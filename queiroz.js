@@ -1,5 +1,5 @@
 /*!
- * Queiroz.js 2.1.1 | JavaScript Extension for Dimep Kairos
+ * Queiroz.js 2.1.2 | JavaScript Extension for Dimep Kairos
  */
 var
 
@@ -45,7 +45,8 @@ var
                     var
                         // Date object, getDay() method returns the weekday as a number
                         Weekday = {
-                            MONDAY: 1
+                            MONDAY: 1,
+                            THURSDAY: 4
                         },
                         _Hour = (function() {
                             return {
@@ -168,10 +169,10 @@ var
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '2.1.1',
+            VERSION = '2.1.2',
 
             Settings = {
-                INITIAL_WEEKDAY: Util.Time.Weekday.MONDAY,
+                INITIAL_WEEKDAY: Util.Time.Weekday.THURSDAY,
                 LAST_WEEK_MODE: false, // false, ON, DOING, DONE
                 MAX_HOURS_PER_DAY: 6,
                 MAX_HOURS_PER_WEEK: 44,
@@ -223,8 +224,15 @@ var
                 return Util.Time.Minute.toMillis(Settings.NORMAL_MINUTES_PER_DAY);
             },
             _buildTimeToLeave = function(missingTimeInMillis) {
+                if (missingTimeInMillis <= 0) {
+                    return '';
+                }
+                if (missingTimeInMillis > _getNormalMinutesPerDayInMillis()) {
+                    return '';
+                }
+
                 var htmlHumanTimeToLeave = '';
-                if (_lastIn && (missingTimeInMillis < _getNormalMinutesPerDayInMillis())) {
+                if (_lastIn) {
                     var
                         timeToLeaveInMillis = _lastIn.getTime() + missingTimeInMillis,
                         humanTimeToLeave = Util.TimeFormatter.dateToHumanTime(new Date(timeToLeaveInMillis));

@@ -14,26 +14,38 @@ JavaScript Extension for Dimep Kairos
 3- Copie, cole e execute o código contido em queiroz.min.js.
 
 #### Changelog
+v2.1.2
+-- [Fix] Cálculo da hora de saída: Quando existe hora extra apresenta cálculo incorreto;
+
 v2.1.1
--- [Fix] Cálculo da hora de saída: Quando existe somente horário de entrada apresenta cálculo incorreto
+-- [Fix] Cálculo da hora de saída: Quando existe somente horário de entrada apresenta cálculo incorreto;
+
 v2.1
--- Last Week Mode: Calcula as horas da semana anterior
+-- Last Week Mode: Calcula as horas da semana anterior;
+
 v2.0.2
--- [Ref] Encapsular Util para que Queiroz seja a única variável exposta
+-- [Ref] Encapsular Util para que Queiroz seja a única variável exposta;
+
 v2.0.1
--- [Fix] Seletor CHECKPOINT incorreto: alterado para obter solicitações de horas (Kelvin Klann)
+-- [Fix] Seletor CHECKPOINT incorreto: alterado para obter solicitações de horas (Kelvin Klann);
+
 v2.0
--- Revealing Module Pattern
+-- Revealing Module Pattern;
+
 v1.2
--- Levar em consideração somente os dias de Segunda-feira em diante
--- Quando existirem lançamentos ímpares, fazer o cálculo utilizando a data atual
+-- Levar em consideração somente os dias de Segunda-feira em diante;
+-- Quando existirem lançamentos ímpares, fazer o cálculo utilizando a data atual;
+
 v1.1
--- Cálculo da hora estimada de saída ao final da semana
+-- Cálculo da hora estimada de saída ao final da semana;
+
 v1.0.2
--- Tampermonkey config (Matheus Barbieri)
+-- Tampermonkey config (Matheus Barbieri);
+
 v1.0.1
--- Adaptação para rodar script na tela de Pedidos (Matheus Barbieri)
+-- Adaptação para rodar script na tela de Pedidos (Matheus Barbieri);
+
 v1.0
--- Cálculo de horas efetuadas por dia
--- Cálculo do total de horas efetuadas na semana
--- Cálculo do total de horas que faltam para completar a semana
+-- Cálculo de horas efetuadas por dia;
+-- Cálculo do total de horas efetuadas na semana;
+-- Cálculo do total de horas que faltam para completar a semana;
