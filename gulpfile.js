@@ -1,5 +1,13 @@
-var gulp = require('gulp');
+var
+gulp = require('gulp'),
+minify = require('gulp-minify');
 
 gulp.task('default', function() {
-  // place code for your default task here
-});g
+    gulp.src('src/*.js')
+        .pipe(minify({
+            ext: {
+                min:'.min.js'
+            }
+        }))
+        .pipe(gulp.dest('dist'));
+});

@@ -1,5 +1,5 @@
 /*!
- * Queiroz.js 2.2.2 | JavaScript Extension for Dimep Kairos
+ * Queiroz.js 2.2.3 | JavaScript Extension for Dimep Kairos
  */
 var
 
@@ -170,7 +170,7 @@ var
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '2.2.2',
+            VERSION = '2.2.3',
 
             Settings = {
                 INITIAL_WEEKDAY: Util.Time.Weekday.WEDNESDAY,
