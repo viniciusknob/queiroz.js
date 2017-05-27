@@ -1,5 +1,5 @@
 /*!
- * Queiroz.js 2.2.3 | JavaScript Extension for Dimep Kairos
+ * Queiroz.js 2.3.0 | JavaScript Extension for Dimep Kairos
  */
 var
 
@@ -45,9 +45,13 @@ var
                     var
                         // Date object, getDay() method returns the weekday as a number
                         Weekday = {
+                            SUNDAY: 0,
                             MONDAY: 1,
+                            TUESDAY: 2,
+                            WEDNESDAY: 3,
                             THURSDAY: 4,
-                            WEDNESDAY: 5
+                            FRIDAY: 5,
+                            SATURDAY: 6
                         },
                         _Hour = (function() {
                             return {
@@ -170,10 +174,10 @@ var
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '2.2.3',
+            VERSION = '2.3.0',
 
             Settings = {
-                INITIAL_WEEKDAY: Util.Time.Weekday.WEDNESDAY,
+                INITIAL_WEEKDAY: Util.Time.Weekday.MONDAY,
                 LAST_WEEK_MODE: false, // false, ON, DOING, DONE
                 MAX_HOURS_PER_DAY: 6,
                 MAX_HOURS_PER_WEEK: 44,

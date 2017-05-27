@@ -1,0 +1,23 @@
+{
+  "name": "queiroz.js",
+  "version": "2.3.0",
+  "description": "JavaScript Extension for Dimep Kairos",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-minify": "^1.0.0",
+    "gulp-replace": "^0.5.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/viniciusknob/queiroz.js.git"
+  },
+  "keywords": [
+    "dimepkairos",
+    "extension"
+  ],
+  "author": "Vinícius M. Knob <knob.vinicius@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/viniciusknob/queiroz.js/issues"
+  }
+}
