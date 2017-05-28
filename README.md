@@ -1,4 +1,4 @@
-# Queiroz.js 2.3.0
+# Queiroz.js 2.4.0
 JavaScript Extension for Dimep Kairos
 
 #### Autor
@@ -16,6 +16,7 @@ JavaScript Extension for Dimep Kairos
 Obs: Se preferir, pode ser utilizado um automatizador como Tampermonkey.
 
 #### Recursos
+* Cálculo de horas efetuadas por turno;
 * Cálculo de horas efetuadas por dia;
 * Cálculo do total de horas efetuadas na semana;
 * Cálculo do total de horas que faltam para completar a semana;

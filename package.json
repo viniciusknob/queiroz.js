@@ -1,6 +1,6 @@
 {
   "name": "queiroz.js",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "JavaScript Extension for Dimep Kairos",
   "devDependencies": {
     "gulp": "^3.9.1",

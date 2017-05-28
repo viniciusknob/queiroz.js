@@ -6,7 +6,7 @@ var
 
 var
     Settings = {
-        VERSION: '2.3.0'
+        VERSION: '2.4.0'
     }
 ;
 
@@ -27,9 +27,9 @@ gulp.task('set-dev-version', function() {
         .pipe(replace(/(version.{4})(?:\d\.){2}\d(?:\.(\d+))?/, replacer))
         .pipe(gulp.dest('./'));
     gulp
-        .src('src/queiroz.js') // Queiroz.js 2.2.3.43
-        .pipe(replace(/(js )(?:\d\.){2}\d(?:\.(\d+))?/, replacer))
-        .pipe(replace(/(VERSION.{4})(?:\d\.){2}\d(?:\.(\d+))?/, replacer))
+        .src('src/queiroz.js')
+        .pipe(replace(/(js )(?:\d\.){2}\d(?:\.(\d+))?/, replacer)) // Queiroz.js 2.2.3.43
+        .pipe(replace(/(VERSION.{4})(?:\d\.){2}\d(?:\.(\d+))?/, replacer)) // VERSION = '2.2.3.43'
         .pipe(gulp.dest('src'));
 });
 
@@ -48,14 +48,14 @@ gulp.task('set-version', function() {
         .pipe(replace(/(version.{4})(?:\d\.){2}\d(?:\.\d+)?/, replacer))
         .pipe(gulp.dest('./'));
     gulp
-        .src('src/queiroz.js') // Queiroz.js 2.2.3.43
-        .pipe(replace(/(js )(?:\d\.){2}\d(?:\.\d+)?/, replacer))
-        .pipe(replace(/(VERSION.{4})(?:\d\.){2}\d(?:\.\d+)?/, replacer))
+        .src('src/queiroz.js')
+        .pipe(replace(/(js )(?:\d\.){2}\d(?:\.\d+)?/, replacer)) // Queiroz.js 2.2.3.43
+        .pipe(replace(/(VERSION.{4})(?:\d\.){2}\d(?:\.\d+)?/, replacer)) // VERSION = '2.2.3.43'
         .pipe(gulp.dest('src'));
 });
 
 gulp.task('minify', function() {
-    gulp.src('src/*.js')
+    gulp.src('src/queiroz.js')
         .pipe(minify({
            ext: {
                min:'.min.js'

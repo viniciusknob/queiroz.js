@@ -1,5 +1,5 @@
 /*!
- * Queiroz.js 2.3.0 | JavaScript Extension for Dimep Kairos
+ * Queiroz.js 2.4.0 | JavaScript Extension for Dimep Kairos
  */
 var
 
@@ -147,7 +147,11 @@ var
                         append: function(selector, html) {
                             var _this = this;
                             _this.asyncReflow(function() {
-                                _this.get(selector).innerHTML += html;
+                                var
+                                    element = _this.get(selector),
+                                    container = document.createElement('div');
+                                container.innerHTML = html;
+                                element.appendChild(container);
                             });
                         },
                         asyncReflow: function(task) {
@@ -174,7 +178,7 @@ var
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '2.3.0',
+            VERSION = '2.4.0',
 
             Settings = {
                 INITIAL_WEEKDAY: Util.Time.Weekday.MONDAY,
@@ -200,8 +204,12 @@ var
                 HEADER_MISSING_TIME: '  |  Faltam: <span class="bold" style="color: brown;">{0}</span>',
                 HEADER_TIME_TO_LEAVE: '  |  Saída/Fim: <span class="bold" style="color: brown;">{0}</span>',
                 LABOR_TIME_PER_DAY: '' +
-                    '<div class="FilledSlot" style="background-color: lightgray; padding-top: 5px;">' +
-                    '<span class="bold" style="margin-left: 6px; color: brown; vertical-align: middle;">{0}</span>' +
+                    '<div class="FilledSlot" style="background-color: lightgray; padding-top: 5px; margin-bottom: 10px;">' +
+                        '<span class="bold" style="margin-left: 6px; color: brown; vertical-align: middle;">= {0}</span>' +
+                    '</div>',
+                LABOR_TIME_PER_SHIFT: '' +
+                    '<div class="FilledSlot" style="background-color: lightgray; padding-top: 5px; margin-bottom: 10px;">' +
+                        '<span class="bold" style="margin-left: 6px; vertical-align: middle;">{0}</span>' +
                     '</div>'
             };
 
@@ -238,10 +246,12 @@ var
 
                 var htmlHumanTimeToLeave = '';
                 if (_lastIn) {
-                    var
-                        timeToLeaveInMillis = _lastIn.getTime() + missingTimeInMillis,
-                        humanTimeToLeave = Util.TimeFormatter.dateToHumanTime(new Date(timeToLeaveInMillis));
+                    var timeToLeaveInMillis = _lastIn.getTime() + missingTimeInMillis;
+                    if (!timeToLeaveInMillis || timeToLeaveInMillis < new Date().getTime()) {
+                        return '';
+                    }
 
+                    var humanTimeToLeave = Util.TimeFormatter.dateToHumanTime(new Date(timeToLeaveInMillis));
                     htmlHumanTimeToLeave = Util.TextFormatter.format(Snippet.HEADER_TIME_TO_LEAVE, [humanTimeToLeave]);
                 }
                 return htmlHumanTimeToLeave;
@@ -278,6 +288,15 @@ var
                     _renderStats(missingTimeInMillis, humanLaborTime, humanMissingTime);
                 }
             },
+            _renderLaborTimePerShift = function(context, shift) {
+                var humanMillis = Util.TimeFormatter.millisToHumanTime(shift);
+                var html = Util.TextFormatter.format(Snippet.LABOR_TIME_PER_SHIFT, [humanMillis]);
+                var container = document.createElement('div');
+                container.innerHTML = html;
+                var filledSlotOut = context.parentNode;
+                filledSlotOut.parentNode.insertBefore(container, filledSlotOut.nextSibling);
+                return container;
+            },
             _renderLaborTime = function(eDay, millis) {
                 var humanMillis = Util.TimeFormatter.millisToHumanTime(millis);
                 eDay.innerHTML += Util.TextFormatter.format(Snippet.LABOR_TIME_PER_DAY, [humanMillis]);
@@ -296,19 +315,28 @@ var
                         if (eOut && !eOut.parentElement.classList.contains('LastSlot')) { // TODO
                             var
                                 timeOut = eOut.textContent, // 04:34
-                                exit = Util.Time.toDate(_getDate(eDay) + " " + timeOut);
-                            millis += Util.Time.Millis.diff(enter, exit);
+                                exit = Util.Time.toDate(_getDate(eDay) + " " + timeOut),
+                                shift = Util.Time.Millis.diff(enter, exit);
+
+                            millis += shift;
+
+                            if (Settings.LAST_WEEK_MODE !== 'DOING') {
+                                _renderLaborTimePerShift(eOut, shift);
+                            }
                         } else {
                             _lastIn = enter;
                             var diffUntilNow = Util.Time.Millis.diff(enter, new Date());
                             if (diffUntilNow < (_getMaxHoursPerDayInMillis())) {
-                                //millis += diffUntilNow;
+                                var
+                                    shift = millis + diffUntilNow,
+                                    element = _renderLaborTimePerShift(eIn, shift),
+                                    span = element.querySelector('span');
+                                element.style.color = 'darkgoldenrod';
+                                span.textContent = '~ ' + span.textContent;
                             }
                         }
                     });
-                    if (Settings.LAST_WEEK_MODE !== 'DOING') {
-                        _renderLaborTime(eDay, millis);
-                    }
+                    _renderLaborTime(eDay, millis);
                     _larborTimeInMillis += millis;
                 }
             },
@@ -379,6 +407,7 @@ var
                         _initWithDelay();
                     }
                 }
+                return NAME + ' ' + VERSION;
             },
             name: NAME,
             version: VERSION
