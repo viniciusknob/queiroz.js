@@ -1,4 +1,4 @@
-# Queiroz.js 2.4.0
+# Queiroz.js 2.4.1
 JavaScript Extension for Dimep Kairos
 
 #### Autor
@@ -11,7 +11,7 @@ JavaScript Extension for Dimep Kairos
 #### Como utilizar
 1. Após efetuar login, acesse um dos menus de apresentação dos horários: Ponto ou Pedidos;
 2. Abra as Ferramentas do Desenvolvedor;
-3. Copie, cole e execute o código contido em queiroz.min.js.
+3. Copie, cole e execute o código contido em dist/queiroz.min.js.
 
 Obs: Se preferir, pode ser utilizado um automatizador como Tampermonkey.
 
