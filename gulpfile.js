@@ -2,12 +2,13 @@ var
     gulp = require('gulp'),
     replace = require('gulp-replace'),
     minify = require('gulp-minify'),
-    runSequence = require('run-sequence')
+    runSequence = require('run-sequence'),
+    concat = require('gulp-concat')
 ;
 
 var
     Settings = {
-        VERSION: '2.4.3',
+        VERSION: '2.5.0',
         versionRegex: '(?:\\d\\.){2}\\d(?:\\.(\\d+))?',
         env: {
             DEV: {
@@ -42,9 +43,9 @@ var
                 .pipe(replace(new RegExp('(version.{4})'+Settings.versionRegex), env.versionReplacer))
                 .pipe(gulp.dest('./'));
         },
-        queiroz: function(env) {
+        src: function(env) {
             return gulp
-                .src('src/queiroz.js')
+                .src(['src/util.js','src/main.js','src/autoexec.js'])
                 .pipe(replace(new RegExp('(js )'+Settings.versionRegex), env.versionReplacer)) // Queiroz.js 2.2.3.43
                 .pipe(replace(new RegExp('(VERSION.{4})'+Settings.versionRegex), env.versionReplacer)) // VERSION = '2.2.3.43'
                 .pipe(gulp.dest('src'));
@@ -54,30 +55,20 @@ var
 
 
 gulp.task('set-dev-version', [
-    'set-dev-version-readme',
-    'set-dev-version-package',
-    'set-dev-version-queiroz'
+    'set-dev-version-src'
 ], function(callback) {
     callback();
 });
 
-gulp.task('set-dev-version-readme', function() {
-    return setVersion.readme(Settings.env.DEV);
-});
-
-gulp.task('set-dev-version-package', function() {
-    return setVersion.package(Settings.env.DEV);
-});
-
-gulp.task('set-dev-version-queiroz', function() {
-    return setVersion.queiroz(Settings.env.DEV);
+gulp.task('set-dev-version-src', function() {
+    return setVersion.src(Settings.env.DEV);
 });
 
 
 gulp.task('set-version', [
     'set-version-readme',
     'set-version-package',
-    'set-version-queiroz'
+    'set-version-src'
 ], function(callback) {
      callback();
 });
@@ -90,13 +81,13 @@ gulp.task('set-version-package', function() {
     return setVersion.package(Settings.env.PRD);
 });
 
-gulp.task('set-version-queiroz', function() {
-    return setVersion.queiroz(Settings.env.PRD);
+gulp.task('set-version-src', function() {
+    return setVersion.src(Settings.env.PRD);
 });
 
 
 gulp.task('compress', function() {
-    return gulp.src('src/queiroz.js')
+    return gulp.src('dist/queiroz.js')
         .pipe(minify({
            ext: {
                min:'.min.js'
@@ -105,13 +96,23 @@ gulp.task('compress', function() {
         .pipe(gulp.dest('dist'));
 });
 
+gulp.task('concat', function() {
+    return gulp.src([
+            'src/util.js',
+            'src/main.js',
+            'src/autoexec.js'
+        ])
+        .pipe(concat('queiroz.js'))
+        .pipe(gulp.dest('dist'));
+});
+
 
 gulp.task('dev', function(callback) {
-    runSequence('set-dev-version', 'compress', callback);
+    runSequence('set-dev-version','concat','compress', callback);
 });
 
 gulp.task('release', function(callback) {
-    runSequence('set-version', 'compress', callback);
+    runSequence('set-version','concat','compress', callback);
 });
 
 

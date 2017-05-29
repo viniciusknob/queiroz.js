@@ -1,4 +1,4 @@
-# Queiroz.js 2.4.3
+# Queiroz.js 2.5.0
 JavaScript Extension for Dimep Kairos
 
 #### Autor
@@ -28,7 +28,7 @@ Obs: Se preferir, pode ser utilizado um automatizador como Tampermonkey.
 * Normal Mode: Calcula o total de horas iniciando da primeira Segunda-feira disponível na view;
 * Last Week Mode: Possibilidade de calcular o total de horas efetuadas para semana anterior;
 * Script pode ser executando nas telas Ponto e Pedidos;
-* Adaptado para rodar utilizado plugins como Tampermonkey.
+* Adaptado para rodar utilizando plugins como Tampermonkey.
 
 #### Simbologia
 
