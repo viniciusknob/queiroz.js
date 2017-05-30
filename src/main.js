@@ -1,6 +1,6 @@
 
 /*!
- * Queiroz.js 2.5.0: queiroz.js
+ * Queiroz.js 2.6.0: queiroz.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -10,7 +10,7 @@ var Queiroz = (function() {
 
     var
         NAME = 'Queiroz.js',
-        VERSION = '2.5.0',
+        VERSION = '2.6.0',
 
         Settings = {
             INITIAL_WEEKDAY: Util.Time.Weekday.MONDAY,
@@ -34,6 +34,7 @@ var Queiroz = (function() {
             HEADER_LAST_WEEK_MODE_ON: '<span class="bold" style="color: green;">SEMANA ANTERIOR</span>  |  ',
             HEADER_LABOR_TIME: 'Total: <span class="bold" style="color: brown;">{0}</span>',
             HEADER_MISSING_TIME: '  |  Faltam: <span class="bold" style="color: brown;">{0}</span>',
+            HEADER_EXTRA_TIME: '  |  Extra: <span class="bold" style="color: brown;">{0}</span>',
             HEADER_TIME_TO_LEAVE: '  |  Saída/Fim: <span class="bold" style="color: brown;">{0}</span>',
             LABOR_TIME_PER_DAY: '' +
                 '<div class="FilledSlot" style="background-color: lightgray; padding-top: 5px; margin-bottom: 10px;">' +
@@ -55,6 +56,9 @@ var Queiroz = (function() {
         },
         _computeMissingTimeInMillis = function() {
             return _computeMaxHoursPerWeekInMillis() - _larborTimeInMillis;
+        },
+        _computeExtraTimeInMillis = function() {
+            return _larborTimeInMillis - _computeMaxHoursPerWeekInMillis();
         },
         _getCheckpoints = function(eColumnDay) {
             return Util.View.getAll(Selector.CHECKPOINT, eColumnDay);
@@ -88,18 +92,19 @@ var Queiroz = (function() {
             }
             return htmlHumanTimeToLeave;
         },
-        _renderStats = function(missingTimeInMillis, humanLaborTime, humanMissingTime) {
+        _renderStats = function(missingTimeInMillis, humanLaborTime, humanMissingTime, humanExtraTime) {
             var
                 htmlLastWeekModeOn = Settings.LAST_WEEK_MODE ? Snippet.HEADER_LAST_WEEK_MODE_ON : '',
                 htmlHumanLaborTime = Util.TextFormatter.format(Snippet.HEADER_LABOR_TIME, [humanLaborTime]),
                 htmlHumanMissingTime = Util.TextFormatter.format(Snippet.HEADER_MISSING_TIME, [humanMissingTime]),
+                htmlHumanExtraTime = Util.TextFormatter.format(Snippet.HEADER_EXTRA_TIME, [humanExtraTime]),
                 htmlHumanTimeToLeave = _buildTimeToLeave(missingTimeInMillis);
 
             var
                 args = [
                     htmlLastWeekModeOn,
                     htmlHumanLaborTime,
-                    htmlHumanMissingTime,
+                    (missingTimeInMillis >= 0 ? htmlHumanMissingTime : htmlHumanExtraTime),
                     htmlHumanTimeToLeave
                 ],
                 html = Util.TextFormatter.format(Snippet.HEADER, args);
@@ -113,11 +118,14 @@ var Queiroz = (function() {
 
             var
                 missingTimeInMillis = _computeMissingTimeInMillis(),
+                extraTimeInMillis = _computeExtraTimeInMillis(),
                 humanLaborTime = Util.TimeFormatter.millisToHumanTime(_larborTimeInMillis),
-                humanMissingTime = Util.TimeFormatter.millisToHumanTime(missingTimeInMillis > 0 ? missingTimeInMillis : 0);
+                humanMissingTime = Util.TimeFormatter.millisToHumanTime(missingTimeInMillis > 0 ? missingTimeInMillis : 0),
+                humanExtraTime = Util.TimeFormatter.millisToHumanTime(extraTimeInMillis > 0 ? extraTimeInMillis : 0);
+
 
             if (Settings.LAST_WEEK_MODE !== 'DOING') {
-                _renderStats(missingTimeInMillis, humanLaborTime, humanMissingTime);
+                _renderStats(missingTimeInMillis, humanLaborTime, humanMissingTime, humanExtraTime);
             }
         },
         _renderLaborTimePerShift = function(context, shift) {

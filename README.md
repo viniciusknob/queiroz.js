@@ -1,4 +1,4 @@
-# Queiroz.js 2.5.0
+# Queiroz.js 2.6.0
 JavaScript Extension for Dimep Kairos
 
 #### Autor
@@ -24,6 +24,7 @@ Obs: Se preferir, pode ser utilizado um automatizador como Tampermonkey.
 * Cálculo de horas efetuadas por dia;
 * Cálculo do total de horas efetuadas na semana;
 * Cálculo do total de horas que faltam para completar a semana;
+* Cálculo do total de horas extras na semana;
 * Cálculo da hora estimada de saída quando faltam menos de 8h48min para completar 44h;
 * Normal Mode: Calcula o total de horas iniciando da primeira Segunda-feira disponível na view;
 * Last Week Mode: Possibilidade de calcular o total de horas efetuadas para semana anterior;
