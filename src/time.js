@@ -1,6 +1,6 @@
 
 /*!
- * Queiroz.js 2.6.3: time.js
+ * Queiroz.js 2.6.4: time.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -19,7 +19,7 @@ var Time = (function() {
         },
         _normalize = function(number) {
             return (number < 10 ? '0' + number : number);
-        };
+        },
         _Hour = (function() {
             return {
                 toMillis: function(hour) {

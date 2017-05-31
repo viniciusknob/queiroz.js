@@ -1,6 +1,6 @@
 
 /*!
- * Queiroz.js 2.6.3: queiroz.js
+ * Queiroz.js 2.6.4: queiroz.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -10,7 +10,7 @@ var Queiroz = (function() {
 
     var
         NAME = 'Queiroz.js',
-        VERSION = '2.6.3',
+        VERSION = '2.6.4',
 
         Settings = {
             INITIAL_WEEKDAY: Time.Weekday.MONDAY,
@@ -88,16 +88,16 @@ var Queiroz = (function() {
                 }
 
                 var humanTimeToLeave = Time.dateToHumanTime(new Date(timeToLeaveInMillis));
-                htmlHumanTimeToLeave = Util.TextFormatter.format(Snippet.HEADER_TIME_TO_LEAVE, [humanTimeToLeave]);
+                htmlHumanTimeToLeave = Util.textFormat(Snippet.HEADER_TIME_TO_LEAVE, [humanTimeToLeave]);
             }
             return htmlHumanTimeToLeave;
         },
         _renderStats = function(missingTimeInMillis, humanLaborTime, humanMissingTime, humanExtraTime) {
             var
                 htmlLastWeekModeOn = Settings.LAST_WEEK_MODE ? Snippet.HEADER_LAST_WEEK_MODE_ON : '',
-                htmlHumanLaborTime = Util.TextFormatter.format(Snippet.HEADER_LABOR_TIME, [humanLaborTime]),
-                htmlHumanMissingTime = Util.TextFormatter.format(Snippet.HEADER_MISSING_TIME, [humanMissingTime]),
-                htmlHumanExtraTime = Util.TextFormatter.format(Snippet.HEADER_EXTRA_TIME, [humanExtraTime]),
+                htmlHumanLaborTime = Util.textFormat(Snippet.HEADER_LABOR_TIME, [humanLaborTime]),
+                htmlHumanMissingTime = Util.textFormat(Snippet.HEADER_MISSING_TIME, [humanMissingTime]),
+                htmlHumanExtraTime = Util.textFormat(Snippet.HEADER_EXTRA_TIME, [humanExtraTime]),
                 htmlHumanTimeToLeave = _buildTimeToLeave(missingTimeInMillis);
 
             var
@@ -107,7 +107,7 @@ var Queiroz = (function() {
                     (missingTimeInMillis >= 0 ? htmlHumanMissingTime : htmlHumanExtraTime),
                     htmlHumanTimeToLeave
                 ],
-                html = Util.TextFormatter.format(Snippet.HEADER, args);
+                html = Util.textFormat(Snippet.HEADER, args);
 
             View.append(Selector.HEADER, html);
         },
@@ -130,7 +130,7 @@ var Queiroz = (function() {
         },
         _renderLaborTimePerShift = function(context, shift) {
             var humanMillis = Time.Millis.toHumanTime(shift);
-            var html = Util.TextFormatter.format(Snippet.LABOR_TIME_PER_SHIFT, [humanMillis]);
+            var html = Util.textFormat(Snippet.LABOR_TIME_PER_SHIFT, [humanMillis]);
             var container = document.createElement('div');
             container.innerHTML = html;
             var filledSlotOut = context.parentNode;
@@ -139,7 +139,7 @@ var Queiroz = (function() {
         },
         _renderLaborTime = function(eDay, millis) {
             var humanMillis = Time.Millis.toHumanTime(millis);
-            eDay.innerHTML += Util.TextFormatter.format(Snippet.LABOR_TIME_PER_DAY, [humanMillis]);
+            eDay.innerHTML += Util.textFormat(Snippet.LABOR_TIME_PER_DAY, [humanMillis]);
         },
         _analyzeDay = function(eDay) {
             var checkpoints = _getCheckpoints(eDay);

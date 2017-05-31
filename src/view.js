@@ -1,6 +1,6 @@
 
 /*!
- * Queiroz.js 2.6.3: view.js
+ * Queiroz.js 2.6.4: view.js
  * JavaScript Extension for Dimep Kairos
  */
 

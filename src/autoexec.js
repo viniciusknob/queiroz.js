@@ -1,6 +1,6 @@
 
 /*!
- * Queiroz.js 2.6.3: autoexec.js
+ * Queiroz.js 2.6.4: autoexec.js
  * JavaScript Extension for Dimep Kairos
  */
 
