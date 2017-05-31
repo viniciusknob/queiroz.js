@@ -1,4 +1,4 @@
-# Queiroz.js 2.6.0
+# Queiroz.js 2.6.1
 JavaScript Extension for Dimep Kairos
 
 #### Autor
@@ -16,7 +16,7 @@ JavaScript Extension for Dimep Kairos
 2. Abra as Ferramentas do Desenvolvedor;
 3. Copie, cole e execute o código contido em dist/queiroz.min.js.
 
-Obs: Se preferir, pode ser utilizado um automatizador como Tampermonkey.
+Obs: Se preferir, pode ser utilizado um automatizador como Tampermonkey, para isso NÃO é necessário adaptação, pois o script já está preparada para lidar com interval esperando a tela carregar completamente.
 
 #### Recursos
 
@@ -30,6 +30,8 @@ Obs: Se preferir, pode ser utilizado um automatizador como Tampermonkey.
 * Last Week Mode: Possibilidade de calcular o total de horas efetuadas para semana anterior;
 * Script pode ser executando nas telas Ponto e Pedidos;
 * Adaptado para rodar utilizando plugins como Tampermonkey.
+
+OBS: Todos os cálculos são efetuados a partir da primeira Segunda-feira, isso é necessário para não bagunçar o resultado final, e também por que o script se limita ao que está sendo apresentado na view.
 
 #### Simbologia
 

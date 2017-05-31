@@ -1,6 +1,6 @@
 
 /*!
- * Queiroz.js 2.6.0: queiroz.js
+ * Queiroz.js 2.6.1: queiroz.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -10,10 +10,10 @@ var Queiroz = (function() {
 
     var
         NAME = 'Queiroz.js',
-        VERSION = '2.6.0',
+        VERSION = '2.6.1',
 
         Settings = {
-            INITIAL_WEEKDAY: Util.Time.Weekday.MONDAY,
+            INITIAL_WEEKDAY: Time.Weekday.MONDAY,
             LAST_WEEK_MODE: false, // false, ON, DOING, DONE
             MAX_HOURS_PER_DAY: 6,
             MAX_HOURS_PER_WEEK: 44,
@@ -52,7 +52,7 @@ var Queiroz = (function() {
         _larborTimeInMillis = 0,
         _lastIn = '',
         _computeMaxHoursPerWeekInMillis = function() {
-            return Settings.MAX_HOURS_PER_WEEK * Util.Time.Millis.In.HOUR;
+            return Settings.MAX_HOURS_PER_WEEK * Time.Millis.In.HOUR;
         },
         _computeMissingTimeInMillis = function() {
             return _computeMaxHoursPerWeekInMillis() - _larborTimeInMillis;
@@ -67,10 +67,10 @@ var Queiroz = (function() {
             return Util.View.get(Selector.DATE, eColumnDay).value;
         },
         _getMaxHoursPerDayInMillis = function() {
-            return Util.Time.Hour.toMillis(Settings.MAX_HOURS_PER_DAY);
+            return Time.Hour.toMillis(Settings.MAX_HOURS_PER_DAY);
         },
         _getNormalMinutesPerDayInMillis = function() {
-            return Util.Time.Minute.toMillis(Settings.NORMAL_MINUTES_PER_DAY);
+            return Time.Minute.toMillis(Settings.NORMAL_MINUTES_PER_DAY);
         },
         _buildTimeToLeave = function(missingTimeInMillis) {
             if (missingTimeInMillis <= 0) {
@@ -149,14 +149,14 @@ var Queiroz = (function() {
                 Util.View.getAll(Selector.TIME_IN, eDay).forEach(function(eIn, index) {
                     var
                         timeIn = eIn.textContent, // 15:45
-                        enter = Util.Time.toDate(_getDate(eDay) + " " + timeIn),
+                        enter = Time.toDate(_getDate(eDay) + " " + timeIn),
                         eOut = checkpoints[(index * 2) + 1];
 
                     if (eOut && !eOut.parentElement.classList.contains('LastSlot')) { // TODO
                         var
                             timeOut = eOut.textContent, // 04:34
-                            exit = Util.Time.toDate(_getDate(eDay) + " " + timeOut),
-                            shift = Util.Time.Millis.diff(enter, exit);
+                            exit = Time.toDate(_getDate(eDay) + " " + timeOut),
+                            shift = Time.Millis.diff(enter, exit);
 
                         millis += shift;
 
@@ -165,7 +165,7 @@ var Queiroz = (function() {
                         }
                     } else {
                         _lastIn = enter;
-                        var diffUntilNow = Util.Time.Millis.diff(enter, new Date());
+                        var diffUntilNow = Time.Millis.diff(enter, new Date());
                         if (diffUntilNow < (_getMaxHoursPerDayInMillis())) {
                             var
                                 shift = millis + diffUntilNow,
@@ -190,7 +190,7 @@ var Queiroz = (function() {
             _eDays.forEach(function(eDay) {
                 var
                     _stringDay = _getDate(eDay) + " " + _fakeTime,
-                    _dateDay = Util.Time.toDate(_stringDay);
+                    _dateDay = Time.toDate(_stringDay);
 
                 if (_larborTimeInMillis === 0) { // first time
                     if (_foundInitialWeekday || (_foundInitialWeekday = _dateDay.getDay() === Settings.INITIAL_WEEKDAY)) {

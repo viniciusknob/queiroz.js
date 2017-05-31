@@ -1,6 +1,6 @@
 
 /*!
- * Queiroz.js 2.6.0: util.js
+ * Queiroz.js 2.6.1: util.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -31,77 +31,6 @@ var Util = (function() {
 
         /**
          * ------------------------------------------------------------------------
-         * Time
-         * ------------------------------------------------------------------------
-         */
-        _Time = (function() {
-
-            var
-                // Date object, getDay() method returns the weekday as a number
-                Weekday = {
-                    SUNDAY: 0,
-                    MONDAY: 1,
-                    TUESDAY: 2,
-                    WEDNESDAY: 3,
-                    THURSDAY: 4,
-                    FRIDAY: 5,
-                    SATURDAY: 6
-                },
-                _Hour = (function() {
-                    return {
-                        toMillis: function(hour) {
-                            return hour * _Millis.In.HOUR;
-                        }
-                    };
-                })(),
-                _Minute = (function() {
-                    return {
-                        toMillis: function(minute) {
-                            return minute * _Millis.In.MINUTE;
-                        }
-                    };
-                })(),
-                _Millis = (function() {
-
-                    var
-                        _In = {
-                            MINUTE: 1000 * 60,
-                            HOUR: 1000 * 60 * 60
-                        };
-
-                    /* PUBLIC */
-
-                    return {
-                        diff: function(init, end) {
-                            if (init instanceof Date && end instanceof Date) {
-                                return end.getTime() - init.getTime();
-                            } else {
-                                return end - init;
-                            }
-                        },
-                        In: _In
-                    };
-                })();
-
-            /* PUBLIC */
-
-            return {
-                Hour: _Hour,
-                Minute: _Minute,
-                Millis: _Millis,
-                Weekday: Weekday,
-                toDate: function(stringDate) { // 14_05_2017 16:08
-                    var
-                        dateTime = stringDate.split(' '),
-                        date = dateTime[0].split('_'),
-                        time = dateTime[1].split(':');
-                    return new Date(date[2], date[1] - 1, date[0], time[0], time[1]);
-                }
-            };
-        })(),
-
-        /**
-         * ------------------------------------------------------------------------
          * TimeFormatter
          * ------------------------------------------------------------------------
          */
@@ -126,7 +55,7 @@ var Util = (function() {
                     return _normalize(diffHour) + ':' + _normalize(diffMin);
                 }
             };
-        })(_Time),
+        })(Time),
 
         /**
          * ------------------------------------------------------------------------
@@ -162,7 +91,6 @@ var Util = (function() {
 
     return {
         TextFormatter: _TextFormatter,
-        Time: _Time,
         TimeFormatter: _TimeFormatter,
         View: _View
     };

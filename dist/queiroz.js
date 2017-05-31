@@ -1,6 +1,74 @@
 
 /*!
- * Queiroz.js 2.6.0: util.js
+ * Queiroz.js 2.6.1: time.js
+ * JavaScript Extension for Dimep Kairos
+ */
+
+var Time = (function() {
+
+    var
+        // Date object, getDay() method returns the weekday as a number
+        Weekday = {
+            SUNDAY: 0,
+            MONDAY: 1,
+            TUESDAY: 2,
+            WEDNESDAY: 3,
+            THURSDAY: 4,
+            FRIDAY: 5,
+            SATURDAY: 6
+        },
+        _Hour = (function() {
+            return {
+                toMillis: function(hour) {
+                    return hour * _Millis.In.HOUR;
+                }
+            };
+        })(),
+        _Minute = (function() {
+            return {
+                toMillis: function(minute) {
+                    return minute * _Millis.In.MINUTE;
+                }
+            };
+        })(),
+        _Millis = (function() {
+
+            /* PUBLIC */
+
+            return {
+                diff: function(init, end) {
+                    if (init instanceof Date && end instanceof Date) {
+                        return end.getTime() - init.getTime();
+                    } else {
+                        return end - init;
+                    }
+                },
+                In: {
+                    MINUTE: 1000 * 60,
+                    HOUR: 1000 * 60 * 60
+                }
+            };
+        })();
+
+    /* PUBLIC */
+
+    return {
+        Hour: _Hour,
+        Minute: _Minute,
+        Millis: _Millis,
+        Weekday: Weekday,
+        toDate: function(stringDate) { // 14_05_2017 16:08
+            var
+                dateTime = stringDate.split(' '),
+                date = dateTime[0].split('_'),
+                time = dateTime[1].split(':');
+            return new Date(date[2], date[1] - 1, date[0], time[0], time[1]);
+        }
+    };
+})();
+
+/*!
+ * Queiroz.js 2.6.1: util.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -31,77 +99,6 @@ var Util = (function() {
 
         /**
          * ------------------------------------------------------------------------
-         * Time
-         * ------------------------------------------------------------------------
-         */
-        _Time = (function() {
-
-            var
-                // Date object, getDay() method returns the weekday as a number
-                Weekday = {
-                    SUNDAY: 0,
-                    MONDAY: 1,
-                    TUESDAY: 2,
-                    WEDNESDAY: 3,
-                    THURSDAY: 4,
-                    FRIDAY: 5,
-                    SATURDAY: 6
-                },
-                _Hour = (function() {
-                    return {
-                        toMillis: function(hour) {
-                            return hour * _Millis.In.HOUR;
-                        }
-                    };
-                })(),
-                _Minute = (function() {
-                    return {
-                        toMillis: function(minute) {
-                            return minute * _Millis.In.MINUTE;
-                        }
-                    };
-                })(),
-                _Millis = (function() {
-
-                    var
-                        _In = {
-                            MINUTE: 1000 * 60,
-                            HOUR: 1000 * 60 * 60
-                        };
-
-                    /* PUBLIC */
-
-                    return {
-                        diff: function(init, end) {
-                            if (init instanceof Date && end instanceof Date) {
-                                return end.getTime() - init.getTime();
-                            } else {
-                                return end - init;
-                            }
-                        },
-                        In: _In
-                    };
-                })();
-
-            /* PUBLIC */
-
-            return {
-                Hour: _Hour,
-                Minute: _Minute,
-                Millis: _Millis,
-                Weekday: Weekday,
-                toDate: function(stringDate) { // 14_05_2017 16:08
-                    var
-                        dateTime = stringDate.split(' '),
-                        date = dateTime[0].split('_'),
-                        time = dateTime[1].split(':');
-                    return new Date(date[2], date[1] - 1, date[0], time[0], time[1]);
-                }
-            };
-        })(),
-
-        /**
-         * ------------------------------------------------------------------------
          * TimeFormatter
          * ------------------------------------------------------------------------
          */
@@ -126,7 +123,7 @@ var Util = (function() {
                     return _normalize(diffHour) + ':' + _normalize(diffMin);
                 }
             };
-        })(_Time),
+        })(Time),
 
         /**
          * ------------------------------------------------------------------------
@@ -162,7 +159,6 @@ var Util = (function() {
 
     return {
         TextFormatter: _TextFormatter,
-        Time: _Time,
         TimeFormatter: _TimeFormatter,
         View: _View
     };
@@ -170,7 +166,7 @@ var Util = (function() {
 })();
 
 /*!
- * Queiroz.js 2.6.0: queiroz.js
+ * Queiroz.js 2.6.1: queiroz.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -180,10 +176,10 @@ var Queiroz = (function() {
 
     var
         NAME = 'Queiroz.js',
-        VERSION = '2.6.0',
+        VERSION = '2.6.1',
 
         Settings = {
-            INITIAL_WEEKDAY: Util.Time.Weekday.MONDAY,
+            INITIAL_WEEKDAY: Time.Weekday.MONDAY,
             LAST_WEEK_MODE: false, // false, ON, DOING, DONE
             MAX_HOURS_PER_DAY: 6,
             MAX_HOURS_PER_WEEK: 44,
@@ -222,7 +218,7 @@ var Queiroz = (function() {
         _larborTimeInMillis = 0,
         _lastIn = '',
         _computeMaxHoursPerWeekInMillis = function() {
-            return Settings.MAX_HOURS_PER_WEEK * Util.Time.Millis.In.HOUR;
+            return Settings.MAX_HOURS_PER_WEEK * Time.Millis.In.HOUR;
         },
         _computeMissingTimeInMillis = function() {
             return _computeMaxHoursPerWeekInMillis() - _larborTimeInMillis;
@@ -237,10 +233,10 @@ var Queiroz = (function() {
             return Util.View.get(Selector.DATE, eColumnDay).value;
         },
         _getMaxHoursPerDayInMillis = function() {
-            return Util.Time.Hour.toMillis(Settings.MAX_HOURS_PER_DAY);
+            return Time.Hour.toMillis(Settings.MAX_HOURS_PER_DAY);
         },
         _getNormalMinutesPerDayInMillis = function() {
-            return Util.Time.Minute.toMillis(Settings.NORMAL_MINUTES_PER_DAY);
+            return Time.Minute.toMillis(Settings.NORMAL_MINUTES_PER_DAY);
         },
         _buildTimeToLeave = function(missingTimeInMillis) {
             if (missingTimeInMillis <= 0) {
@@ -319,14 +315,14 @@ var Queiroz = (function() {
                 Util.View.getAll(Selector.TIME_IN, eDay).forEach(function(eIn, index) {
                     var
                         timeIn = eIn.textContent, // 15:45
-                        enter = Util.Time.toDate(_getDate(eDay) + " " + timeIn),
+                        enter = Time.toDate(_getDate(eDay) + " " + timeIn),
                         eOut = checkpoints[(index * 2) + 1];
 
                     if (eOut && !eOut.parentElement.classList.contains('LastSlot')) { // TODO
                         var
                             timeOut = eOut.textContent, // 04:34
-                            exit = Util.Time.toDate(_getDate(eDay) + " " + timeOut),
-                            shift = Util.Time.Millis.diff(enter, exit);
+                            exit = Time.toDate(_getDate(eDay) + " " + timeOut),
+                            shift = Time.Millis.diff(enter, exit);
 
                         millis += shift;
 
@@ -335,7 +331,7 @@ var Queiroz = (function() {
                         }
                     } else {
                         _lastIn = enter;
-                        var diffUntilNow = Util.Time.Millis.diff(enter, new Date());
+                        var diffUntilNow = Time.Millis.diff(enter, new Date());
                         if (diffUntilNow < (_getMaxHoursPerDayInMillis())) {
                             var
                                 shift = millis + diffUntilNow,
@@ -360,7 +356,7 @@ var Queiroz = (function() {
             _eDays.forEach(function(eDay) {
                 var
                     _stringDay = _getDate(eDay) + " " + _fakeTime,
-                    _dateDay = Util.Time.toDate(_stringDay);
+                    _dateDay = Time.toDate(_stringDay);
 
                 if (_larborTimeInMillis === 0) { // first time
                     if (_foundInitialWeekday || (_foundInitialWeekday = _dateDay.getDay() === Settings.INITIAL_WEEKDAY)) {
@@ -425,7 +421,7 @@ var Queiroz = (function() {
 })();
 
 /*!
- * Queiroz.js 2.6.0: autoexec.js
+ * Queiroz.js 2.6.1: autoexec.js
  * JavaScript Extension for Dimep Kairos
  */
 
