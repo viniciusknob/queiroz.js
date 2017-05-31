@@ -1,6 +1,6 @@
 
 /*!
- * Queiroz.js 2.6.2: queiroz.js
+ * Queiroz.js 2.6.3: queiroz.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -10,7 +10,7 @@ var Queiroz = (function() {
 
     var
         NAME = 'Queiroz.js',
-        VERSION = '2.6.2',
+        VERSION = '2.6.3',
 
         Settings = {
             INITIAL_WEEKDAY: Time.Weekday.MONDAY,
@@ -52,7 +52,7 @@ var Queiroz = (function() {
         _larborTimeInMillis = 0,
         _lastIn = '',
         _computeMaxHoursPerWeekInMillis = function() {
-            return Settings.MAX_HOURS_PER_WEEK * Time.Millis.In.HOUR;
+            return Settings.MAX_HOURS_PER_WEEK * Time.Millis.IN_HOUR;
         },
         _computeMissingTimeInMillis = function() {
             return _computeMaxHoursPerWeekInMillis() - _larborTimeInMillis;
@@ -87,7 +87,7 @@ var Queiroz = (function() {
                     return '';
                 }
 
-                var humanTimeToLeave = Util.TimeFormatter.dateToHumanTime(new Date(timeToLeaveInMillis));
+                var humanTimeToLeave = Time.dateToHumanTime(new Date(timeToLeaveInMillis));
                 htmlHumanTimeToLeave = Util.TextFormatter.format(Snippet.HEADER_TIME_TO_LEAVE, [humanTimeToLeave]);
             }
             return htmlHumanTimeToLeave;
@@ -119,9 +119,9 @@ var Queiroz = (function() {
             var
                 missingTimeInMillis = _computeMissingTimeInMillis(),
                 extraTimeInMillis = _computeExtraTimeInMillis(),
-                humanLaborTime = Util.TimeFormatter.millisToHumanTime(_larborTimeInMillis),
-                humanMissingTime = Util.TimeFormatter.millisToHumanTime(missingTimeInMillis > 0 ? missingTimeInMillis : 0),
-                humanExtraTime = Util.TimeFormatter.millisToHumanTime(extraTimeInMillis > 0 ? extraTimeInMillis : 0);
+                humanLaborTime = Time.Millis.toHumanTime(_larborTimeInMillis),
+                humanMissingTime = Time.Millis.toHumanTime(missingTimeInMillis > 0 ? missingTimeInMillis : 0),
+                humanExtraTime = Time.Millis.toHumanTime(extraTimeInMillis > 0 ? extraTimeInMillis : 0);
 
 
             if (Settings.LAST_WEEK_MODE !== 'DOING') {
@@ -129,7 +129,7 @@ var Queiroz = (function() {
             }
         },
         _renderLaborTimePerShift = function(context, shift) {
-            var humanMillis = Util.TimeFormatter.millisToHumanTime(shift);
+            var humanMillis = Time.Millis.toHumanTime(shift);
             var html = Util.TextFormatter.format(Snippet.LABOR_TIME_PER_SHIFT, [humanMillis]);
             var container = document.createElement('div');
             container.innerHTML = html;
@@ -138,7 +138,7 @@ var Queiroz = (function() {
             return container;
         },
         _renderLaborTime = function(eDay, millis) {
-            var humanMillis = Util.TimeFormatter.millisToHumanTime(millis);
+            var humanMillis = Time.Millis.toHumanTime(millis);
             eDay.innerHTML += Util.TextFormatter.format(Snippet.LABOR_TIME_PER_DAY, [humanMillis]);
         },
         _analyzeDay = function(eDay) {

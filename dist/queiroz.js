@@ -1,6 +1,6 @@
 
 /*!
- * Queiroz.js 2.6.2: view.js
+ * Queiroz.js 2.6.3: view.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -32,7 +32,7 @@ var View = (function() {
 })();
 
 /*!
- * Queiroz.js 2.6.2: time.js
+ * Queiroz.js 2.6.3: time.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -49,25 +49,34 @@ var Time = (function() {
             FRIDAY: 5,
             SATURDAY: 6
         },
+        _normalize = function(number) {
+            return (number < 10 ? '0' + number : number);
+        };
         _Hour = (function() {
             return {
                 toMillis: function(hour) {
-                    return hour * _Millis.In.HOUR;
+                    return hour * _Millis.IN_HOUR;
                 }
             };
         })(),
         _Minute = (function() {
             return {
                 toMillis: function(minute) {
-                    return minute * _Millis.In.MINUTE;
+                    return minute * _Millis.IN_MINUTE;
                 }
             };
         })(),
         _Millis = (function() {
 
+            var
+                MINUTE_IN_MILLIS = 1000 * 60,
+                HOUR_IN_MILLIS = MINUTE_IN_MILLIS * 60;
+
             /* PUBLIC */
 
             return {
+                IN_MINUTE: MINUTE_IN_MILLIS,
+                IN_HOUR: HOUR_IN_MILLIS,
                 diff: function(init, end) {
                     if (init instanceof Date && end instanceof Date) {
                         return end.getTime() - init.getTime();
@@ -75,9 +84,12 @@ var Time = (function() {
                         return end - init;
                     }
                 },
-                In: {
-                    MINUTE: 1000 * 60,
-                    HOUR: 1000 * 60 * 60
+                toHumanTime: function(millis) {
+                    var
+                        diffHour = parseInt(millis / HOUR_IN_MILLIS),
+                        diffMin = parseInt((millis / MINUTE_IN_MILLIS) % 60);
+
+                    return _normalize(diffHour) + ':' + _normalize(diffMin);
                 }
             };
         })();
@@ -95,12 +107,15 @@ var Time = (function() {
                 date = dateTime[0].split('_'),
                 time = dateTime[1].split(':');
             return new Date(date[2], date[1] - 1, date[0], time[0], time[1]);
+        },
+        dateToHumanTime: function(date) {
+            return _normalize(date.getHours()) + ':' + _normalize(date.getMinutes());
         }
     };
 })();
 
 /*!
- * Queiroz.js 2.6.2: util.js
+ * Queiroz.js 2.6.3: util.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -127,45 +142,16 @@ var Util = (function() {
                     return pattern;
                 }
             };
-        })(),
-
-        /**
-         * ------------------------------------------------------------------------
-         * TimeFormatter
-         * ------------------------------------------------------------------------
-         */
-        _TimeFormatter = (function(Time) {
-
-            var
-                _normalize = function(number) {
-                    return (number < 10 ? '0' + number : number);
-                };
-
-            /* PUBLIC */
-
-            return {
-                dateToHumanTime: function(date) {
-                    return _normalize(date.getHours()) + ':' + _normalize(date.getMinutes());
-                },
-                millisToHumanTime: function(millis) {
-                    var
-                        diffHour = parseInt(millis / Time.Millis.In.HOUR),
-                        diffMin = parseInt((millis / Time.Millis.In.MINUTE) % 60);
-
-                    return _normalize(diffHour) + ':' + _normalize(diffMin);
-                }
-            };
-        })(Time);
+        })();
 
     return {
-        TextFormatter: _TextFormatter,
-        TimeFormatter: _TimeFormatter
+        TextFormatter: _TextFormatter
     };
 
 })();
 
 /*!
- * Queiroz.js 2.6.2: queiroz.js
+ * Queiroz.js 2.6.3: queiroz.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -175,7 +161,7 @@ var Queiroz = (function() {
 
     var
         NAME = 'Queiroz.js',
-        VERSION = '2.6.2',
+        VERSION = '2.6.3',
 
         Settings = {
             INITIAL_WEEKDAY: Time.Weekday.MONDAY,
@@ -217,7 +203,7 @@ var Queiroz = (function() {
         _larborTimeInMillis = 0,
         _lastIn = '',
         _computeMaxHoursPerWeekInMillis = function() {
-            return Settings.MAX_HOURS_PER_WEEK * Time.Millis.In.HOUR;
+            return Settings.MAX_HOURS_PER_WEEK * Time.Millis.IN_HOUR;
         },
         _computeMissingTimeInMillis = function() {
             return _computeMaxHoursPerWeekInMillis() - _larborTimeInMillis;
@@ -252,7 +238,7 @@ var Queiroz = (function() {
                     return '';
                 }
 
-                var humanTimeToLeave = Util.TimeFormatter.dateToHumanTime(new Date(timeToLeaveInMillis));
+                var humanTimeToLeave = Time.dateToHumanTime(new Date(timeToLeaveInMillis));
                 htmlHumanTimeToLeave = Util.TextFormatter.format(Snippet.HEADER_TIME_TO_LEAVE, [humanTimeToLeave]);
             }
             return htmlHumanTimeToLeave;
@@ -284,9 +270,9 @@ var Queiroz = (function() {
             var
                 missingTimeInMillis = _computeMissingTimeInMillis(),
                 extraTimeInMillis = _computeExtraTimeInMillis(),
-                humanLaborTime = Util.TimeFormatter.millisToHumanTime(_larborTimeInMillis),
-                humanMissingTime = Util.TimeFormatter.millisToHumanTime(missingTimeInMillis > 0 ? missingTimeInMillis : 0),
-                humanExtraTime = Util.TimeFormatter.millisToHumanTime(extraTimeInMillis > 0 ? extraTimeInMillis : 0);
+                humanLaborTime = Time.Millis.toHumanTime(_larborTimeInMillis),
+                humanMissingTime = Time.Millis.toHumanTime(missingTimeInMillis > 0 ? missingTimeInMillis : 0),
+                humanExtraTime = Time.Millis.toHumanTime(extraTimeInMillis > 0 ? extraTimeInMillis : 0);
 
 
             if (Settings.LAST_WEEK_MODE !== 'DOING') {
@@ -294,7 +280,7 @@ var Queiroz = (function() {
             }
         },
         _renderLaborTimePerShift = function(context, shift) {
-            var humanMillis = Util.TimeFormatter.millisToHumanTime(shift);
+            var humanMillis = Time.Millis.toHumanTime(shift);
             var html = Util.TextFormatter.format(Snippet.LABOR_TIME_PER_SHIFT, [humanMillis]);
             var container = document.createElement('div');
             container.innerHTML = html;
@@ -303,7 +289,7 @@ var Queiroz = (function() {
             return container;
         },
         _renderLaborTime = function(eDay, millis) {
-            var humanMillis = Util.TimeFormatter.millisToHumanTime(millis);
+            var humanMillis = Time.Millis.toHumanTime(millis);
             eDay.innerHTML += Util.TextFormatter.format(Snippet.LABOR_TIME_PER_DAY, [humanMillis]);
         },
         _analyzeDay = function(eDay) {
@@ -420,7 +406,7 @@ var Queiroz = (function() {
 })();
 
 /*!
- * Queiroz.js 2.6.2: autoexec.js
+ * Queiroz.js 2.6.3: autoexec.js
  * JavaScript Extension for Dimep Kairos
  */
 

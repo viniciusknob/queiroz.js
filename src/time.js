@@ -1,6 +1,6 @@
 
 /*!
- * Queiroz.js 2.6.2: time.js
+ * Queiroz.js 2.6.3: time.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -17,25 +17,34 @@ var Time = (function() {
             FRIDAY: 5,
             SATURDAY: 6
         },
+        _normalize = function(number) {
+            return (number < 10 ? '0' + number : number);
+        };
         _Hour = (function() {
             return {
                 toMillis: function(hour) {
-                    return hour * _Millis.In.HOUR;
+                    return hour * _Millis.IN_HOUR;
                 }
             };
         })(),
         _Minute = (function() {
             return {
                 toMillis: function(minute) {
-                    return minute * _Millis.In.MINUTE;
+                    return minute * _Millis.IN_MINUTE;
                 }
             };
         })(),
         _Millis = (function() {
 
+            var
+                MINUTE_IN_MILLIS = 1000 * 60,
+                HOUR_IN_MILLIS = MINUTE_IN_MILLIS * 60;
+
             /* PUBLIC */
 
             return {
+                IN_MINUTE: MINUTE_IN_MILLIS,
+                IN_HOUR: HOUR_IN_MILLIS,
                 diff: function(init, end) {
                     if (init instanceof Date && end instanceof Date) {
                         return end.getTime() - init.getTime();
@@ -43,9 +52,12 @@ var Time = (function() {
                         return end - init;
                     }
                 },
-                In: {
-                    MINUTE: 1000 * 60,
-                    HOUR: 1000 * 60 * 60
+                toHumanTime: function(millis) {
+                    var
+                        diffHour = parseInt(millis / HOUR_IN_MILLIS),
+                        diffMin = parseInt((millis / MINUTE_IN_MILLIS) % 60);
+
+                    return _normalize(diffHour) + ':' + _normalize(diffMin);
                 }
             };
         })();
@@ -63,6 +75,9 @@ var Time = (function() {
                 date = dateTime[0].split('_'),
                 time = dateTime[1].split(':');
             return new Date(date[2], date[1] - 1, date[0], time[0], time[1]);
+        },
+        dateToHumanTime: function(date) {
+            return _normalize(date.getHours()) + ':' + _normalize(date.getMinutes());
         }
     };
 })();
