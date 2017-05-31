@@ -8,7 +8,7 @@ var
 
 var
     Settings = {
-        VERSION: '2.6.1',
+        VERSION: '2.6.2',
         versionRegex: '(?:\\d\\.){2}\\d(?:\\.(\\d+))?',
         env: {
             DEV: {
@@ -45,7 +45,7 @@ var
         },
         src: function(env) {
             return gulp
-                .src(['src/time.js','src/util.js','src/main.js','src/autoexec.js'])
+                .src(['src/view.js','src/time.js','src/util.js','src/main.js','src/autoexec.js'])
                 .pipe(replace(new RegExp('(js )'+Settings.versionRegex), env.versionReplacer)) // Queiroz.js 2.2.3.43
                 .pipe(replace(new RegExp('(VERSION.{4})'+Settings.versionRegex), env.versionReplacer)) // VERSION = '2.2.3.43'
                 .pipe(gulp.dest('src'));
@@ -98,6 +98,7 @@ gulp.task('compress', function() {
 
 gulp.task('concat', function() {
     return gulp.src([
+            'src/view.js',
             'src/time.js',
             'src/util.js',
             'src/main.js',

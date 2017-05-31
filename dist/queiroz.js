@@ -1,6 +1,38 @@
 
 /*!
- * Queiroz.js 2.6.1: time.js
+ * Queiroz.js 2.6.2: view.js
+ * JavaScript Extension for Dimep Kairos
+ */
+
+var View = (function() {
+
+    /* PUBLIC */
+
+    return {
+        append: function(selector, html) {
+            var _this = this;
+            _this.asyncReflow(function() {
+                var
+                    element = _this.get(selector),
+                    container = document.createElement('div');
+                container.innerHTML = html;
+                element.appendChild(container);
+            });
+        },
+        asyncReflow: function(task) {
+            setTimeout(task, 25);
+        },
+        get: function(selector, target) {
+            return (target || document).querySelector(selector);
+        },
+        getAll: function(selector, target) {
+            return (target || document).querySelectorAll(selector);
+        }
+    };
+})();
+
+/*!
+ * Queiroz.js 2.6.2: time.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -68,7 +100,7 @@ var Time = (function() {
 })();
 
 /*!
- * Queiroz.js 2.6.1: util.js
+ * Queiroz.js 2.6.2: util.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -123,50 +155,17 @@ var Util = (function() {
                     return _normalize(diffHour) + ':' + _normalize(diffMin);
                 }
             };
-        })(Time),
-
-        /**
-         * ------------------------------------------------------------------------
-         * View
-         * ------------------------------------------------------------------------
-         */
-        _View = (function() {
-
-            /* PUBLIC */
-
-            return {
-                append: function(selector, html) {
-                    var _this = this;
-                    _this.asyncReflow(function() {
-                        var
-                            element = _this.get(selector),
-                            container = document.createElement('div');
-                        container.innerHTML = html;
-                        element.appendChild(container);
-                    });
-                },
-                asyncReflow: function(task) {
-                    setTimeout(task, 25);
-                },
-                get: function(selector, target) {
-                    return (target || document).querySelector(selector);
-                },
-                getAll: function(selector, target) {
-                    return (target || document).querySelectorAll(selector);
-                }
-            };
-        })();
+        })(Time);
 
     return {
         TextFormatter: _TextFormatter,
-        TimeFormatter: _TimeFormatter,
-        View: _View
+        TimeFormatter: _TimeFormatter
     };
 
 })();
 
 /*!
- * Queiroz.js 2.6.1: queiroz.js
+ * Queiroz.js 2.6.2: queiroz.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -176,7 +175,7 @@ var Queiroz = (function() {
 
     var
         NAME = 'Queiroz.js',
-        VERSION = '2.6.1',
+        VERSION = '2.6.2',
 
         Settings = {
             INITIAL_WEEKDAY: Time.Weekday.MONDAY,
@@ -227,10 +226,10 @@ var Queiroz = (function() {
             return _larborTimeInMillis - _computeMaxHoursPerWeekInMillis();
         },
         _getCheckpoints = function(eColumnDay) {
-            return Util.View.getAll(Selector.CHECKPOINT, eColumnDay);
+            return View.getAll(Selector.CHECKPOINT, eColumnDay);
         },
         _getDate = function(eColumnDay) {
-            return Util.View.get(Selector.DATE, eColumnDay).value;
+            return View.get(Selector.DATE, eColumnDay).value;
         },
         _getMaxHoursPerDayInMillis = function() {
             return Time.Hour.toMillis(Settings.MAX_HOURS_PER_DAY);
@@ -275,7 +274,7 @@ var Queiroz = (function() {
                 ],
                 html = Util.TextFormatter.format(Snippet.HEADER, args);
 
-            Util.View.append(Selector.HEADER, html);
+            View.append(Selector.HEADER, html);
         },
         _buildStats = function() {
             if (Settings.LAST_WEEK_MODE === 'ON') {
@@ -312,7 +311,7 @@ var Queiroz = (function() {
             if (checkpoints.length) {
                 var millis = 0;
 
-                Util.View.getAll(Selector.TIME_IN, eDay).forEach(function(eIn, index) {
+                View.getAll(Selector.TIME_IN, eDay).forEach(function(eIn, index) {
                     var
                         timeIn = eIn.textContent, // 15:45
                         enter = Time.toDate(_getDate(eDay) + " " + timeIn),
@@ -351,7 +350,7 @@ var Queiroz = (function() {
                 _selectedDays = [],
                 _foundInitialWeekday = false,
                 _fakeTime = '12:34',
-                _eDays = Util.View.getAll(Selector.COLUMN_DAY);
+                _eDays = View.getAll(Selector.COLUMN_DAY);
 
             _eDays.forEach(function(eDay) {
                 var
@@ -391,7 +390,7 @@ var Queiroz = (function() {
         },
         _initWithDelay = function() {
             var interval = setInterval(function() {
-                if (Util.View.get(Selector.CHECKPOINT)) {
+                if (View.get(Selector.CHECKPOINT)) {
                     clearInterval(interval);
                     _init();
                 }
@@ -407,7 +406,7 @@ var Queiroz = (function() {
                 mudarSemana(-1, true);
                 setTimeout(_initWithDelay, 1000);
             } else {
-                if (Util.View.get(Selector.CHECKPOINT)) {
+                if (View.get(Selector.CHECKPOINT)) {
                     _init();
                 } else {
                     _initWithDelay();
@@ -421,7 +420,7 @@ var Queiroz = (function() {
 })();
 
 /*!
- * Queiroz.js 2.6.1: autoexec.js
+ * Queiroz.js 2.6.2: autoexec.js
  * JavaScript Extension for Dimep Kairos
  */
 

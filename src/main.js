@@ -1,6 +1,6 @@
 
 /*!
- * Queiroz.js 2.6.1: queiroz.js
+ * Queiroz.js 2.6.2: queiroz.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -10,7 +10,7 @@ var Queiroz = (function() {
 
     var
         NAME = 'Queiroz.js',
-        VERSION = '2.6.1',
+        VERSION = '2.6.2',
 
         Settings = {
             INITIAL_WEEKDAY: Time.Weekday.MONDAY,
@@ -61,10 +61,10 @@ var Queiroz = (function() {
             return _larborTimeInMillis - _computeMaxHoursPerWeekInMillis();
         },
         _getCheckpoints = function(eColumnDay) {
-            return Util.View.getAll(Selector.CHECKPOINT, eColumnDay);
+            return View.getAll(Selector.CHECKPOINT, eColumnDay);
         },
         _getDate = function(eColumnDay) {
-            return Util.View.get(Selector.DATE, eColumnDay).value;
+            return View.get(Selector.DATE, eColumnDay).value;
         },
         _getMaxHoursPerDayInMillis = function() {
             return Time.Hour.toMillis(Settings.MAX_HOURS_PER_DAY);
@@ -109,7 +109,7 @@ var Queiroz = (function() {
                 ],
                 html = Util.TextFormatter.format(Snippet.HEADER, args);
 
-            Util.View.append(Selector.HEADER, html);
+            View.append(Selector.HEADER, html);
         },
         _buildStats = function() {
             if (Settings.LAST_WEEK_MODE === 'ON') {
@@ -146,7 +146,7 @@ var Queiroz = (function() {
             if (checkpoints.length) {
                 var millis = 0;
 
-                Util.View.getAll(Selector.TIME_IN, eDay).forEach(function(eIn, index) {
+                View.getAll(Selector.TIME_IN, eDay).forEach(function(eIn, index) {
                     var
                         timeIn = eIn.textContent, // 15:45
                         enter = Time.toDate(_getDate(eDay) + " " + timeIn),
@@ -185,7 +185,7 @@ var Queiroz = (function() {
                 _selectedDays = [],
                 _foundInitialWeekday = false,
                 _fakeTime = '12:34',
-                _eDays = Util.View.getAll(Selector.COLUMN_DAY);
+                _eDays = View.getAll(Selector.COLUMN_DAY);
 
             _eDays.forEach(function(eDay) {
                 var
@@ -225,7 +225,7 @@ var Queiroz = (function() {
         },
         _initWithDelay = function() {
             var interval = setInterval(function() {
-                if (Util.View.get(Selector.CHECKPOINT)) {
+                if (View.get(Selector.CHECKPOINT)) {
                     clearInterval(interval);
                     _init();
                 }
@@ -241,7 +241,7 @@ var Queiroz = (function() {
                 mudarSemana(-1, true);
                 setTimeout(_initWithDelay, 1000);
             } else {
-                if (Util.View.get(Selector.CHECKPOINT)) {
+                if (View.get(Selector.CHECKPOINT)) {
                     _init();
                 } else {
                     _initWithDelay();

@@ -1,6 +1,6 @@
 
 /*!
- * Queiroz.js 2.6.1: util.js
+ * Queiroz.js 2.6.2: util.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -55,44 +55,11 @@ var Util = (function() {
                     return _normalize(diffHour) + ':' + _normalize(diffMin);
                 }
             };
-        })(Time),
-
-        /**
-         * ------------------------------------------------------------------------
-         * View
-         * ------------------------------------------------------------------------
-         */
-        _View = (function() {
-
-            /* PUBLIC */
-
-            return {
-                append: function(selector, html) {
-                    var _this = this;
-                    _this.asyncReflow(function() {
-                        var
-                            element = _this.get(selector),
-                            container = document.createElement('div');
-                        container.innerHTML = html;
-                        element.appendChild(container);
-                    });
-                },
-                asyncReflow: function(task) {
-                    setTimeout(task, 25);
-                },
-                get: function(selector, target) {
-                    return (target || document).querySelector(selector);
-                },
-                getAll: function(selector, target) {
-                    return (target || document).querySelectorAll(selector);
-                }
-            };
-        })();
+        })(Time);
 
     return {
         TextFormatter: _TextFormatter,
-        TimeFormatter: _TimeFormatter,
-        View: _View
+        TimeFormatter: _TimeFormatter
     };
 
 })();
