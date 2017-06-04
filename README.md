@@ -1,4 +1,4 @@
-# Queiroz.js 2.6.4
+# Queiroz.js 2.6.5
 JavaScript Extension for Dimep Kairos
 
 #### Autor
@@ -16,7 +16,7 @@ JavaScript Extension for Dimep Kairos
 2. Abra as Ferramentas do Desenvolvedor;
 3. Copie, cole e execute o código contido em dist/queiroz.min.js.
 
-Obs: Se preferir, pode ser utilizado um automatizador como Tampermonkey, para isso NÃO é necessário adaptação, pois o script já está preparada para lidar com interval esperando a tela carregar completamente.
+Obs: Se preferir, pode ser utilizado um automatizador como Tampermonkey, para isso NÃO é necessário adaptação, pois o script já está preparado para esperar a tela carregar completamente.
 
 #### Recursos
 
