@@ -1,4 +1,4 @@
-# Queiroz.js 2.6.6
+# Queiroz.js 2.6.7
 JavaScript Extension for Dimep Kairos
 
 #### Autor
@@ -36,7 +36,6 @@ OBS: Todos os cálculos são efetuados a partir da primeira Segunda-feira, isso 
 #### Simbologia
 
 * ~ : Quando não existe uma hora de saída, utiliza a hora atual;
-* = : Total de horas trabalhadas em um dia.
 
 #### Contribuindo...
 

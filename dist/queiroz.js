@@ -1,6 +1,6 @@
 
 /*!
- * Queiroz.js 2.6.6: view.js
+ * Queiroz.js 2.6.7: view.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -46,7 +46,7 @@
 })(window);
 
 /*!
- * Queiroz.js 2.6.6: time.js
+ * Queiroz.js 2.6.7: time.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -142,7 +142,7 @@
 })(window);
 
 /*!
- * Queiroz.js 2.6.6: util.js
+ * Queiroz.js 2.6.7: util.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -175,7 +175,7 @@
 })(window);
 
 /*!
- * Queiroz.js 2.6.6: main.js
+ * Queiroz.js 2.6.7: main.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -194,7 +194,7 @@
 
         var
             _NAME = 'Queiroz.js',
-            VERSION = '2.6.6',
+            VERSION = '2.6.7',
 
             Settings = {
                 INITIAL_WEEKDAY: Time.Weekday.MONDAY,
@@ -222,7 +222,7 @@
                 HEADER_TIME_TO_LEAVE: '  |  Saída/Fim: <span class="bold" style="color: brown;">{0}</span>',
                 LABOR_TIME_PER_DAY: '' +
                     '<div class="FilledSlot" style="background-color: lightgray; padding-top: 5px; margin-bottom: 10px;">' +
-                        '<span class="bold" style="margin-left: 6px; color: brown; vertical-align: middle;">= {0}</span>' +
+                        '<span class="bold" style="margin-left: 6px; color: brown; vertical-align: middle;">{0}</span>' +
                     '</div>',
                 LABOR_TIME_PER_SHIFT: '' +
                     '<div class="FilledSlot" style="background-color: lightgray; padding-top: 5px; margin-bottom: 10px;">' +
@@ -443,7 +443,7 @@
 })(window, view, time, util);
 
 /*!
- * Queiroz.js 2.6.6: autoexec.js
+ * Queiroz.js 2.6.7: autoexec.js
  * JavaScript Extension for Dimep Kairos
  */
 
