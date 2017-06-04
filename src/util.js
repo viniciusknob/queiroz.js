@@ -1,6 +1,6 @@
 
 /*!
- * Queiroz.js 2.6.7: util.js
+ * Queiroz.js 2.6.8: util.js
  * JavaScript Extension for Dimep Kairos
  */
 

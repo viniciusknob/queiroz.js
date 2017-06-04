@@ -1,6 +1,6 @@
 
 /*!
- * Queiroz.js 2.6.7: main.js
+ * Queiroz.js 2.6.8: main.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -19,7 +19,7 @@
 
         var
             _NAME = 'Queiroz.js',
-            VERSION = '2.6.7',
+            VERSION = '2.6.8',
 
             Settings = {
                 INITIAL_WEEKDAY: Time.Weekday.MONDAY,
