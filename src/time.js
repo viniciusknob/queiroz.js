@@ -1,6 +1,6 @@
 
 /*!
- * Queiroz.js 2.6.5: time.js
+ * Queiroz.js 2.6.6: time.js
  * JavaScript Extension for Dimep Kairos
  */
 

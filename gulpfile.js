@@ -8,7 +8,7 @@ var
 
 var
     Settings = {
-        VERSION: '2.6.5',
+        VERSION: '2.6.6',
         versionRegex: '(?:\\d\\.){2}\\d(?:\\.(\\d+))?',
         env: {
             DEV: {
@@ -45,7 +45,14 @@ var
         },
         src: function(env) {
             return gulp
-                .src(['src/view.js','src/time.js','src/util.js','src/main.js','src/autoexec.js'])
+                .src([
+                    'src/dochead.js',
+                    'src/view.js',
+                    'src/time.js',
+                    'src/util.js',
+                    'src/main.js',
+                    'src/autoexec.js'
+                ])
                 .pipe(replace(new RegExp('(js )'+Settings.versionRegex), env.versionReplacer)) // Queiroz.js 2.2.3.43
                 .pipe(replace(new RegExp('(VERSION.{4})'+Settings.versionRegex), env.versionReplacer)) // VERSION = '2.2.3.43'
                 .pipe(gulp.dest('src'));
@@ -96,6 +103,15 @@ gulp.task('compress', function() {
         .pipe(gulp.dest('dist'));
 });
 
+gulp.task('concat-min', function() {
+    return gulp.src([
+            'src/dochead.js',
+            'dist/queiroz.min.js'
+        ])
+        .pipe(concat('queiroz.min.js'))
+        .pipe(gulp.dest('dist'));
+});
+
 gulp.task('concat', function() {
     return gulp.src([
             'src/view.js',
@@ -114,7 +130,7 @@ gulp.task('dev', function(callback) {
 });
 
 gulp.task('release', function(callback) {
-    runSequence('set-version','concat','compress', callback);
+    runSequence('set-version','concat','compress','concat-min', callback);
 });
 
 
