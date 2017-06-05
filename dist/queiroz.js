@@ -1,6 +1,6 @@
 
 /*!
- * Queiroz.js 2.6.8: view.js
+ * Queiroz.js 2.6.9: view.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -46,7 +46,7 @@
 })(window);
 
 /*!
- * Queiroz.js 2.6.8: time.js
+ * Queiroz.js 2.6.9: time.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -142,7 +142,7 @@
 })(window);
 
 /*!
- * Queiroz.js 2.6.8: util.js
+ * Queiroz.js 2.6.9: util.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -175,7 +175,7 @@
 })(window);
 
 /*!
- * Queiroz.js 2.6.8: main.js
+ * Queiroz.js 2.6.9: main.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -194,7 +194,7 @@
 
         var
             _NAME = 'Queiroz.js',
-            VERSION = '2.6.8',
+            VERSION = '2.6.9',
 
             Settings = {
                 INITIAL_WEEKDAY: Time.Weekday.MONDAY,
@@ -214,20 +214,34 @@
             },
 
             Snippet = {
-                HEADER: '<p class="floatRight" style="padding: 10px; background-color: lightgray;">{0}{1}{2}{3}</p>',
-                HEADER_LAST_WEEK_MODE_ON: '<span class="bold" style="color: green;">SEMANA ANTERIOR</span>  |  ',
-                HEADER_LABOR_TIME: 'Total: <span class="bold" style="color: brown;">{0}</span>',
-                HEADER_MISSING_TIME: '  |  Faltam: <span class="bold" style="color: brown;">{0}</span>',
-                HEADER_EXTRA_TIME: '  |  Extra: <span class="bold" style="color: brown;">{0}</span>',
-                HEADER_TIME_TO_LEAVE: '  |  Saída/Fim: <span class="bold" style="color: brown;">{0}</span>',
+                HEADER: '<p class="qz-box qz-box-head qz-box-muted">{0}{1}{2}{3}</p>',
+                HEADER_LAST_WEEK_MODE_ON: '<strong class="qz-text-primary">SEMANA ANTERIOR</strong>  |  ',
+                HEADER_LABOR_TIME: 'Total: <strong class="qz-text-primary">{0}</strong>',
+                HEADER_MISSING_TIME: '  |  Faltam: <strong class="qz-text-primary">{0}</strong>',
+                HEADER_EXTRA_TIME: '  |  Extra: <strong class="qz-text-primary">{0}</strong>',
+                HEADER_TIME_TO_LEAVE: '  |  Saída/Fim: <strong class="qz-text-primary">{0}</strong>',
                 LABOR_TIME_PER_DAY: '' +
-                    '<div class="FilledSlot" style="background-color: lightgray; padding-top: 5px; margin-bottom: 10px;">' +
-                        '<span class="bold" style="margin-left: 6px; color: brown; vertical-align: middle;">{0}</span>' +
+                    '<div class="qz-box qz-box-muted">' +
+                        '<strong class="qz-box-content qz-text-primary">{0}</strong>' +
                     '</div>',
                 LABOR_TIME_PER_SHIFT: '' +
-                    '<div class="FilledSlot" style="background-color: lightgray; padding-top: 5px; margin-bottom: 10px;">' +
-                        '<span class="bold" style="margin-left: 6px; vertical-align: middle;">{0}</span>' +
-                    '</div>'
+                    '<div class="qz-box qz-box-muted">' +
+                        '<strong class="qz-box-content">{0}</strong>' +
+                    '</div>',
+                STYLE: ''+
+                    '<style>' +
+                        // reset
+                        'strong{font-weight:bold;}' +
+                        // override
+                        '.ContentTable {margin-top:inherit;}' +
+                        '.emptySlot,.FilledSlot,.LastSlot {height:inherit;padding:5px;}' +
+                        // queiroz.js classes
+                        '.qz-text-primary {color:brown;}' +
+                        '.qz-box {padding:7px;margin:5px 0;}' +
+                        '.qz-box-head {float:right;}' +
+                        '.qz-box-muted {background-color:lightgray;}' +
+                        '.qz-box .qz-box-content {margin-left:6px; vertical-align:middle;}' +
+                    '</style>'
             };
 
         /* PRIVATE */
@@ -398,6 +412,7 @@
                 _lastIn = '';
             },
             _init = function() {
+                View.append('head', Snippet.STYLE);
                 var _selectedDays = _selectDaysToAnalyze();
                 _selectedDays.forEach(_analyzeDay);
                 _buildStats();
@@ -443,7 +458,7 @@
 })(window, view, time, util);
 
 /*!
- * Queiroz.js 2.6.8: autoexec.js
+ * Queiroz.js 2.6.9: autoexec.js
  * JavaScript Extension for Dimep Kairos
  */
 
