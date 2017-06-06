@@ -1,6 +1,6 @@
 
 /*!
- * Queiroz.js 2.6.9: main.js
+ * Queiroz.js 2.6.10: main.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -19,7 +19,7 @@
 
         var
             _NAME = 'Queiroz.js',
-            VERSION = '2.6.9',
+            VERSION = '2.6.10',
 
             Settings = {
                 INITIAL_WEEKDAY: Time.Weekday.MONDAY,
@@ -193,7 +193,7 @@
                                 var
                                     shift = millis + diffUntilNow,
                                     element = _renderLaborTimePerShift(eIn, shift),
-                                    span = element.querySelector('span');
+                                    span = element.querySelector('strong');
                                 element.style.color = 'darkgoldenrod';
                                 span.textContent = '~ ' + span.textContent;
                             }

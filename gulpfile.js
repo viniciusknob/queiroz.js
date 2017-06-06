@@ -8,8 +8,8 @@ var
 
 var
     Settings = {
-        VERSION: '2.6.9',
-        versionRegex: '(?:\\d\\.){2}\\d(?:\\.(\\d+))?',
+        VERSION: '2.6.10',
+        versionRegex: '(?:\\d+\\.){2}\\d+(?:\\.(\\d+))?',
         env: {
             DEV: {
                 versionReplacer: function(match, $1, $2) {
