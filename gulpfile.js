@@ -8,7 +8,7 @@ var
 
 var
     Settings = {
-        VERSION: '2.6.10',
+        VERSION: '2.6.11',
         versionRegex: '(?:\\d+\\.){2}\\d+(?:\\.(\\d+))?',
         env: {
             DEV: {

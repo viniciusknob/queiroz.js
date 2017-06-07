@@ -1,6 +1,6 @@
 
 /*!
- * Queiroz.js 2.6.10: view.js
+ * Queiroz.js 2.6.11: view.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -46,7 +46,7 @@
 })(window);
 
 /*!
- * Queiroz.js 2.6.10: time.js
+ * Queiroz.js 2.6.11: time.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -142,7 +142,7 @@
 })(window);
 
 /*!
- * Queiroz.js 2.6.10: util.js
+ * Queiroz.js 2.6.11: util.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -175,7 +175,7 @@
 })(window);
 
 /*!
- * Queiroz.js 2.6.10: main.js
+ * Queiroz.js 2.6.11: main.js
  * JavaScript Extension for Dimep Kairos
  */
 
@@ -194,7 +194,7 @@
 
         var
             _NAME = 'Queiroz.js',
-            VERSION = '2.6.10',
+            VERSION = '2.6.11',
 
             Settings = {
                 INITIAL_WEEKDAY: Time.Weekday.MONDAY,
@@ -458,7 +458,7 @@
 })(window, view, time, util);
 
 /*!
- * Queiroz.js 2.6.10: autoexec.js
+ * Queiroz.js 2.6.11: autoexec.js
  * JavaScript Extension for Dimep Kairos
  */
 
