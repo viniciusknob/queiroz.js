@@ -1,7 +1,8 @@
 
 /*!
- * Queiroz.js 2.6.11: main.js
+ * Queiroz.js: main.js
  * JavaScript Extension for Dimep Kairos
+ * https://github.com/viniciusknob/queiroz.js
  */
 
 (function(window, View, Time, Util) {
@@ -19,7 +20,7 @@
 
         var
             _NAME = 'Queiroz.js',
-            VERSION = '2.6.11',
+            VERSION = '0.0.0',
 
             Settings = {
                 INITIAL_WEEKDAY: Time.Weekday.MONDAY,
@@ -62,8 +63,8 @@
                         '.emptySlot,.FilledSlot,.LastSlot {height:inherit;padding:5px;}' +
                         // queiroz.js classes
                         '.qz-text-primary {color:brown;}' +
-                        '.qz-box {padding:7px;margin:5px 0;}' +
-                        '.qz-box-head {float:right;}' +
+                        '.qz-box {padding:7px;margin:5px 1px;}' +
+                        '.qz-box-head {float:right;padding:10px;}' +
                         '.qz-box-muted {background-color:lightgray;}' +
                         '.qz-box .qz-box-content {margin-left:6px; vertical-align:middle;}' +
                     '</style>'

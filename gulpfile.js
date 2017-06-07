@@ -8,16 +8,13 @@ var
 
 var
     Settings = {
-        VERSION: '2.6.11',
-        versionRegex: '(?:\\d+\\.){2}\\d+(?:\\.(\\d+))?',
+        VERSION: '2.6.12',
+        versionRegex: '(?:\\d+\\.){2}\\d+(?:-beta\\.\\d+)?',
         env: {
             DEV: {
-                versionReplacer: function(match, $1, $2) {
-                    var
-                        devVersion = parseInt($2 || 0) + 1,
-                        generatedVersion = [Settings.VERSION, devVersion].join('.');
-
-                    return $1 + generatedVersion;
+                versionReplacer: function(match, $1) {
+                    var devVersion = '-beta.' + new Date().toLocaleString().replace(/\D/g,'');
+                    return $1 + Settings.VERSION + devVersion;
                 }
             },
             PRD: {
@@ -31,65 +28,61 @@ var
 
 var
     setVersion = {
-        readme: function(env) {
+        root: function(env) {
             return gulp
-                .src('./README.md') // Queiroz.js 2.2.3.43
+                .src([
+                    './README.md',   // Queiroz.js 2.2.3-beta.1234567890'
+                    './package.json' // "version": "2.2.3-beta.1234567890'"
+                ])
                 .pipe(replace(new RegExp('(js )'+Settings.versionRegex), env.versionReplacer))
-                .pipe(gulp.dest('./'));
-        },
-        package: function(env) {
-            return gulp
-                .src('./package.json') // "version": "2.2.3.43"
                 .pipe(replace(new RegExp('(version.{4})'+Settings.versionRegex), env.versionReplacer))
                 .pipe(gulp.dest('./'));
         },
         src: function(env) {
             return gulp
-                .src([
-                    'src/dochead.js',
-                    'src/view.js',
-                    'src/time.js',
-                    'src/util.js',
-                    'src/main.js',
-                    'src/autoexec.js'
-                ])
-                .pipe(replace(new RegExp('(js )'+Settings.versionRegex), env.versionReplacer)) // Queiroz.js 2.2.3.43
-                .pipe(replace(new RegExp('(VERSION.{4})'+Settings.versionRegex), env.versionReplacer)) // VERSION = '2.2.3.43'
+                .src('src/dochead.js')
+                .pipe(replace(new RegExp('(js )'+Settings.versionRegex), env.versionReplacer)) // Queiroz.js 2.2.3-beta.1234567890'
                 .pipe(gulp.dest('src'));
-        }
+        },
+        dist: function(env) {
+            return gulp
+                .src('dist/queiroz.js')
+                .pipe(replace(new RegExp('(VERSION.{4})'+Settings.versionRegex), env.versionReplacer)) // VERSION = '2.2.3-beta.1234567890'
+                .pipe(gulp.dest('dist'));
+            }
     }
 ;
 
 
 gulp.task('set-dev-version', [
-    'set-dev-version-src'
+    'set-dev-version-dist'
 ], function(callback) {
     callback();
 });
 
-gulp.task('set-dev-version-src', function() {
-    return setVersion.src(Settings.env.DEV);
+gulp.task('set-dev-version-dist', function() {
+    return setVersion.dist(Settings.env.DEV);
 });
 
 
 gulp.task('set-version', [
-    'set-version-readme',
-    'set-version-package',
-    'set-version-src'
+    'set-version-root',
+    'set-version-src',
+    'set-version-dist'
 ], function(callback) {
      callback();
 });
 
-gulp.task('set-version-readme', function() {
-    return setVersion.readme(Settings.env.PRD);
-});
-
-gulp.task('set-version-package', function() {
-    return setVersion.package(Settings.env.PRD);
+gulp.task('set-version-root', function() {
+    return setVersion.root(Settings.env.PRD);
 });
 
 gulp.task('set-version-src', function() {
     return setVersion.src(Settings.env.PRD);
+});
+
+gulp.task('set-version-dist', function() {
+    return setVersion.dist(Settings.env.PRD);
 });
 
 
@@ -126,11 +119,11 @@ gulp.task('concat', function() {
 
 
 gulp.task('dev', function(callback) {
-    runSequence('set-dev-version','concat','compress', callback);
+    runSequence('concat','set-dev-version','compress', callback);
 });
 
 gulp.task('release', function(callback) {
-    runSequence('set-version','concat','compress','concat-min', callback);
+    runSequence('concat','set-version','compress','concat-min', callback);
 });
 
 

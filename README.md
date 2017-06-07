@@ -1,4 +1,4 @@
-# Queiroz.js 2.6.11
+# Queiroz.js 2.6.12
 JavaScript Extension for Dimep Kairos
 
 #### Autor
@@ -14,9 +14,9 @@ JavaScript Extension for Dimep Kairos
 
 1. Após efetuar login, acesse um dos menus de apresentação dos horários: Ponto ou Pedidos;
 2. Abra as Ferramentas do Desenvolvedor;
-3. Copie, cole e execute o código contido em dist/queiroz.min.js.
+3. Copie, cole e execute o código contido [aqui](../master/dist/queiroz.min.js).
 
-Obs: Se você utiliza um gerenciador de scripts, como Tampermonkey, NÃO é necessário adaptação, você pode utilizar a configuração contida [aqui](../blob/master/Tampermonkey.js).
+Obs: Se você utiliza um gerenciador de scripts, como Tampermonkey, NÃO é necessário adaptação, você pode utilizar a configuração contida [aqui](../master/Tampermonkey.js).
 
 #### Recursos
 
@@ -46,7 +46,7 @@ OBS: Todos os cálculos são efetuados a partir da primeira Segunda-feira, isso 
 
 #### Versionamento
 
-* 'gulp dev' gera um incremento de número ao final da versão (x.x.x.1), assim pode-se controlar a versão do desenvolvimento. OBS: Antes de usá-lo, é necessário alterar a versão em Settings.VERSION no gulpfile.js.
+* 'gulp dev' gera uma versão de desenvolvimento adicionando um número ao final da versão. O número indica a data e hora sem sinais. Use esse recurso quantas vezes precisar durante o desenvolvimento. OBS: Antes de usá-lo, é necessário alterar a versão em Settings.VERSION no gulpfile.js.
 * 'gulp release' normaliza a versão para x.x.x, preparando o código para ser commitado.
 
 * 1.x.x : Drástica mudança na extenção, seja na estrutura ou na forma de apresentação.
