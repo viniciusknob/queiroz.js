@@ -73,40 +73,76 @@
         /* PRIVATE */
 
         var
-            _larborTimeInMillis = 0,
-            _lastIn = '',
-            _computeMaxHoursPerWeekInMillis = function() {
-                return Settings.MAX_HOURS_PER_WEEK * Time.Millis.IN_HOUR;
-            },
-            _computeMissingTimeInMillis = function() {
-                return _computeMaxHoursPerWeekInMillis() - _larborTimeInMillis;
-            },
-            _computeExtraTimeInMillis = function() {
-                return _larborTimeInMillis - _computeMaxHoursPerWeekInMillis();
-            },
-            _getCheckpoints = function(eColumnDay) {
-                return View.getAll(Selector.CHECKPOINT, eColumnDay);
-            },
-            _getDate = function(eColumnDay) {
-                return View.get(Selector.DATE, eColumnDay).value;
+            _getMaxHoursPerWeekInMillis = function() {
+                return Time.Hour.toMillis(Settings.MAX_HOURS_PER_WEEK);
             },
             _getMaxHoursPerDayInMillis = function() {
                 return Time.Hour.toMillis(Settings.MAX_HOURS_PER_DAY);
             },
             _getNormalMinutesPerDayInMillis = function() {
                 return Time.Minute.toMillis(Settings.NORMAL_MINUTES_PER_DAY);
+            };
+
+
+        var data = {
+            week: {
+                laborTime: {
+                    millis: 0,
+                    human: '',
+                    html: ''
+                },
+                missingTime: {
+                    millis: 0,
+                    human: '',
+                    html: ''
+                },
+                extraTime: {
+                    millis: 0,
+                    human: '',
+                    html: ''
+                },
+                _computeMissingTimeInMillis = function() {
+                    return _getMaxHoursPerWeekInMillis() - data.week.laborTime.millis;
+                },
+                _computeExtraTimeInMillis = function() {
+                    return data.week.laborTime.millis - _getMaxHoursPerWeekInMillis();
+                },
+                buildTime: function() {
+                    data.week.missingTime.millis = data.week._computeMissingTimeInMillis();
+                    data.week.extraTime.millis = data.week._computeExtraTimeInMillis();
+                },
+                buildHumanTime: function() {
+                    data.week.laborTime.human = Time.Millis.toHumanTime(data.week.laborTime.millis);
+                    data.week.missingTime.human = Time.Millis.toHumanTime(data.week.missingTime.millis > 0 ? data.week.missingTime.millis : 0);
+                    data.week.extraTime.human = Time.Millis.toHumanTime(data.week.extraTime.millis > 0 ? data.week.extraTime.millis : 0);
+                },
+                buildHtmlTime: function() {
+                    data.week.laborTime.html = Util.textFormat(Snippet.HEADER_LABOR_TIME, [data.week.laborTime.human]);
+                    data.week.missingTime.html = Util.textFormat(Snippet.HEADER_MISSING_TIME, [data.week.missingTime.human]);
+                    data.week.extraTime.html = Util.textFormat(Snippet.HEADER_EXTRA_TIME, [data.week.extraTime.human]);
+                }
+            }
+        };
+
+        var
+            _lastIn = '',
+            _getCheckpoints = function(eColumnDay) {
+                return View.getAll(Selector.CHECKPOINT, eColumnDay);
             },
-            _buildTimeToLeave = function(missingTimeInMillis) {
-                if (missingTimeInMillis <= 0) {
+            _getDate = function(eColumnDay) {
+                return View.get(Selector.DATE, eColumnDay).value;
+            },
+            _buildTimeToLeave = function() {
+                if (data.week.missingTime.millis <= 0) {
                     return '';
                 }
-                if (missingTimeInMillis > _getNormalMinutesPerDayInMillis()) {
+                if (data.week.missingTime.millis > _getNormalMinutesPerDayInMillis()) {
                     return '';
                 }
 
                 var htmlHumanTimeToLeave = '';
                 if (_lastIn) {
-                    var timeToLeaveInMillis = _lastIn.getTime() + missingTimeInMillis;
+                    var timeToLeaveInMillis = _lastIn.getTime() + data.week.missingTime.millis;
                     if (!timeToLeaveInMillis || timeToLeaveInMillis < new Date().getTime()) {
                         return '';
                     }
@@ -116,19 +152,20 @@
                 }
                 return htmlHumanTimeToLeave;
             },
-            _renderStats = function(missingTimeInMillis, humanLaborTime, humanMissingTime, humanExtraTime) {
+            _renderStats = function() {
+
+                data.week.buildHumanTime();
+                data.week.buildHtmlTime();
+
                 var
                     htmlLastWeekModeOn = Settings.LAST_WEEK_MODE ? Snippet.HEADER_LAST_WEEK_MODE_ON : '',
-                    htmlHumanLaborTime = Util.textFormat(Snippet.HEADER_LABOR_TIME, [humanLaborTime]),
-                    htmlHumanMissingTime = Util.textFormat(Snippet.HEADER_MISSING_TIME, [humanMissingTime]),
-                    htmlHumanExtraTime = Util.textFormat(Snippet.HEADER_EXTRA_TIME, [humanExtraTime]),
-                    htmlHumanTimeToLeave = _buildTimeToLeave(missingTimeInMillis);
+                    htmlHumanTimeToLeave = _buildTimeToLeave(data.week.missingTime.millis);
 
                 var
                     args = [
                         htmlLastWeekModeOn,
-                        htmlHumanLaborTime,
-                        (missingTimeInMillis >= 0 ? htmlHumanMissingTime : htmlHumanExtraTime),
+                        data.week.laborTime.html,
+                        (data.week.missingTime.millis >= 0 ? data.week.missingTime.html : data.week.extraTime.html),
                         htmlHumanTimeToLeave
                     ],
                     html = Util.textFormat(Snippet.HEADER, args);
@@ -140,16 +177,10 @@
                     Settings.LAST_WEEK_MODE = 'DOING';
                 }
 
-                var
-                    missingTimeInMillis = _computeMissingTimeInMillis(),
-                    extraTimeInMillis = _computeExtraTimeInMillis(),
-                    humanLaborTime = Time.Millis.toHumanTime(_larborTimeInMillis),
-                    humanMissingTime = Time.Millis.toHumanTime(missingTimeInMillis > 0 ? missingTimeInMillis : 0),
-                    humanExtraTime = Time.Millis.toHumanTime(extraTimeInMillis > 0 ? extraTimeInMillis : 0);
-
+                data.week.buildTime();
 
                 if (Settings.LAST_WEEK_MODE !== 'DOING') {
-                    _renderStats(missingTimeInMillis, humanLaborTime, humanMissingTime, humanExtraTime);
+                    _renderStats();
                 }
             },
             _renderLaborTimePerShift = function(context, shift) {
@@ -161,7 +192,7 @@
                 filledSlotOut.parentNode.insertBefore(container, filledSlotOut.nextSibling);
                 return container;
             },
-            _renderLaborTime = function(eDay, millis) {
+            _renderLaborTimePerDay = function(eDay, millis) {
                 var humanMillis = Time.Millis.toHumanTime(millis);
                 eDay.innerHTML += Util.textFormat(Snippet.LABOR_TIME_PER_DAY, [humanMillis]);
             },
@@ -173,13 +204,13 @@
                     View.getAll(Selector.TIME_IN, eDay).forEach(function(eIn, index) {
                         var
                             timeIn = eIn.textContent, // 15:45
-                            enter = Time.toDate(_getDate(eDay) + " " + timeIn),
+                            enter = Time.toDate(_getDate(eDay) + " " + timeIn), // typeOf enter == Date
                             eOut = checkpoints[(index * 2) + 1];
 
                         if (eOut && !eOut.parentElement.classList.contains('LastSlot')) { // TODO
                             var
                                 timeOut = eOut.textContent, // 04:34
-                                exit = Time.toDate(_getDate(eDay) + " " + timeOut),
+                                exit = Time.toDate(_getDate(eDay) + " " + timeOut),  // typeOf exit == Date
                                 shift = Time.Millis.diff(enter, exit);
 
                             millis += shift;
@@ -200,8 +231,8 @@
                             }
                         }
                     });
-                    _renderLaborTime(eDay, millis);
-                    _larborTimeInMillis += millis;
+                    data.week.laborTime.millis += millis;
+                    _renderLaborTimePerDay(eDay, millis);
                 }
             },
             _selectDaysToAnalyze = function() {
@@ -216,7 +247,7 @@
                         _stringDay = _getDate(eDay) + " " + _fakeTime,
                         _dateDay = Time.toDate(_stringDay);
 
-                    if (_larborTimeInMillis === 0) { // first time
+                    if (data.week.laborTime.millis === 0) { // first time
                         if (_foundInitialWeekday || (_foundInitialWeekday = _dateDay.getDay() === Settings.INITIAL_WEEKDAY)) {
                             _selectedDays.push(eDay);
                         }
@@ -232,10 +263,6 @@
                 });
 
                 return _selectedDays;
-            },
-            _resetControls = function() {
-                _larborTimeInMillis = 0;
-                _lastIn = '';
             },
             _init = function() {
                 View.append('head', Snippet.STYLE);
