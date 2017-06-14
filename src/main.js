@@ -101,31 +101,31 @@
                     human: '',
                     html: ''
                 },
-                _computeMissingTimeInMillis = function() {
-                    return _getMaxHoursPerWeekInMillis() - data.week.laborTime.millis;
+                _computeMissingTimeInMillis: function() {
+                    return _getMaxHoursPerWeekInMillis() - this.laborTime.millis;
                 },
-                _computeExtraTimeInMillis = function() {
-                    return data.week.laborTime.millis - _getMaxHoursPerWeekInMillis();
+                _computeExtraTimeInMillis: function() {
+                    return this.laborTime.millis - _getMaxHoursPerWeekInMillis();
                 },
                 buildTime: function() {
-                    data.week.missingTime.millis = data.week._computeMissingTimeInMillis();
-                    data.week.extraTime.millis = data.week._computeExtraTimeInMillis();
+                    this.missingTime.millis = this._computeMissingTimeInMillis();
+                    this.extraTime.millis = this._computeExtraTimeInMillis();
                 },
                 buildHumanTime: function() {
-                    data.week.laborTime.human = Time.Millis.toHumanTime(data.week.laborTime.millis);
-                    data.week.missingTime.human = Time.Millis.toHumanTime(data.week.missingTime.millis > 0 ? data.week.missingTime.millis : 0);
-                    data.week.extraTime.human = Time.Millis.toHumanTime(data.week.extraTime.millis > 0 ? data.week.extraTime.millis : 0);
+                    this.laborTime.human = Time.Millis.toHumanTime(this.laborTime.millis);
+                    this.missingTime.human = Time.Millis.toHumanTime(this.missingTime.millis > 0 ? this.missingTime.millis : 0);
+                    this.extraTime.human = Time.Millis.toHumanTime(this.extraTime.millis > 0 ? this.extraTime.millis : 0);
                 },
                 buildHtmlTime: function() {
-                    data.week.laborTime.html = Util.textFormat(Snippet.HEADER_LABOR_TIME, [data.week.laborTime.human]);
-                    data.week.missingTime.html = Util.textFormat(Snippet.HEADER_MISSING_TIME, [data.week.missingTime.human]);
-                    data.week.extraTime.html = Util.textFormat(Snippet.HEADER_EXTRA_TIME, [data.week.extraTime.human]);
+                    this.laborTime.html = Util.textFormat(Snippet.HEADER_LABOR_TIME, [this.laborTime.human]);
+                    this.missingTime.html = Util.textFormat(Snippet.HEADER_MISSING_TIME, [this.missingTime.human]);
+                    this.extraTime.html = Util.textFormat(Snippet.HEADER_EXTRA_TIME, [this.extraTime.human]);
                 }
             }
         };
 
         var
-            _lastIn = '',
+            _lastInDate = '',
             _getCheckpoints = function(eColumnDay) {
                 return View.getAll(Selector.CHECKPOINT, eColumnDay);
             },
@@ -141,8 +141,8 @@
                 }
 
                 var htmlHumanTimeToLeave = '';
-                if (_lastIn) {
-                    var timeToLeaveInMillis = _lastIn.getTime() + data.week.missingTime.millis;
+                if (_lastInDate) {
+                    var timeToLeaveInMillis = _lastInDate.getTime() + data.week.missingTime.millis;
                     if (!timeToLeaveInMillis || timeToLeaveInMillis < new Date().getTime()) {
                         return '';
                     }
@@ -153,7 +153,6 @@
                 return htmlHumanTimeToLeave;
             },
             _renderStats = function() {
-
                 data.week.buildHumanTime();
                 data.week.buildHtmlTime();
 
@@ -200,32 +199,33 @@
                 var checkpoints = _getCheckpoints(eDay);
                 if (checkpoints.length) {
                     var millis = 0;
-
-                    View.getAll(Selector.TIME_IN, eDay).forEach(function(eIn, index) {
+                    View.getAll(Selector.TIME_IN, eDay).forEach(function(inElement, index) {
                         var
-                            timeIn = eIn.textContent, // 15:45
-                            enter = Time.toDate(_getDate(eDay) + " " + timeIn), // typeOf enter == Date
-                            eOut = checkpoints[(index * 2) + 1];
+                            inText = inElement.textContent, // 15:45
+                            inDate = Time.toDate(_getDate(eDay) + " " + inText), // typeOf inDate == Date
+                            outElement = checkpoints[(index * 2) + 1];
 
-                        if (eOut && !eOut.parentElement.classList.contains('LastSlot')) { // TODO
+                        if (outElement && !outElement.parentElement.classList.contains('LastSlot')) { // TODO
                             var
-                                timeOut = eOut.textContent, // 04:34
-                                exit = Time.toDate(_getDate(eDay) + " " + timeOut),  // typeOf exit == Date
-                                shift = Time.Millis.diff(enter, exit);
+                                outText = outElement.textContent, // 04:34
+                                outDate = Time.toDate(_getDate(eDay) + " " + outText),  // typeOf outDate == Date
+                                shiftInMillis = Time.Millis.diff(inDate, outDate);
 
-                            millis += shift;
+                            millis += shiftInMillis;
 
                             if (Settings.LAST_WEEK_MODE !== 'DOING') {
-                                _renderLaborTimePerShift(eOut, shift);
+                                _renderLaborTimePerShift(outElement, shiftInMillis);
                             }
                         } else {
-                            _lastIn = enter;
-                            var diffUntilNow = Time.Millis.diff(enter, new Date());
+                            _lastInDate = inDate;
+                            var diffUntilNow = Time.Millis.diff(inDate, new Date());
                             if (diffUntilNow < (_getMaxHoursPerDayInMillis())) {
+
                                 var
-                                    shift = millis + diffUntilNow,
-                                    element = _renderLaborTimePerShift(eIn, shift),
+                                    shiftInMillis = millis + diffUntilNow,
+                                    element = _renderLaborTimePerShift(inElement, shiftInMillis),
                                     span = element.querySelector('strong');
+
                                 element.style.color = 'darkgoldenrod';
                                 span.textContent = '~ ' + span.textContent;
                             }
@@ -261,7 +261,6 @@
                         }
                     }
                 });
-
                 return _selectedDays;
             },
             _init = function() {
