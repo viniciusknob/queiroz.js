@@ -25,9 +25,9 @@
             Settings = {
                 INITIAL_WEEKDAY: Time.Weekday.MONDAY,
                 LAST_WEEK_MODE: false, // false, ON, DOING, DONE
-                MAX_HOURS_PER_DAY: 6,
+                MAX_CONSECUTIVE_HOURS_PER_DAY: 6,
                 MAX_HOURS_PER_WEEK: 44,
-                NORMAL_MINUTES_PER_DAY: (8 * 60) + 48,
+                MAX_MINUTES_PER_DAY: (8 * 60) + 48,
                 TAMPERMONKEY_DELAY_MILLIS: 1000
             },
 
@@ -40,10 +40,11 @@
             },
 
             Snippet = {
-                HEADER: '<p class="qz-box qz-box-head qz-box-muted">{0}{1}{2}{3}</p>',
+                HEADER: '<p class="qz-box qz-box-head qz-box-muted">{0}{1}{2}{3}{4}</p>',
                 HEADER_LAST_WEEK_MODE_ON: '<strong class="qz-text-primary">SEMANA ANTERIOR</strong>  |  ',
                 HEADER_LABOR_TIME: 'Total: <strong class="qz-text-primary">{0}</strong>',
-                HEADER_MISSING_TIME: '  |  Faltam: <strong class="qz-text-primary">{0}</strong>',
+                HEADER_TODAY_MISSING_TIME: '  |  Faltam/Hoje: <strong class="qz-text-primary">{0}</strong>',
+                HEADER_WEEK_MISSING_TIME: '  |  Faltam/Semana: <strong class="qz-text-primary">{0}</strong>',
                 HEADER_EXTRA_TIME: '  |  Extra: <strong class="qz-text-primary">{0}</strong>',
                 HEADER_TIME_TO_LEAVE: '  |  Saída/Fim: <strong class="qz-text-primary">{0}</strong>',
                 LABOR_TIME_PER_DAY: '' +
@@ -76,30 +77,24 @@
             _getMaxHoursPerWeekInMillis = function() {
                 return Time.Hour.toMillis(Settings.MAX_HOURS_PER_WEEK);
             },
-            _getMaxHoursPerDayInMillis = function() {
-                return Time.Hour.toMillis(Settings.MAX_HOURS_PER_DAY);
+            _getMaxConsecutiveHoursPerDayInMillis = function() {
+                return Time.Hour.toMillis(Settings.MAX_CONSECUTIVE_HOURS_PER_DAY);
             },
-            _getNormalMinutesPerDayInMillis = function() {
-                return Time.Minute.toMillis(Settings.NORMAL_MINUTES_PER_DAY);
+            _getMaxMinutesPerDayInMillis = function() {
+                return Time.Minute.toMillis(Settings.MAX_MINUTES_PER_DAY);
             };
 
 
         var data = {
             week: {
                 laborTime: {
-                    millis: 0,
-                    human: '',
-                    html: ''
+                    millis: 0, human: '', html: ''
                 },
                 missingTime: {
-                    millis: 0,
-                    human: '',
-                    html: ''
+                    millis: 0, human: '', html: ''
                 },
                 extraTime: {
-                    millis: 0,
-                    human: '',
-                    html: ''
+                    millis: 0, human: '', html: ''
                 },
                 _computeMissingTimeInMillis: function() {
                     return _getMaxHoursPerWeekInMillis() - this.laborTime.millis;
@@ -118,8 +113,28 @@
                 },
                 buildHtmlTime: function() {
                     this.laborTime.html = Util.textFormat(Snippet.HEADER_LABOR_TIME, [this.laborTime.human]);
-                    this.missingTime.html = Util.textFormat(Snippet.HEADER_MISSING_TIME, [this.missingTime.human]);
+                    this.missingTime.html = Util.textFormat(Snippet.HEADER_WEEK_MISSING_TIME, [this.missingTime.human]);
                     this.extraTime.html = Util.textFormat(Snippet.HEADER_EXTRA_TIME, [this.extraTime.human]);
+                }
+            },
+            today: {
+                laborTime: {
+                    millis: 0
+                },
+                missingTime: {
+                    millis: 0, human: '', html: ''
+                },
+                _computeMissingTimeInMillis: function() {
+                    return _getMaxMinutesPerDayInMillis() - this.laborTime.millis;
+                },
+                buildTime: function() {
+                    this.missingTime.millis = this._computeMissingTimeInMillis();
+                },
+                buildHumanTime: function() {
+                    this.missingTime.human = Time.Millis.toHumanTime(this.missingTime.millis > 0 ? this.missingTime.millis : 0);
+                },
+                buildHtmlTime: function() {
+                    this.missingTime.html = Util.textFormat(Snippet.HEADER_TODAY_MISSING_TIME, [this.missingTime.human]);
                 }
             }
         };
@@ -136,7 +151,7 @@
                 if (data.week.missingTime.millis <= 0) {
                     return '';
                 }
-                if (data.week.missingTime.millis > _getNormalMinutesPerDayInMillis()) {
+                if (data.week.missingTime.millis > _getMaxMinutesPerDayInMillis()) {
                     return '';
                 }
 
@@ -155,6 +170,8 @@
             _renderStats = function() {
                 data.week.buildHumanTime();
                 data.week.buildHtmlTime();
+                data.today.buildHumanTime();
+                data.today.buildHtmlTime();
 
                 var
                     htmlLastWeekModeOn = Settings.LAST_WEEK_MODE ? Snippet.HEADER_LAST_WEEK_MODE_ON : '',
@@ -164,6 +181,7 @@
                     args = [
                         htmlLastWeekModeOn,
                         data.week.laborTime.html,
+                        data.today.missingTime.html,
                         (data.week.missingTime.millis >= 0 ? data.week.missingTime.html : data.week.extraTime.html),
                         htmlHumanTimeToLeave
                     ],
@@ -177,6 +195,7 @@
                 }
 
                 data.week.buildTime();
+                data.today.buildTime();
 
                 if (Settings.LAST_WEEK_MODE !== 'DOING') {
                     _renderStats();
@@ -216,10 +235,13 @@
                             if (Settings.LAST_WEEK_MODE !== 'DOING') {
                                 _renderLaborTimePerShift(outElement, shiftInMillis);
                             }
+                            if (Time.isToday(inDate)) {
+                                data.today.laborTime.millis += shiftInMillis;
+                            }
                         } else {
                             _lastInDate = inDate;
                             var diffUntilNow = Time.Millis.diff(inDate, new Date());
-                            if (diffUntilNow < (_getMaxHoursPerDayInMillis())) {
+                            if (diffUntilNow < (_getMaxConsecutiveHoursPerDayInMillis())) {
 
                                 var
                                     shiftInMillis = millis + diffUntilNow,

@@ -79,15 +79,21 @@
             Minute: _Minute,
             Millis: _Millis,
             Weekday: Weekday,
+            dateToHumanTime: function(date) {
+                return _normalize(date.getHours()) + ':' + _normalize(date.getMinutes());
+            },
+            isToday: function(date) {
+                var today = new Date();
+                return date.getDate() === today.getDate() &&
+                       date.getMonth() === today.getMonth() &&
+                       date.getFullYear() === today.getFullYear();
+            },
             toDate: function(stringDate) { // 14_05_2017 16:08
                 var
                     dateTime = stringDate.split(' '),
                     date = dateTime[0].split('_'),
                     time = dateTime[1].split(':');
                 return new Date(date[2], date[1] - 1, date[0], time[0], time[1]);
-            },
-            dateToHumanTime: function(date) {
-                return _normalize(date.getHours()) + ':' + _normalize(date.getMinutes());
             }
         };
     }();
