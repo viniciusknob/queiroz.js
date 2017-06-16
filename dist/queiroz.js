@@ -204,7 +204,7 @@
 
         var
             _NAME = 'Queiroz.js',
-            VERSION = '2.7.0',
+            VERSION = '2.7.1',
 
             Settings = {
                 INITIAL_WEEKDAY: Time.Weekday.MONDAY,
@@ -224,13 +224,13 @@
             },
 
             Snippet = {
-                HEADER: '<p class="qz-box qz-box-head qz-box-muted">{0}{1}{2}{3}{4}</p>',
-                HEADER_LAST_WEEK_MODE_ON: '<strong class="qz-text-primary">SEMANA ANTERIOR</strong>  |  ',
-                HEADER_LABOR_TIME: 'Total: <strong class="qz-text-primary">{0}</strong>',
-                HEADER_TODAY_MISSING_TIME: '  |  Faltam/Hoje: <strong class="qz-text-primary">{0}</strong>',
-                HEADER_WEEK_MISSING_TIME: '  |  Faltam/Semana: <strong class="qz-text-primary">{0}</strong>',
-                HEADER_EXTRA_TIME: '  |  Extra: <strong class="qz-text-primary">{0}</strong>',
-                HEADER_TIME_TO_LEAVE: '  |  Saída/Fim: <strong class="qz-text-primary">{0}</strong>',
+                HEADER: '<p class="qz-box-head">{0}{1}{2}{3}{4}</p>',
+                HEADER_LAST_WEEK_MODE_ON: '<span class="qz-box qz-box-muted"><strong class="qz-text-primary">SEMANA ANTERIOR</strong></span>',
+                HEADER_LABOR_TIME: '<span class="qz-box qz-box-muted">Total: <strong class="qz-text-primary">{0}</strong></span>',
+                HEADER_TODAY_MISSING_TIME: '<span class="qz-box qz-box-muted">Faltam/Hoje: <strong class="qz-text-primary">{0}</strong></span>',
+                HEADER_WEEK_MISSING_TIME: '<span class="qz-box qz-box-muted">Faltam/Semana: <strong class="qz-text-primary">{0}</strong></span>',
+                HEADER_EXTRA_TIME: '<span class="qz-box qz-box-muted">Extra: <strong class="qz-text-primary">{0}</strong></span>',
+                HEADER_TIME_TO_LEAVE: '<span class="qz-box qz-box-muted">Saída/Fim: <strong class="qz-text-primary">{0}</strong></span>',
                 LABOR_TIME_PER_DAY: '' +
                     '<div class="qz-box qz-box-muted">' +
                         '<strong class="qz-box-content qz-text-primary">{0}</strong>' +
@@ -244,12 +244,11 @@
                         // reset
                         'strong{font-weight:bold;}' +
                         // override
-                        '.ContentTable {margin-top:inherit;}' +
                         '.emptySlot,.FilledSlot,.LastSlot {height:inherit;padding:5px;}' +
                         // queiroz.js classes
                         '.qz-text-primary {color:brown;}' +
-                        '.qz-box {padding:7px;margin:5px 1px;}' +
-                        '.qz-box-head {float:right;padding:10px;}' +
+                        '.qz-box {padding:7px;margin:5px 1px;border:darkgrey 1px solid;}' +
+                        '.qz-box-head {float:right;padding:10px 0;}' +
                         '.qz-box-muted {background-color:lightgray;}' +
                         '.qz-box .qz-box-content {margin-left:6px; vertical-align:middle;}' +
                     '</style>'
