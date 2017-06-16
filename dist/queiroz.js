@@ -204,7 +204,7 @@
 
         var
             _NAME = 'Queiroz.js',
-            VERSION = '2.7.1',
+            VERSION = '2.7.2',
 
             Settings = {
                 INITIAL_WEEKDAY: Time.Weekday.MONDAY,
@@ -224,7 +224,7 @@
             },
 
             Snippet = {
-                HEADER: '<p class="qz-box-head">{0}{1}{2}{3}{4}</p>',
+                HEADER: '<p class="qz-box-head">{0}</p>',
                 HEADER_LAST_WEEK_MODE_ON: '<span class="qz-box qz-box-muted"><strong class="qz-text-primary">SEMANA ANTERIOR</strong></span>',
                 HEADER_LABOR_TIME: '<span class="qz-box qz-box-muted">Total: <strong class="qz-text-primary">{0}</strong></span>',
                 HEADER_TODAY_MISSING_TIME: '<span class="qz-box qz-box-muted">Faltam/Hoje: <strong class="qz-text-primary">{0}</strong></span>',
@@ -245,12 +245,13 @@
                         'strong{font-weight:bold;}' +
                         // override
                         '.emptySlot,.FilledSlot,.LastSlot {height:inherit;padding:5px;}' +
+                        '.FilledSlot span {margin:inherit!important;}' +
                         // queiroz.js classes
                         '.qz-text-primary {color:brown;}' +
                         '.qz-box {padding:7px;margin:5px 1px;border:darkgrey 1px solid;}' +
                         '.qz-box-head {float:right;padding:10px 0;}' +
                         '.qz-box-muted {background-color:lightgray;}' +
-                        '.qz-box .qz-box-content {margin-left:6px; vertical-align:middle;}' +
+                        '.qz-box .qz-box-content {vertical-align:middle;}' +
                     '</style>'
             };
 
@@ -350,6 +351,12 @@
                 }
                 return htmlHumanTimeToLeave;
             },
+            _getMissingOrExtraTime = function() {
+                return data.week.missingTime.millis >= 0 ? data.week.missingTime.html : data.week.extraTime.html;
+            },
+            _buildHtmlHead = function(args) {
+                return Util.textFormat(Snippet.HEADER, [args.join('')]);
+            },
             _renderStats = function() {
                 data.week.buildHumanTime();
                 data.week.buildHtmlTime();
@@ -358,17 +365,18 @@
 
                 var
                     htmlLastWeekModeOn = Settings.LAST_WEEK_MODE ? Snippet.HEADER_LAST_WEEK_MODE_ON : '',
-                    htmlHumanTimeToLeave = _buildTimeToLeave(data.week.missingTime.millis);
+                    htmlMissingOrExtraTime = _getMissingOrExtraTime(),
+                    htmlHumanTimeToLeave = _buildTimeToLeave();
 
                 var
                     args = [
                         htmlLastWeekModeOn,
                         data.week.laborTime.html,
                         data.today.missingTime.html,
-                        (data.week.missingTime.millis >= 0 ? data.week.missingTime.html : data.week.extraTime.html),
+                        htmlMissingOrExtraTime,
                         htmlHumanTimeToLeave
                     ],
-                    html = Util.textFormat(Snippet.HEADER, args);
+                    html = _buildHtmlHead(args);
 
                 View.append(Selector.HEADER, html);
             },
