@@ -204,7 +204,7 @@
 
         var
             _NAME = 'Queiroz.js',
-            VERSION = '2.7.2',
+            VERSION = '2.7.3',
 
             Settings = {
                 INITIAL_WEEKDAY: Time.Weekday.MONDAY,
@@ -233,6 +233,7 @@
                 HEADER_TIME_TO_LEAVE: '<span class="qz-box qz-box-muted">Saída/Fim: <strong class="qz-text-primary">{0}</strong></span>',
                 LABOR_TIME_PER_DAY: '' +
                     '<div class="qz-box qz-box-muted">' +
+                        '<div class="help-text">Total</div>' +
                         '<strong class="qz-box-content qz-text-primary">{0}</strong>' +
                     '</div>',
                 LABOR_TIME_PER_SHIFT: '' +
@@ -244,6 +245,7 @@
                         // reset
                         'strong{font-weight:bold;}' +
                         // override
+                        '.ContentTable {margin-top:inherit;}' +
                         '.emptySlot,.FilledSlot,.LastSlot {height:inherit;padding:5px;}' +
                         '.FilledSlot span {margin:inherit!important;}' +
                         // queiroz.js classes
@@ -252,6 +254,7 @@
                         '.qz-box-head {float:right;padding:10px 0;}' +
                         '.qz-box-muted {background-color:lightgray;}' +
                         '.qz-box .qz-box-content {vertical-align:middle;}' +
+                        '.help-text {font-size:10px;}' +
                     '</style>'
             };
 
