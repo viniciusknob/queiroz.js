@@ -8,7 +8,7 @@ var
 
 var
     Settings = {
-        VERSION: '2.7.3',
+        VERSION: '2.7.4',
         versionRegex: '(?:\\d+\\.){2}\\d+(?:-beta\\.\\d+)?',
         env: {
             DEV: {
@@ -107,6 +107,7 @@ gulp.task('concat-min', function() {
 
 gulp.task('concat', function() {
     return gulp.src([
+            'src/snippet.js',
             'src/view.js',
             'src/time.js',
             'src/util.js',

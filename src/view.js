@@ -26,7 +26,12 @@
                         element = _this.get(selector),
                         container = document.createElement('div');
 
-                    container.innerHTML = html;
+                    if (typeof html === 'string') {
+                        container.innerHTML = html;
+                    } else {
+                        container.appendChild(html);
+                    }
+
                     element.appendChild(container);
                 });
             },

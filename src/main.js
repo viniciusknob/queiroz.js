@@ -5,7 +5,7 @@
  * https://github.com/viniciusknob/queiroz.js
  */
 
-(function(window, View, Time, Util) {
+(function(window, View, Time, Util, Snippet) {
 
     /* Constants */
 
@@ -25,7 +25,7 @@
             Settings = {
                 INITIAL_WEEKDAY: Time.Weekday.MONDAY,
                 LAST_WEEK_MODE: false, // false, ON, DOING, DONE
-                MAX_CONSECUTIVE_HOURS_PER_DAY: 6,
+                MAX_CONSECUTIVE_HOURS_PER_DAY: 48, //6
                 MAX_HOURS_PER_WEEK: 44,
                 MAX_MINUTES_PER_DAY: (8 * 60) + 48,
                 TAMPERMONKEY_DELAY_MILLIS: 1000
@@ -37,41 +37,6 @@
                 DATE: '[id^=hiddenDiaApont]',
                 HEADER: '#SemanaApontamentos div',
                 TIME_IN: '.TimeIN,.TimeINVisualizacao'
-            },
-
-            Snippet = {
-                HEADER: '<p class="qz-box-head">{0}</p>',
-                HEADER_LAST_WEEK_MODE_ON: '<span class="qz-box qz-box-muted"><strong class="qz-text-primary">SEMANA ANTERIOR</strong></span>',
-                HEADER_LABOR_TIME: '<span class="qz-box qz-box-muted">Total: <strong class="qz-text-primary">{0}</strong></span>',
-                HEADER_TODAY_MISSING_TIME: '<span class="qz-box qz-box-muted">Faltam/Hoje: <strong class="qz-text-primary">{0}</strong></span>',
-                HEADER_WEEK_MISSING_TIME: '<span class="qz-box qz-box-muted">Faltam/Semana: <strong class="qz-text-primary">{0}</strong></span>',
-                HEADER_EXTRA_TIME: '<span class="qz-box qz-box-muted">Extra: <strong class="qz-text-primary">{0}</strong></span>',
-                HEADER_TIME_TO_LEAVE: '<span class="qz-box qz-box-muted">Saída/Fim: <strong class="qz-text-primary">{0}</strong></span>',
-                LABOR_TIME_PER_DAY: '' +
-                    '<div class="qz-box qz-box-muted">' +
-                        '<div class="help-text">Total</div>' +
-                        '<strong class="qz-box-content qz-text-primary">{0}</strong>' +
-                    '</div>',
-                LABOR_TIME_PER_SHIFT: '' +
-                    '<div class="qz-box qz-box-muted">' +
-                        '<strong class="qz-box-content">{0}</strong>' +
-                    '</div>',
-                STYLE: ''+
-                    '<style>' +
-                        // reset
-                        'strong{font-weight:bold;}' +
-                        // override
-                        '.ContentTable {margin-top:inherit;}' +
-                        '.emptySlot,.FilledSlot,.LastSlot {height:inherit;padding:5px;}' +
-                        '.FilledSlot span {margin:inherit!important;}' +
-                        // queiroz.js classes
-                        '.qz-text-primary {color:brown;}' +
-                        '.qz-box {padding:7px;margin:5px 1px;border:darkgrey 1px solid;}' +
-                        '.qz-box-head {float:right;padding:10px 0;}' +
-                        '.qz-box-muted {background-color:lightgray;}' +
-                        '.qz-box .qz-box-content {vertical-align:middle;}' +
-                        '.help-text {font-size:10px;}' +
-                    '</style>'
             };
 
         /* PRIVATE */
@@ -115,9 +80,9 @@
                     this.extraTime.human = Time.Millis.toHumanTime(this.extraTime.millis > 0 ? this.extraTime.millis : 0);
                 },
                 buildHtmlTime: function() {
-                    this.laborTime.html = Util.textFormat(Snippet.HEADER_LABOR_TIME, [this.laborTime.human]);
-                    this.missingTime.html = Util.textFormat(Snippet.HEADER_WEEK_MISSING_TIME, [this.missingTime.human]);
-                    this.extraTime.html = Util.textFormat(Snippet.HEADER_EXTRA_TIME, [this.extraTime.human]);
+                    this.laborTime.html = Snippet.headerLaborTime(this.laborTime.human);
+                    this.missingTime.html = Snippet.headerWeekMissingTime(this.missingTime.human);
+                    this.extraTime.html = Snippet.headerExtraTime(this.extraTime.human);
                 }
             },
             today: {
@@ -137,7 +102,7 @@
                     this.missingTime.human = Time.Millis.toHumanTime(this.missingTime.millis > 0 ? this.missingTime.millis : 0);
                 },
                 buildHtmlTime: function() {
-                    this.missingTime.html = Util.textFormat(Snippet.HEADER_TODAY_MISSING_TIME, [this.missingTime.human]);
+                    this.missingTime.html = Snippet.headerTodayMissingTime(this.missingTime.human);
                 }
             }
         };
@@ -166,15 +131,21 @@
                     }
 
                     var humanTimeToLeave = Time.dateToHumanTime(new Date(timeToLeaveInMillis));
-                    htmlHumanTimeToLeave = Util.textFormat(Snippet.HEADER_TIME_TO_LEAVE, [humanTimeToLeave]);
+                    htmlHumanTimeToLeave = Snippet.headerTimeToLeave(humanTimeToLeave);
                 }
                 return htmlHumanTimeToLeave;
             },
             _getMissingOrExtraTime = function() {
                 return data.week.missingTime.millis >= 0 ? data.week.missingTime.html : data.week.extraTime.html;
             },
-            _buildHtmlHead = function(args) {
-                return Util.textFormat(Snippet.HEADER, [args.join('')]);
+            _buildHtmlHeader = function(args) {
+                var header = Snippet.header();
+                args.forEach(function(element) {
+                    if (element) {
+                        header.appendChild(element);
+                    }
+                })
+                return header;
             },
             _renderStats = function() {
                 data.week.buildHumanTime();
@@ -183,7 +154,7 @@
                 data.today.buildHtmlTime();
 
                 var
-                    htmlLastWeekModeOn = Settings.LAST_WEEK_MODE ? Snippet.HEADER_LAST_WEEK_MODE_ON : '',
+                    htmlLastWeekModeOn = Settings.LAST_WEEK_MODE ? Snippet.headerLastWeekModeOn() : '',
                     htmlMissingOrExtraTime = _getMissingOrExtraTime(),
                     htmlHumanTimeToLeave = _buildTimeToLeave();
 
@@ -195,7 +166,7 @@
                         htmlMissingOrExtraTime,
                         htmlHumanTimeToLeave
                     ],
-                    html = _buildHtmlHead(args);
+                    html = _buildHtmlHeader(args);
 
                 View.append(Selector.HEADER, html);
             },
@@ -211,18 +182,18 @@
                     _renderStats();
                 }
             },
-            _renderLaborTimePerShift = function(context, shift) {
+            _renderLaborTimePerShift = function(context, shift, finished) {
                 var humanMillis = Time.Millis.toHumanTime(shift);
-                var html = Util.textFormat(Snippet.LABOR_TIME_PER_SHIFT, [humanMillis]);
+                var html = Snippet.laborTimePerShift(humanMillis, finished);
                 var container = document.createElement('div');
-                container.innerHTML = html;
+                container.appendChild(html);
                 var filledSlotOut = context.parentNode;
-                filledSlotOut.parentNode.insertBefore(container, filledSlotOut.nextSibling);
+                filledSlotOut.parentNode.insertBefore(html, filledSlotOut.nextSibling);
                 return container;
             },
             _renderLaborTimePerDay = function(eDay, millis) {
                 var humanMillis = Time.Millis.toHumanTime(millis);
-                eDay.innerHTML += Util.textFormat(Snippet.LABOR_TIME_PER_DAY, [humanMillis]);
+                eDay.appendChild(Snippet.laborTimePerDay(humanMillis));
             },
             _analyzeDay = function(eDay) {
                 var checkpoints = _getCheckpoints(eDay);
@@ -243,7 +214,7 @@
                             millis += shiftInMillis;
 
                             if (Settings.LAST_WEEK_MODE !== 'DOING') {
-                                _renderLaborTimePerShift(outElement, shiftInMillis);
+                                _renderLaborTimePerShift(outElement, shiftInMillis, true);
                             }
                             if (Time.isToday(inDate)) {
                                 data.today.laborTime.millis += shiftInMillis;
@@ -252,14 +223,8 @@
                             _lastInDate = inDate;
                             var diffUntilNow = Time.Millis.diff(inDate, new Date());
                             if (diffUntilNow < (_getMaxConsecutiveHoursPerDayInMillis())) {
-
-                                var
-                                    shiftInMillis = millis + diffUntilNow,
-                                    element = _renderLaborTimePerShift(inElement, shiftInMillis),
-                                    span = element.querySelector('strong');
-
-                                element.style.color = 'darkgoldenrod';
-                                span.textContent = '~ ' + span.textContent;
+                                var shiftInMillis = millis + diffUntilNow;
+                                _renderLaborTimePerShift(inElement, shiftInMillis, false);
                             }
                         }
                     });
@@ -339,4 +304,4 @@
 
     window[NAME] = Queiroz;
 
-})(window, view, time, util);
+})(window, view, time, util, snippet);
