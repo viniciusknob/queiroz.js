@@ -29,6 +29,7 @@
                 '.FilledSlot span {margin:inherit!important;}' +
                 // queiroz.js classes
                 '.qz-text-primary {color:brown;}' +
+                '.qz-text-secondary {color:darkgoldenrod;}' +
                 '.qz-box {padding:5px 10px;margin:5px 1px;border:darkgrey 1px solid;}' +
                 '.qz-box-head {float:right;padding:10px 0;}' +
                 '.qz-box-muted {background-color:lightgray;}' +
@@ -84,8 +85,8 @@
             headerExtraTime: function(extraTime) {
                 return _buildBoxHeader('Extra: ', extraTime);
             },
-            headerTimeToLeave: function(timeToLeave) {
-                return _buildBoxHeader('Saída/Fim: ', timeToLeave);
+            headerWeekTimeToLeave: function(timeToLeave) {
+                return _buildBoxHeader('Saída: ', timeToLeave);
             },
             laborTimePerDay: function(laborTime) {
                 var helpText = _buildTag(TagName.DIV, 'help-text', 'Efetuado');
@@ -101,8 +102,16 @@
                 if (!finished) {
                     var helpText = _buildTag(TagName.DIV, 'help-text', 'Trabalhando...');
                     div.appendChild(helpText);
-                    time.style.color = 'darkgoldenrod';
+                    time.classList.add('qz-text-secondary');
                 }
+                div.appendChild(time);
+                return div;
+            },
+            todayTimeToLeave: function(timeToLeave) {
+                var helpText = _buildTag(TagName.DIV, 'help-text', 'Saída/Fim');
+                var time = _buildTag(TagName.STRONG, 'qz-box-content qz-text-primary', timeToLeave);
+                var div = _buildTag(TagName.DIV, 'qz-box qz-box-muted');
+                div.appendChild(helpText);
                 div.appendChild(time);
                 return div;
             }

@@ -29,6 +29,7 @@
                 '.FilledSlot span {margin:inherit!important;}' +
                 // queiroz.js classes
                 '.qz-text-primary {color:brown;}' +
+                '.qz-text-secondary {color:darkgoldenrod;}' +
                 '.qz-box {padding:5px 10px;margin:5px 1px;border:darkgrey 1px solid;}' +
                 '.qz-box-head {float:right;padding:10px 0;}' +
                 '.qz-box-muted {background-color:lightgray;}' +
@@ -84,8 +85,8 @@
             headerExtraTime: function(extraTime) {
                 return _buildBoxHeader('Extra: ', extraTime);
             },
-            headerTimeToLeave: function(timeToLeave) {
-                return _buildBoxHeader('Saída/Fim: ', timeToLeave);
+            headerWeekTimeToLeave: function(timeToLeave) {
+                return _buildBoxHeader('Saída: ', timeToLeave);
             },
             laborTimePerDay: function(laborTime) {
                 var helpText = _buildTag(TagName.DIV, 'help-text', 'Efetuado');
@@ -101,8 +102,16 @@
                 if (!finished) {
                     var helpText = _buildTag(TagName.DIV, 'help-text', 'Trabalhando...');
                     div.appendChild(helpText);
-                    time.style.color = 'darkgoldenrod';
+                    time.classList.add('qz-text-secondary');
                 }
+                div.appendChild(time);
+                return div;
+            },
+            todayTimeToLeave: function(timeToLeave) {
+                var helpText = _buildTag(TagName.DIV, 'help-text', 'Saída/Fim');
+                var time = _buildTag(TagName.STRONG, 'qz-box-content qz-text-primary', timeToLeave);
+                var div = _buildTag(TagName.DIV, 'qz-box qz-box-muted');
+                div.appendChild(helpText);
                 div.appendChild(time);
                 return div;
             }
@@ -323,12 +332,12 @@
 
         var
             _NAME = 'Queiroz.js',
-            VERSION = '2.7.5',
+            VERSION = '2.7.6',
 
             Settings = {
                 INITIAL_WEEKDAY: Time.Weekday.MONDAY,
                 LAST_WEEK_MODE: false, // false, ON, DOING, DONE
-                MAX_CONSECUTIVE_HOURS_PER_DAY: 48, //6
+                MAX_CONSECUTIVE_HOURS_PER_DAY: 6,
                 MAX_HOURS_PER_WEEK: 44,
                 MAX_MINUTES_PER_DAY: (8 * 60) + 48,
                 TAMPERMONKEY_DELAY_MILLIS: 1000
@@ -434,7 +443,7 @@
                     }
 
                     var humanTimeToLeave = Time.dateToHumanTime(new Date(timeToLeaveInMillis));
-                    htmlHumanTimeToLeave = Snippet.headerTimeToLeave(humanTimeToLeave);
+                    htmlHumanTimeToLeave = Snippet.headerWeekTimeToLeave(humanTimeToLeave);
                 }
                 return htmlHumanTimeToLeave;
             },
@@ -447,7 +456,7 @@
                     if (element) {
                         header.appendChild(element);
                     }
-                })
+                });
                 return header;
             },
             _renderStats = function() {
@@ -492,11 +501,17 @@
                 container.appendChild(html);
                 var filledSlotOut = context.parentNode;
                 filledSlotOut.parentNode.insertBefore(html, filledSlotOut.nextSibling);
-                return container;
             },
             _renderLaborTimePerDay = function(eDay, millis) {
                 var humanMillis = Time.Millis.toHumanTime(millis);
                 eDay.appendChild(Snippet.laborTimePerDay(humanMillis));
+            },
+            _renderTodayTimeToLeave = function(context, inputMillis) {
+                var timeToLeaveInMillis = inputMillis + (_getMaxMinutesPerDayInMillis() - data.today.laborTime.millis);
+                var humanTimeToLeave = Time.dateToHumanTime(new Date(timeToLeaveInMillis));
+                var html = Snippet.todayTimeToLeave(humanTimeToLeave);
+                var filledSlotOut = context.parentNode;
+                filledSlotOut.parentNode.insertBefore(html, filledSlotOut.nextSibling);
             },
             _analyzeDay = function(eDay) {
                 var checkpoints = _getCheckpoints(eDay);
@@ -524,10 +539,13 @@
                             }
                         } else {
                             _lastInDate = inDate;
+                            if (Time.isToday(inDate)) {
+                                _renderTodayTimeToLeave(inElement, inDate.getTime());
+                            }
                             var diffUntilNow = Time.Millis.diff(inDate, new Date());
                             if (diffUntilNow < (_getMaxConsecutiveHoursPerDayInMillis())) {
-                                var shiftInMillis = millis + diffUntilNow;
-                                _renderLaborTimePerShift(inElement, shiftInMillis, false);
+                                var shiftInMillisUntilNow = millis + diffUntilNow;
+                                _renderLaborTimePerShift(inElement, shiftInMillisUntilNow, false);
                             }
                         }
                     });
