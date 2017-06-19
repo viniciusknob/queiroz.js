@@ -1,0 +1,44 @@
+/* reset */
+strong {
+    font-weight: bold
+}
+
+/* override */
+.ContentTable {
+    margin-top: inherit;
+}
+.emptySlot,
+.FilledSlot,
+.LastSlot {
+    height: inherit;
+    padding: 5px;
+}
+.FilledSlot span {
+    margin: inherit !important;
+}
+
+/* Queiroz.js */
+.qz-text-primary {
+    color: brown;
+}
+.qz-text-secondary {
+    color: darkgoldenrod;
+}
+.qz-box {
+    padding: 5px 10px;
+    margin: 5px 1px;
+    border: darkgrey 1px solid;
+}
+.qz-box-head {
+    float: right;
+    padding: 10px 0;
+}
+.qz-box-muted {
+    background-color: lightgray;
+}
+.qz-box .qz-box-content {
+    vertical-align: middle;
+}
+.qz-help-text {
+    font-size: 10px;
+}

@@ -9,7 +9,7 @@
 
     /* Constants */
 
-    var NAME = 'Queiroz';
+    var NAME = 'QueirozJS';
 
 
     /* Module Definition */
@@ -28,7 +28,7 @@
                 MAX_CONSECUTIVE_HOURS_PER_DAY: 6,
                 MAX_HOURS_PER_WEEK: 44,
                 MAX_MINUTES_PER_DAY: (8 * 60) + 48,
-                TAMPERMONKEY_DELAY_MILLIS: 1000
+                USERSCRIPT_DELAY_MILLIS: 1000
             },
 
             Selector = {
@@ -88,21 +88,6 @@
             today: {
                 laborTime: {
                     millis: 0
-                },
-                missingTime: {
-                    millis: 0, human: '', html: ''
-                },
-                _computeMissingTimeInMillis: function() {
-                    return _getMaxMinutesPerDayInMillis() - this.laborTime.millis;
-                },
-                buildTime: function() {
-                    this.missingTime.millis = this._computeMissingTimeInMillis();
-                },
-                buildHumanTime: function() {
-                    this.missingTime.human = Time.Millis.toHumanTime(this.missingTime.millis > 0 ? this.missingTime.millis : 0);
-                },
-                buildHtmlTime: function() {
-                    this.missingTime.html = Snippet.headerTodayMissingTime(this.missingTime.human);
                 }
             }
         };
@@ -150,8 +135,6 @@
             _renderStats = function() {
                 data.week.buildHumanTime();
                 data.week.buildHtmlTime();
-                data.today.buildHumanTime();
-                data.today.buildHtmlTime();
 
                 var
                     htmlLastWeekModeOn = Settings.LAST_WEEK_MODE ? Snippet.headerLastWeekModeOn() : '',
@@ -162,7 +145,6 @@
                     args = [
                         htmlLastWeekModeOn,
                         data.week.laborTime.html,
-                        data.today.missingTime.html,
                         htmlMissingOrExtraTime,
                         htmlHumanTimeToLeave
                     ],
@@ -176,13 +158,13 @@
                 }
 
                 data.week.buildTime();
-                data.today.buildTime();
 
                 if (Settings.LAST_WEEK_MODE !== 'DOING') {
                     _renderStats();
                 }
             },
             _renderLaborTimePerShift = function(context, shift, finished) {
+                if (shift < 0) shift = 0; // normalize
                 var humanMillis = Time.Millis.toHumanTime(shift);
                 var html = Snippet.laborTimePerShift(humanMillis, finished);
                 var container = document.createElement('div');
@@ -195,7 +177,8 @@
                 eDay.appendChild(Snippet.laborTimePerDay(humanMillis));
             },
             _renderTodayTimeToLeave = function(context, inputMillis) {
-                var timeToLeaveInMillis = inputMillis + (_getMaxMinutesPerDayInMillis() - data.today.laborTime.millis);
+                var missingTime = _getMaxMinutesPerDayInMillis() - data.today.laborTime.millis;
+                var timeToLeaveInMillis = inputMillis + (missingTime < 0 ? 0 : missingTime);
                 var humanTimeToLeave = Time.dateToHumanTime(new Date(timeToLeaveInMillis));
                 var html = Snippet.todayTimeToLeave(humanTimeToLeave);
                 var filledSlotOut = context.parentNode;
@@ -237,8 +220,10 @@
                             }
                         }
                     });
-                    data.week.laborTime.millis += millis;
-                    _renderLaborTimePerDay(eDay, millis);
+                    if (millis > 0) {
+                        data.week.laborTime.millis += millis;
+                        _renderLaborTimePerDay(eDay, millis);
+                    }
                 }
             },
             _selectDaysToAnalyze = function() {
@@ -286,7 +271,7 @@
                         clearInterval(interval);
                         _init();
                     }
-                }, Settings.TAMPERMONKEY_DELAY_MILLIS);
+                }, Settings.USERSCRIPT_DELAY_MILLIS);
             };
 
         /* PUBLIC */

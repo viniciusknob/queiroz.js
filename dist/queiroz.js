@@ -17,25 +17,7 @@
             P: 'p',
             SPAN: 'span',
             STRONG: 'strong'
-        },
-
-        STYLE = ''+
-            '<style>' +
-                // reset
-                'strong{font-weight:bold;}' +
-                // override
-                '.ContentTable {margin-top:inherit;}' +
-                '.emptySlot,.FilledSlot,.LastSlot {height:inherit;padding:5px;}' +
-                '.FilledSlot span {margin:inherit!important;}' +
-                // queiroz.js classes
-                '.qz-text-primary {color:brown;}' +
-                '.qz-text-secondary {color:darkgoldenrod;}' +
-                '.qz-box {padding:5px 10px;margin:5px 1px;border:darkgrey 1px solid;}' +
-                '.qz-box-head {float:right;padding:10px 0;}' +
-                '.qz-box-muted {background-color:lightgray;}' +
-                '.qz-box .qz-box-content {vertical-align:middle;}' +
-                '.help-text {font-size:10px;}' +
-            '</style>';
+        };
 
 
     /* Module Definition */
@@ -66,7 +48,7 @@
         /* PUBLIC */
 
         return {
-            STYLE: STYLE,
+            STYLE: '<style>strong{font-weight:700}.ContentTable{margin-top:inherit}.FilledSlot,.LastSlot,.emptySlot{height:inherit;padding:5px}.FilledSlot span{margin:inherit!important}.qz-text-primary{color:brown}.qz-text-secondary{color:#b8860b}.qz-box{padding:5px 10px;margin:5px 1px;border:#a9a9a9 1px solid}.qz-box-head{float:right;padding:10px 0}.qz-box-muted{background-color:#d3d3d3}.qz-box .qz-box-content{vertical-align:middle}.qz-help-text{font-size:10px}</style>',
             header: function() {
                 return _buildTag(TagName.P, 'qz-box-head');
             },
@@ -76,11 +58,8 @@
             headerLaborTime: function(laborTime) {
                 return _buildBoxHeader('Total: ', laborTime);
             },
-            headerTodayMissingTime: function(missingTime) {
-                return _buildBoxHeader('Faltam/Hoje: ', missingTime);
-            },
             headerWeekMissingTime: function(missingTime) {
-                return _buildBoxHeader('Faltam/Semana: ', missingTime);
+                return _buildBoxHeader('Faltam: ', missingTime);
             },
             headerExtraTime: function(extraTime) {
                 return _buildBoxHeader('Extra: ', extraTime);
@@ -89,7 +68,7 @@
                 return _buildBoxHeader('Saída: ', timeToLeave);
             },
             laborTimePerDay: function(laborTime) {
-                var helpText = _buildTag(TagName.DIV, 'help-text', 'Efetuado');
+                var helpText = _buildTag(TagName.DIV, 'qz-help-text', 'Efetuado');
                 var time = _buildTag(TagName.STRONG, 'qz-box-content qz-text-primary', laborTime);
                 var div = _buildTag(TagName.DIV, 'qz-box qz-box-muted');
                 div.appendChild(helpText);
@@ -100,7 +79,7 @@
                 var div = _buildTag(TagName.DIV, 'qz-box qz-box-muted');
                 var time = _buildTag(TagName.STRONG, 'qz-box-content', laborTime);
                 if (!finished) {
-                    var helpText = _buildTag(TagName.DIV, 'help-text', 'Trabalhando...');
+                    var helpText = _buildTag(TagName.DIV, 'qz-help-text', 'Trabalhando...');
                     div.appendChild(helpText);
                     time.classList.add('qz-text-secondary');
                 }
@@ -108,7 +87,7 @@
                 return div;
             },
             todayTimeToLeave: function(timeToLeave) {
-                var helpText = _buildTag(TagName.DIV, 'help-text', 'Saída/Fim');
+                var helpText = _buildTag(TagName.DIV, 'qz-help-text', 'Saída');
                 var time = _buildTag(TagName.STRONG, 'qz-box-content qz-text-primary', timeToLeave);
                 var div = _buildTag(TagName.DIV, 'qz-box qz-box-muted');
                 div.appendChild(helpText);
@@ -321,7 +300,7 @@
 
     /* Constants */
 
-    var NAME = 'Queiroz';
+    var NAME = 'QueirozJS';
 
 
     /* Module Definition */
@@ -332,7 +311,7 @@
 
         var
             _NAME = 'Queiroz.js',
-            VERSION = '2.7.6',
+            VERSION = '2.7.7',
 
             Settings = {
                 INITIAL_WEEKDAY: Time.Weekday.MONDAY,
@@ -340,7 +319,7 @@
                 MAX_CONSECUTIVE_HOURS_PER_DAY: 6,
                 MAX_HOURS_PER_WEEK: 44,
                 MAX_MINUTES_PER_DAY: (8 * 60) + 48,
-                TAMPERMONKEY_DELAY_MILLIS: 1000
+                USERSCRIPT_DELAY_MILLIS: 1000
             },
 
             Selector = {
@@ -400,21 +379,6 @@
             today: {
                 laborTime: {
                     millis: 0
-                },
-                missingTime: {
-                    millis: 0, human: '', html: ''
-                },
-                _computeMissingTimeInMillis: function() {
-                    return _getMaxMinutesPerDayInMillis() - this.laborTime.millis;
-                },
-                buildTime: function() {
-                    this.missingTime.millis = this._computeMissingTimeInMillis();
-                },
-                buildHumanTime: function() {
-                    this.missingTime.human = Time.Millis.toHumanTime(this.missingTime.millis > 0 ? this.missingTime.millis : 0);
-                },
-                buildHtmlTime: function() {
-                    this.missingTime.html = Snippet.headerTodayMissingTime(this.missingTime.human);
                 }
             }
         };
@@ -462,8 +426,6 @@
             _renderStats = function() {
                 data.week.buildHumanTime();
                 data.week.buildHtmlTime();
-                data.today.buildHumanTime();
-                data.today.buildHtmlTime();
 
                 var
                     htmlLastWeekModeOn = Settings.LAST_WEEK_MODE ? Snippet.headerLastWeekModeOn() : '',
@@ -474,7 +436,6 @@
                     args = [
                         htmlLastWeekModeOn,
                         data.week.laborTime.html,
-                        data.today.missingTime.html,
                         htmlMissingOrExtraTime,
                         htmlHumanTimeToLeave
                     ],
@@ -488,13 +449,13 @@
                 }
 
                 data.week.buildTime();
-                data.today.buildTime();
 
                 if (Settings.LAST_WEEK_MODE !== 'DOING') {
                     _renderStats();
                 }
             },
             _renderLaborTimePerShift = function(context, shift, finished) {
+                if (shift < 0) shift = 0; // normalize
                 var humanMillis = Time.Millis.toHumanTime(shift);
                 var html = Snippet.laborTimePerShift(humanMillis, finished);
                 var container = document.createElement('div');
@@ -507,7 +468,8 @@
                 eDay.appendChild(Snippet.laborTimePerDay(humanMillis));
             },
             _renderTodayTimeToLeave = function(context, inputMillis) {
-                var timeToLeaveInMillis = inputMillis + (_getMaxMinutesPerDayInMillis() - data.today.laborTime.millis);
+                var missingTime = _getMaxMinutesPerDayInMillis() - data.today.laborTime.millis;
+                var timeToLeaveInMillis = inputMillis + (missingTime < 0 ? 0 : missingTime);
                 var humanTimeToLeave = Time.dateToHumanTime(new Date(timeToLeaveInMillis));
                 var html = Snippet.todayTimeToLeave(humanTimeToLeave);
                 var filledSlotOut = context.parentNode;
@@ -549,8 +511,10 @@
                             }
                         }
                     });
-                    data.week.laborTime.millis += millis;
-                    _renderLaborTimePerDay(eDay, millis);
+                    if (millis > 0) {
+                        data.week.laborTime.millis += millis;
+                        _renderLaborTimePerDay(eDay, millis);
+                    }
                 }
             },
             _selectDaysToAnalyze = function() {
@@ -598,7 +562,7 @@
                         clearInterval(interval);
                         _init();
                     }
-                }, Settings.TAMPERMONKEY_DELAY_MILLIS);
+                }, Settings.USERSCRIPT_DELAY_MILLIS);
             };
 
         /* PUBLIC */
@@ -633,4 +597,4 @@
  * https://github.com/viniciusknob/queiroz.js
  */
 
-Queiroz.bless();
+QueirozJS.bless();

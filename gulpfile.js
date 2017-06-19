@@ -2,13 +2,16 @@ var
     gulp = require('gulp'),
     replace = require('gulp-replace'),
     minify = require('gulp-minify'),
+    cleanCSS = require('gulp-clean-css'),
     runSequence = require('run-sequence'),
-    concat = require('gulp-concat')
+    concat = require('gulp-concat'),
+    rename = require('gulp-rename'),
+    fs = require('fs')
 ;
 
 var
     Settings = {
-        VERSION: '2.7.6',
+        VERSION: '2.7.7',
         versionRegex: '(?:\\d+\\.){2}\\d+(?:-beta\\.\\d+)?',
         env: {
             DEV: {
@@ -85,6 +88,24 @@ gulp.task('set-version-dist', function() {
     return setVersion.dist(Settings.env.PRD);
 });
 
+gulp.task('style-replace', function() {
+    return gulp.src('dist/queiroz.js')
+            .pipe(replace('%css%', fs.readFileSync('src/css/style.min.css', 'utf8')))
+            .pipe(gulp.dest('dist'));
+});
+
+gulp.task('style-compress', function() {
+    return gulp.src('src/css/style.css')
+        .pipe(cleanCSS())
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(gulp.dest('src/css'));
+});
+
+gulp.task('style', function(callback) {
+    runSequence('style-compress', 'style-replace', callback);
+});
 
 gulp.task('compress', function() {
     return gulp.src('dist/queiroz.js')
@@ -120,11 +141,11 @@ gulp.task('concat', function() {
 
 
 gulp.task('dev', function(callback) {
-    runSequence('concat','set-dev-version','compress', callback);
+    runSequence('concat','set-dev-version','style','compress', callback);
 });
 
 gulp.task('release', function(callback) {
-    runSequence('concat','set-version','compress','concat-min', callback);
+    runSequence('concat','set-version','style','compress','concat-min', callback);
 });
 
 

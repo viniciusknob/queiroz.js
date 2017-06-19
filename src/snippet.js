@@ -17,25 +17,7 @@
             P: 'p',
             SPAN: 'span',
             STRONG: 'strong'
-        },
-
-        STYLE = ''+
-            '<style>' +
-                // reset
-                'strong{font-weight:bold;}' +
-                // override
-                '.ContentTable {margin-top:inherit;}' +
-                '.emptySlot,.FilledSlot,.LastSlot {height:inherit;padding:5px;}' +
-                '.FilledSlot span {margin:inherit!important;}' +
-                // queiroz.js classes
-                '.qz-text-primary {color:brown;}' +
-                '.qz-text-secondary {color:darkgoldenrod;}' +
-                '.qz-box {padding:5px 10px;margin:5px 1px;border:darkgrey 1px solid;}' +
-                '.qz-box-head {float:right;padding:10px 0;}' +
-                '.qz-box-muted {background-color:lightgray;}' +
-                '.qz-box .qz-box-content {vertical-align:middle;}' +
-                '.help-text {font-size:10px;}' +
-            '</style>';
+        };
 
 
     /* Module Definition */
@@ -66,7 +48,7 @@
         /* PUBLIC */
 
         return {
-            STYLE: STYLE,
+            STYLE: '<style>%css%</style>',
             header: function() {
                 return _buildTag(TagName.P, 'qz-box-head');
             },
@@ -76,11 +58,8 @@
             headerLaborTime: function(laborTime) {
                 return _buildBoxHeader('Total: ', laborTime);
             },
-            headerTodayMissingTime: function(missingTime) {
-                return _buildBoxHeader('Faltam/Hoje: ', missingTime);
-            },
             headerWeekMissingTime: function(missingTime) {
-                return _buildBoxHeader('Faltam/Semana: ', missingTime);
+                return _buildBoxHeader('Faltam: ', missingTime);
             },
             headerExtraTime: function(extraTime) {
                 return _buildBoxHeader('Extra: ', extraTime);
@@ -89,7 +68,7 @@
                 return _buildBoxHeader('Saída: ', timeToLeave);
             },
             laborTimePerDay: function(laborTime) {
-                var helpText = _buildTag(TagName.DIV, 'help-text', 'Efetuado');
+                var helpText = _buildTag(TagName.DIV, 'qz-help-text', 'Efetuado');
                 var time = _buildTag(TagName.STRONG, 'qz-box-content qz-text-primary', laborTime);
                 var div = _buildTag(TagName.DIV, 'qz-box qz-box-muted');
                 div.appendChild(helpText);
@@ -100,7 +79,7 @@
                 var div = _buildTag(TagName.DIV, 'qz-box qz-box-muted');
                 var time = _buildTag(TagName.STRONG, 'qz-box-content', laborTime);
                 if (!finished) {
-                    var helpText = _buildTag(TagName.DIV, 'help-text', 'Trabalhando...');
+                    var helpText = _buildTag(TagName.DIV, 'qz-help-text', 'Trabalhando...');
                     div.appendChild(helpText);
                     time.classList.add('qz-text-secondary');
                 }
@@ -108,7 +87,7 @@
                 return div;
             },
             todayTimeToLeave: function(timeToLeave) {
-                var helpText = _buildTag(TagName.DIV, 'help-text', 'Saída/Fim');
+                var helpText = _buildTag(TagName.DIV, 'qz-help-text', 'Saída');
                 var time = _buildTag(TagName.STRONG, 'qz-box-content qz-text-primary', timeToLeave);
                 var div = _buildTag(TagName.DIV, 'qz-box qz-box-muted');
                 div.appendChild(helpText);
