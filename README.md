@@ -1,4 +1,4 @@
-# Queiroz.js 2.7.7
+# Queiroz.js 2.7.8
 JavaScript Extension for Dimep Kairos
 
 #### Autor
@@ -38,20 +38,9 @@ OBS: NÃO é necessário adaptação.
 * Normal Mode: Calcula o total de horas iniciando da primeira Segunda-feira disponível na view;
 * Last Week Mode: Possibilidade de calcular o total de horas efetuadas para semana anterior;
 * Script pode ser executando nas telas Ponto e Pedidos;
-* Adaptado para rodar utilizando plugins como Tampermonkey.
+* Adaptado para rodar como UserScript.
 
 OBS: Todos os cálculos são efetuados a partir da primeira Segunda-feira, isso é necessário para não bagunçar o resultado final, e também por que o script se limita ao que está sendo apresentado na view.
-
-#### Simbologia
-
-* ~ : Quando não existe uma hora de saída, utiliza a hora atual;
-
-#### Contribuindo...
-
-1. git clone
-2. npm rm --global gulp | npm install --global gulp-cli
-3. npm install
-4. Go ahead!
 
 #### Versionamento
 
@@ -61,3 +50,7 @@ OBS: Todos os cálculos são efetuados a partir da primeira Segunda-feira, isso 
 * 1.x.x : Drástica mudança na extenção, seja na estrutura ou na forma de apresentação.
 * x.1.x : Mudanças relacionadas a novos recursos e plugins.
 * x.x.1 : Correções de bugs, refatorações e pequenas modificações que não representem um risco.
+
+#### Licença
+
+Código liberado sob a [MIT License](../master/LICENSE)

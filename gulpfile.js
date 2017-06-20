@@ -11,7 +11,7 @@ var
 
 var
     Settings = {
-        VERSION: '2.7.7',
+        VERSION: '2.7.8',
         versionRegex: '(?:\\d+\\.){2}\\d+(?:-beta\\.\\d+)?',
         env: {
             DEV: {
