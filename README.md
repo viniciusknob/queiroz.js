@@ -1,4 +1,4 @@
-# Queiroz.js 2.7.8
+# Queiroz.js 2.7.9
 JavaScript Extension for Dimep Kairos
 
 #### Autor
@@ -53,4 +53,4 @@ OBS: Todos os cálculos são efetuados a partir da primeira Segunda-feira, isso 
 
 #### Licença
 
-Código liberado sob a [MIT License](../master/LICENSE)
+Código liberado sob [MIT License](../master/LICENSE)
