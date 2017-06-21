@@ -21,8 +21,11 @@ strong {
 .qz-text-primary {
     color: brown;
 }
-.qz-text-secondary {
+.qz-text-golden {
     color: darkgoldenrod;
+}
+.qz-text-teal {
+    color: teal;
 }
 .qz-box {
     padding: 5px 10px;

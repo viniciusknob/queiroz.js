@@ -48,7 +48,7 @@
         /* PUBLIC */
 
         return {
-            STYLE: '<style>strong{font-weight:700}.ContentTable{margin-top:inherit}.FilledSlot,.LastSlot,.emptySlot{height:inherit;padding:5px}.FilledSlot span{margin:inherit!important}.qz-text-primary{color:brown}.qz-text-secondary{color:#b8860b}.qz-box{padding:5px 10px;margin:5px 1px;border:#a9a9a9 1px solid}.qz-box-head{float:right;padding:10px 0}.qz-box-muted{background-color:#d3d3d3}.qz-box .qz-box-content{vertical-align:middle}.qz-help-text{font-size:10px}</style>',
+            STYLE: '<style>strong{font-weight:700}.ContentTable{margin-top:inherit}.FilledSlot,.LastSlot,.emptySlot{height:inherit;padding:5px}.FilledSlot span{margin:inherit!important}.qz-text-primary{color:brown}.qz-text-golden{color:#b8860b}.qz-text-teal{color:teal}.qz-box{padding:5px 10px;margin:5px 1px;border:#a9a9a9 1px solid}.qz-box-head{float:right;padding:10px 0}.qz-box-muted{background-color:#d3d3d3}.qz-box .qz-box-content{vertical-align:middle}.qz-help-text{font-size:10px}</style>',
             header: function() {
                 return _buildTag(TagName.P, 'qz-box-head');
             },
@@ -56,7 +56,10 @@
                 return _buildBoxHeader('', 'SEMANA ANTERIOR');
             },
             headerLaborTime: function(laborTime) {
-                return _buildBoxHeader('Total: ', laborTime);
+                return _buildBoxHeader('Efetuado: ', laborTime);
+            },
+            headerBalanceTime: function(balanceTime) {
+                return _buildBoxHeader('Saldo: ', balanceTime);
             },
             headerWeekMissingTime: function(missingTime) {
                 return _buildBoxHeader('Faltam: ', missingTime);
@@ -66,6 +69,14 @@
             },
             headerWeekTimeToLeave: function(timeToLeave) {
                 return _buildBoxHeader('Saída: ', timeToLeave);
+            },
+            balanceTimePerDay: function(balanceTime) {
+                var helpText = _buildTag(TagName.DIV, 'qz-help-text', 'Saldo');
+                var time = _buildTag(TagName.STRONG, 'qz-box-content qz-text-teal', balanceTime);
+                var div = _buildTag(TagName.DIV, 'qz-box qz-box-muted');
+                div.appendChild(helpText);
+                div.appendChild(time);
+                return div;
             },
             laborTimePerDay: function(laborTime) {
                 var helpText = _buildTag(TagName.DIV, 'qz-help-text', 'Efetuado');
@@ -81,7 +92,7 @@
                 if (!finished) {
                     var helpText = _buildTag(TagName.DIV, 'qz-help-text', 'Trabalhando...');
                     div.appendChild(helpText);
-                    time.classList.add('qz-text-secondary');
+                    time.classList.add('qz-text-golden');
                 }
                 div.appendChild(time);
                 return div;
@@ -311,7 +322,7 @@
 
         var
             _NAME = 'Queiroz.js',
-            VERSION = '2.7.9',
+            VERSION = '2.7.10',
 
             Settings = {
                 INITIAL_WEEKDAY: Time.Weekday.MONDAY,
@@ -467,6 +478,18 @@
                 var humanMillis = Time.Millis.toHumanTime(millis);
                 eDay.appendChild(Snippet.laborTimePerDay(humanMillis));
             },
+            _renderBalanceTimePerDay = function(eDay, millis) {
+                var
+                    max = _getMaxMinutesPerDayInMillis(),
+                    humanMillis = '00:00';
+
+                if (millis < max) {
+                    humanMillis = '-' + Time.Millis.toHumanTime(max - millis);
+                } else if (millis > max) {
+                    humanMillis = '+' + Time.Millis.toHumanTime(millis - max);
+                }
+                eDay.appendChild(Snippet.balanceTimePerDay(humanMillis));
+            },
             _renderTodayTimeToLeave = function(context, inputMillis) {
                 var missingTime = _getMaxMinutesPerDayInMillis() - data.today.laborTime.millis;
                 var timeToLeaveInMillis = inputMillis + (missingTime < 0 ? 0 : missingTime);
@@ -515,6 +538,7 @@
                         data.week.laborTime.millis += millis;
                         _renderLaborTimePerDay(eDay, millis);
                     }
+                    _renderBalanceTimePerDay(eDay, millis);
                 }
             },
             _selectDaysToAnalyze = function() {

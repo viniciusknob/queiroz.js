@@ -56,7 +56,10 @@
                 return _buildBoxHeader('', 'SEMANA ANTERIOR');
             },
             headerLaborTime: function(laborTime) {
-                return _buildBoxHeader('Total: ', laborTime);
+                return _buildBoxHeader('Efetuado: ', laborTime);
+            },
+            headerBalanceTime: function(balanceTime) {
+                return _buildBoxHeader('Saldo: ', balanceTime);
             },
             headerWeekMissingTime: function(missingTime) {
                 return _buildBoxHeader('Faltam: ', missingTime);
@@ -66,6 +69,14 @@
             },
             headerWeekTimeToLeave: function(timeToLeave) {
                 return _buildBoxHeader('Saída: ', timeToLeave);
+            },
+            balanceTimePerDay: function(balanceTime) {
+                var helpText = _buildTag(TagName.DIV, 'qz-help-text', 'Saldo');
+                var time = _buildTag(TagName.STRONG, 'qz-box-content qz-text-teal', balanceTime);
+                var div = _buildTag(TagName.DIV, 'qz-box qz-box-muted');
+                div.appendChild(helpText);
+                div.appendChild(time);
+                return div;
             },
             laborTimePerDay: function(laborTime) {
                 var helpText = _buildTag(TagName.DIV, 'qz-help-text', 'Efetuado');
@@ -81,7 +92,7 @@
                 if (!finished) {
                     var helpText = _buildTag(TagName.DIV, 'qz-help-text', 'Trabalhando...');
                     div.appendChild(helpText);
-                    time.classList.add('qz-text-secondary');
+                    time.classList.add('qz-text-golden');
                 }
                 div.appendChild(time);
                 return div;

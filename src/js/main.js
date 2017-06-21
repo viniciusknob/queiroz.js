@@ -176,6 +176,18 @@
                 var humanMillis = Time.Millis.toHumanTime(millis);
                 eDay.appendChild(Snippet.laborTimePerDay(humanMillis));
             },
+            _renderBalanceTimePerDay = function(eDay, millis) {
+                var
+                    max = _getMaxMinutesPerDayInMillis(),
+                    humanMillis = '00:00';
+
+                if (millis < max) {
+                    humanMillis = '-' + Time.Millis.toHumanTime(max - millis);
+                } else if (millis > max) {
+                    humanMillis = '+' + Time.Millis.toHumanTime(millis - max);
+                }
+                eDay.appendChild(Snippet.balanceTimePerDay(humanMillis));
+            },
             _renderTodayTimeToLeave = function(context, inputMillis) {
                 var missingTime = _getMaxMinutesPerDayInMillis() - data.today.laborTime.millis;
                 var timeToLeaveInMillis = inputMillis + (missingTime < 0 ? 0 : missingTime);
@@ -224,6 +236,7 @@
                         data.week.laborTime.millis += millis;
                         _renderLaborTimePerDay(eDay, millis);
                     }
+                    _renderBalanceTimePerDay(eDay, millis);
                 }
             },
             _selectDaysToAnalyze = function() {
