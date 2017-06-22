@@ -322,7 +322,7 @@
 
         var
             _NAME = 'Queiroz.js',
-            VERSION = '2.7.10',
+            VERSION = '2.7.11',
 
             Settings = {
                 INITIAL_WEEKDAY: Time.Weekday.MONDAY,
@@ -360,6 +360,9 @@
                 laborTime: {
                     millis: 0, human: '', html: ''
                 },
+                balanceTime: {
+                    millis: 0, human: '', html: ''
+                },
                 missingTime: {
                     millis: 0, human: '', html: ''
                 },
@@ -372,17 +375,29 @@
                 _computeExtraTimeInMillis: function() {
                     return this.laborTime.millis - _getMaxHoursPerWeekInMillis();
                 },
+                _buildHumanBalanceTime: function() {
+                    var millis = this.balanceTime.millis;
+                    if (millis == 0) {
+                        return '00:00';
+                    } else if (millis > 0) {
+                        return '+' + Time.Millis.toHumanTime(millis);
+                    } else if (millis < 0) {
+                        return '-' + Time.Millis.toHumanTime(millis * -1);
+                    }
+                },
                 buildTime: function() {
                     this.missingTime.millis = this._computeMissingTimeInMillis();
                     this.extraTime.millis = this._computeExtraTimeInMillis();
                 },
                 buildHumanTime: function() {
                     this.laborTime.human = Time.Millis.toHumanTime(this.laborTime.millis);
+                    this.balanceTime.human = this._buildHumanBalanceTime();
                     this.missingTime.human = Time.Millis.toHumanTime(this.missingTime.millis > 0 ? this.missingTime.millis : 0);
                     this.extraTime.human = Time.Millis.toHumanTime(this.extraTime.millis > 0 ? this.extraTime.millis : 0);
                 },
                 buildHtmlTime: function() {
                     this.laborTime.html = Snippet.headerLaborTime(this.laborTime.human);
+                    this.balanceTime.html = Snippet.headerBalanceTime(this.balanceTime.human);
                     this.missingTime.html = Snippet.headerWeekMissingTime(this.missingTime.human);
                     this.extraTime.html = Snippet.headerExtraTime(this.extraTime.human);
                 }
@@ -447,6 +462,7 @@
                     args = [
                         htmlLastWeekModeOn,
                         data.week.laborTime.html,
+                        data.week.balanceTime.html,
                         htmlMissingOrExtraTime,
                         htmlHumanTimeToLeave
                     ],
@@ -478,15 +494,20 @@
                 var humanMillis = Time.Millis.toHumanTime(millis);
                 eDay.appendChild(Snippet.laborTimePerDay(humanMillis));
             },
-            _renderBalanceTimePerDay = function(eDay, millis) {
+            _renderBalanceTimePerDay = function(eDay, laborTimeInMillis) {
                 var
                     max = _getMaxMinutesPerDayInMillis(),
+                    millis = 0,
                     humanMillis = '00:00';
 
-                if (millis < max) {
-                    humanMillis = '-' + Time.Millis.toHumanTime(max - millis);
-                } else if (millis > max) {
-                    humanMillis = '+' + Time.Millis.toHumanTime(millis - max);
+                if (laborTimeInMillis < max) {
+                    millis = max - laborTimeInMillis;
+                    data.week.balanceTime.millis -= millis;
+                    humanMillis = '-' + Time.Millis.toHumanTime(millis);
+                } else if (laborTimeInMillis > max) {
+                    millis = laborTimeInMillis - max;
+                    data.week.balanceTime.millis += millis;
+                    humanMillis = '+' + Time.Millis.toHumanTime(millis);
                 }
                 eDay.appendChild(Snippet.balanceTimePerDay(humanMillis));
             },
