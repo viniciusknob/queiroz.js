@@ -38,9 +38,9 @@
                 }
                 return element;
             },
-            _buildBoxHeader = function(boxContent, strongValue) {
+            _buildBoxHeader = function(boxContent, strongValue, strongClass) {
                 var box = _buildTag(TagName.SPAN, 'qz-box qz-box-muted', boxContent);
-                var time = _buildTag(TagName.STRONG, 'qz-text-primary', strongValue);
+                var time = _buildTag(TagName.STRONG, strongClass, strongValue);
                 box.appendChild(time);
                 return box;
             };
@@ -48,27 +48,27 @@
         /* PUBLIC */
 
         return {
-            STYLE: '<style>strong{font-weight:700}.ContentTable{margin-top:inherit}.FilledSlot,.LastSlot,.emptySlot{height:inherit;padding:5px}.FilledSlot span{margin:inherit!important}.qz-text-primary{color:brown}.qz-text-golden{color:#b8860b}.qz-text-teal{color:teal}.qz-box{padding:5px 10px;margin:5px 1px;border:#a9a9a9 1px solid}.qz-box-head{float:right;padding:10px 0}.qz-box-muted{background-color:#d3d3d3}.qz-box .qz-box-content{vertical-align:middle}.qz-help-text{font-size:10px}</style>',
+            STYLE: '<style>strong{font-weight:700}.ContentTable{margin-top:inherit}.FilledSlot,.LastSlot,.emptySlot{height:inherit;padding:5px}.FilledSlot span{margin:inherit!important}.qz-text-primary{color:brown}.qz-text-golden{color:#b8860b}.qz-text-green{color:green}.qz-text-teal{color:teal}.qz-box{padding:5px 10px;margin:5px 1px;border:#a9a9a9 1px solid}.qz-box-head{float:right;padding:10px 0}.qz-box-muted{background-color:#d3d3d3}.qz-box .qz-box-content{vertical-align:middle}.qz-help-text{font-size:10px}</style>',
             header: function() {
                 return _buildTag(TagName.P, 'qz-box-head');
             },
             headerLastWeekModeOn: function() {
-                return _buildBoxHeader('', 'SEMANA ANTERIOR');
+                return _buildBoxHeader('', 'SEMANA ANTERIOR', 'qz-text-primary');
             },
             headerLaborTime: function(laborTime) {
-                return _buildBoxHeader('Efetuado: ', laborTime);
+                return _buildBoxHeader('Efetuado: ', laborTime, 'qz-text-green');
             },
             headerBalanceTime: function(balanceTime) {
-                return _buildBoxHeader('Saldo: ', balanceTime);
+                return _buildBoxHeader('Saldo: ', balanceTime, 'qz-text-teal');
             },
-            headerWeekMissingTime: function(missingTime) {
-                return _buildBoxHeader('Faltam: ', missingTime);
+            headerWeekPendingTime: function(pendingTime) {
+                return _buildBoxHeader('Pendente: ', pendingTime, 'qz-text-primary');
             },
             headerExtraTime: function(extraTime) {
-                return _buildBoxHeader('Extra: ', extraTime);
+                return _buildBoxHeader('Extra: ', extraTime, 'qz-text-green');
             },
             headerWeekTimeToLeave: function(timeToLeave) {
-                return _buildBoxHeader('Saída: ', timeToLeave);
+                return _buildBoxHeader('Saída: ', timeToLeave, 'qz-text-primary');
             },
             balanceTimePerDay: function(balanceTime) {
                 var helpText = _buildTag(TagName.DIV, 'qz-help-text', 'Saldo');
@@ -80,7 +80,7 @@
             },
             laborTimePerDay: function(laborTime) {
                 var helpText = _buildTag(TagName.DIV, 'qz-help-text', 'Efetuado');
-                var time = _buildTag(TagName.STRONG, 'qz-box-content qz-text-primary', laborTime);
+                var time = _buildTag(TagName.STRONG, 'qz-box-content qz-text-green', laborTime);
                 var div = _buildTag(TagName.DIV, 'qz-box qz-box-muted');
                 div.appendChild(helpText);
                 div.appendChild(time);
@@ -322,7 +322,7 @@
 
         var
             _NAME = 'Queiroz.js',
-            VERSION = '2.7.11',
+            VERSION = '2.7.12',
 
             Settings = {
                 INITIAL_WEEKDAY: Time.Weekday.MONDAY,
@@ -363,13 +363,13 @@
                 balanceTime: {
                     millis: 0, human: '', html: ''
                 },
-                missingTime: {
+                pendingTime: {
                     millis: 0, human: '', html: ''
                 },
                 extraTime: {
                     millis: 0, human: '', html: ''
                 },
-                _computeMissingTimeInMillis: function() {
+                _computePendingTimeInMillis: function() {
                     return _getMaxHoursPerWeekInMillis() - this.laborTime.millis;
                 },
                 _computeExtraTimeInMillis: function() {
@@ -386,19 +386,19 @@
                     }
                 },
                 buildTime: function() {
-                    this.missingTime.millis = this._computeMissingTimeInMillis();
+                    this.pendingTime.millis = this._computePendingTimeInMillis();
                     this.extraTime.millis = this._computeExtraTimeInMillis();
                 },
                 buildHumanTime: function() {
                     this.laborTime.human = Time.Millis.toHumanTime(this.laborTime.millis);
                     this.balanceTime.human = this._buildHumanBalanceTime();
-                    this.missingTime.human = Time.Millis.toHumanTime(this.missingTime.millis > 0 ? this.missingTime.millis : 0);
+                    this.pendingTime.human = Time.Millis.toHumanTime(this.pendingTime.millis > 0 ? this.pendingTime.millis : 0);
                     this.extraTime.human = Time.Millis.toHumanTime(this.extraTime.millis > 0 ? this.extraTime.millis : 0);
                 },
                 buildHtmlTime: function() {
                     this.laborTime.html = Snippet.headerLaborTime(this.laborTime.human);
                     this.balanceTime.html = Snippet.headerBalanceTime(this.balanceTime.human);
-                    this.missingTime.html = Snippet.headerWeekMissingTime(this.missingTime.human);
+                    this.pendingTime.html = Snippet.headerWeekPendingTime(this.pendingTime.human);
                     this.extraTime.html = Snippet.headerExtraTime(this.extraTime.human);
                 }
             },
@@ -418,16 +418,16 @@
                 return View.get(Selector.DATE, eColumnDay).value;
             },
             _buildTimeToLeave = function() {
-                if (data.week.missingTime.millis <= 0) {
+                if (data.week.pendingTime.millis <= 0) {
                     return '';
                 }
-                if (data.week.missingTime.millis > _getMaxMinutesPerDayInMillis()) {
+                if (data.week.pendingTime.millis > _getMaxMinutesPerDayInMillis()) {
                     return '';
                 }
 
                 var htmlHumanTimeToLeave = '';
                 if (_lastInDate) {
-                    var timeToLeaveInMillis = _lastInDate.getTime() + data.week.missingTime.millis;
+                    var timeToLeaveInMillis = _lastInDate.getTime() + data.week.pendingTime.millis;
                     if (!timeToLeaveInMillis || timeToLeaveInMillis < new Date().getTime()) {
                         return '';
                     }
@@ -437,8 +437,8 @@
                 }
                 return htmlHumanTimeToLeave;
             },
-            _getMissingOrExtraTime = function() {
-                return data.week.missingTime.millis >= 0 ? data.week.missingTime.html : data.week.extraTime.html;
+            _getPendingOrExtraTime = function() {
+                return data.week.pendingTime.millis >= 0 ? data.week.pendingTime.html : data.week.extraTime.html;
             },
             _buildHtmlHeader = function(args) {
                 var header = Snippet.header();
@@ -455,7 +455,7 @@
 
                 var
                     htmlLastWeekModeOn = Settings.LAST_WEEK_MODE ? Snippet.headerLastWeekModeOn() : '',
-                    htmlMissingOrExtraTime = _getMissingOrExtraTime(),
+                    htmlPendingOrExtraTime = _getPendingOrExtraTime(),
                     htmlHumanTimeToLeave = _buildTimeToLeave();
 
                 var
@@ -463,7 +463,7 @@
                         htmlLastWeekModeOn,
                         data.week.laborTime.html,
                         data.week.balanceTime.html,
-                        htmlMissingOrExtraTime,
+                        htmlPendingOrExtraTime,
                         htmlHumanTimeToLeave
                     ],
                     html = _buildHtmlHeader(args);
@@ -512,8 +512,8 @@
                 eDay.appendChild(Snippet.balanceTimePerDay(humanMillis));
             },
             _renderTodayTimeToLeave = function(context, inputMillis) {
-                var missingTime = _getMaxMinutesPerDayInMillis() - data.today.laborTime.millis;
-                var timeToLeaveInMillis = inputMillis + (missingTime < 0 ? 0 : missingTime);
+                var pendingTime = _getMaxMinutesPerDayInMillis() - data.today.laborTime.millis;
+                var timeToLeaveInMillis = inputMillis + (pendingTime < 0 ? 0 : pendingTime);
                 var humanTimeToLeave = Time.dateToHumanTime(new Date(timeToLeaveInMillis));
                 var html = Snippet.todayTimeToLeave(humanTimeToLeave);
                 var filledSlotOut = context.parentNode;

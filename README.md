@@ -1,16 +1,16 @@
-# Queiroz.js 2.7.11
+# Queiroz.js 2.7.12
 JavaScript Extension for Dimep Kairos
 
-#### Autor
+### Autor
 
 * Vinícius M. Knob
 
-#### Contribuidores
+### Contribuidores
 
 * Matheus Barbieri
 * Kelvin Klann
 
-#### Como utilizar
+### Como utilizar
 
 Manualmente:
 1. Após efetuar login, acesse um dos menus de apresentação dos horários: Ponto ou Pedidos;
@@ -27,22 +27,30 @@ Indicados:
 
 OBS: NÃO é necessário adaptação.
 
-#### Recursos
+### Recursos
 
-* Cálculo de horas efetuadas por turno, quando não existe uma saída gravada, utiliza a hora atual.
-* Cálculo de horas efetuadas por dia;
-* Cálculo do total de horas efetuadas na semana;
-* Cálculo do total de horas que faltam para completar a semana;
-* Cálculo do total de horas extras na semana;
-* Cálculo da hora estimada de saída quando faltam menos de 8h48min para completar 44h;
-* Normal Mode: Calcula o total de horas iniciando da primeira Segunda-feira disponível na view;
+Cálculos considerando o dia:
+* Total de horas efetuadas;
+* Horas efetuadas por turno, quando não existe uma saída gravada, utiliza a hora atual;
+* Hora de saída prevista (maior precisão após o intervalo de almoço);
+* Saldo de horas considerando 08h48min.
+
+Cálculos considerando a semana:
+* Total de horas efetuadas;
+* Total de horas que faltam para completar a semana;
+* Total de horas extras;
+* Saldo de horas;
+* Hora estimada de saída quando faltam menos de 8h48min para completar 44h;
+
+Outros recursos:
+* Normal Mode: Calcula o total de horas a partir da primeira Segunda-feira disponível na view;
 * Last Week Mode: Possibilidade de calcular o total de horas efetuadas para semana anterior;
-* Script pode ser executando nas telas Ponto e Pedidos;
+* Pode ser executando nas telas Ponto e Pedidos;
 * Adaptado para rodar como UserScript.
 
 OBS: Todos os cálculos são efetuados a partir da primeira Segunda-feira, isso é necessário para não bagunçar o resultado final, e também por que o script se limita ao que está sendo apresentado na view.
 
-#### Versionamento
+### Versionamento
 
 * 'gulp dev' gera uma versão de desenvolvimento adicionando um número ao final da versão. O número indica a data e hora sem sinais. Use esse recurso quantas vezes precisar durante o desenvolvimento. OBS: Antes de usá-lo, é necessário alterar a versão em Settings.VERSION no gulpfile.js.
 * 'gulp release' normaliza a versão para x.x.x, preparando o código para ser commitado.
@@ -51,6 +59,6 @@ OBS: Todos os cálculos são efetuados a partir da primeira Segunda-feira, isso 
 * x.1.x : Mudanças relacionadas a novos recursos e plugins.
 * x.x.1 : Correções de bugs, refatorações e pequenas modificações que não representem um risco.
 
-#### Licença
+### Licença
 
 Código liberado sob [MIT License](../master/LICENSE).

@@ -38,9 +38,9 @@
                 }
                 return element;
             },
-            _buildBoxHeader = function(boxContent, strongValue) {
+            _buildBoxHeader = function(boxContent, strongValue, strongClass) {
                 var box = _buildTag(TagName.SPAN, 'qz-box qz-box-muted', boxContent);
-                var time = _buildTag(TagName.STRONG, 'qz-text-primary', strongValue);
+                var time = _buildTag(TagName.STRONG, strongClass, strongValue);
                 box.appendChild(time);
                 return box;
             };
@@ -53,22 +53,22 @@
                 return _buildTag(TagName.P, 'qz-box-head');
             },
             headerLastWeekModeOn: function() {
-                return _buildBoxHeader('', 'SEMANA ANTERIOR');
+                return _buildBoxHeader('', 'SEMANA ANTERIOR', 'qz-text-primary');
             },
             headerLaborTime: function(laborTime) {
-                return _buildBoxHeader('Efetuado: ', laborTime);
+                return _buildBoxHeader('Efetuado: ', laborTime, 'qz-text-green');
             },
             headerBalanceTime: function(balanceTime) {
-                return _buildBoxHeader('Saldo: ', balanceTime);
+                return _buildBoxHeader('Saldo: ', balanceTime, 'qz-text-teal');
             },
-            headerWeekMissingTime: function(missingTime) {
-                return _buildBoxHeader('Faltam: ', missingTime);
+            headerWeekPendingTime: function(pendingTime) {
+                return _buildBoxHeader('Pendente: ', pendingTime, 'qz-text-primary');
             },
             headerExtraTime: function(extraTime) {
-                return _buildBoxHeader('Extra: ', extraTime);
+                return _buildBoxHeader('Extra: ', extraTime, 'qz-text-green');
             },
             headerWeekTimeToLeave: function(timeToLeave) {
-                return _buildBoxHeader('Saída: ', timeToLeave);
+                return _buildBoxHeader('Saída: ', timeToLeave, 'qz-text-primary');
             },
             balanceTimePerDay: function(balanceTime) {
                 var helpText = _buildTag(TagName.DIV, 'qz-help-text', 'Saldo');
@@ -80,7 +80,7 @@
             },
             laborTimePerDay: function(laborTime) {
                 var helpText = _buildTag(TagName.DIV, 'qz-help-text', 'Efetuado');
-                var time = _buildTag(TagName.STRONG, 'qz-box-content qz-text-primary', laborTime);
+                var time = _buildTag(TagName.STRONG, 'qz-box-content qz-text-green', laborTime);
                 var div = _buildTag(TagName.DIV, 'qz-box qz-box-muted');
                 div.appendChild(helpText);
                 div.appendChild(time);
