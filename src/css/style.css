@@ -4,6 +4,9 @@ strong {
 }
 
 /* override */
+#SemanaApontamentos {
+    cursor: default !important;
+}
 .ContentTable {
     margin-top: inherit;
 }
