@@ -82,6 +82,7 @@
             dateToHumanTime: function(date) {
                 return _normalize(date.getHours()) + ':' + _normalize(date.getMinutes());
             },
+            fake: '12:34',
             isToday: function(date) {
                 var today = new Date();
                 return date.getDate() === today.getDate() &&
@@ -94,7 +95,8 @@
                     date = dateTime[0].split('_'),
                     time = dateTime[1].split(':');
                 return new Date(date[2], date[1] - 1, date[0], time[0], time[1]);
-            }
+            },
+            zero: '00:00'
         };
     }();
 

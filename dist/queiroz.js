@@ -247,6 +247,7 @@
             dateToHumanTime: function(date) {
                 return _normalize(date.getHours()) + ':' + _normalize(date.getMinutes());
             },
+            fake: '12:34',
             isToday: function(date) {
                 var today = new Date();
                 return date.getDate() === today.getDate() &&
@@ -259,7 +260,8 @@
                     date = dateTime[0].split('_'),
                     time = dateTime[1].split(':');
                 return new Date(date[2], date[1] - 1, date[0], time[0], time[1]);
-            }
+            },
+            zero: '00:00'
         };
     }();
 
@@ -322,7 +324,7 @@
 
         var
             _NAME = 'Queiroz.js',
-            VERSION = '2.7.12',
+            VERSION = '2.7.13',
 
             Settings = {
                 INITIAL_WEEKDAY: Time.Weekday.MONDAY,
@@ -378,7 +380,7 @@
                 _buildHumanBalanceTime: function() {
                     var millis = this.balanceTime.millis;
                     if (millis == 0) {
-                        return '00:00';
+                        return Time.zero;
                     } else if (millis > 0) {
                         return '+' + Time.Millis.toHumanTime(millis);
                     } else if (millis < 0) {
@@ -411,11 +413,11 @@
 
         var
             _lastInDate = '',
-            _getCheckpoints = function(eColumnDay) {
-                return View.getAll(Selector.CHECKPOINT, eColumnDay);
+            _getCheckpoints = function(eDay) {
+                return View.getAll(Selector.CHECKPOINT, eDay);
             },
-            _getDate = function(eColumnDay) {
-                return View.get(Selector.DATE, eColumnDay).value;
+            _getDate = function(eDay) {
+                return View.get(Selector.DATE, eDay).value;
             },
             _buildTimeToLeave = function() {
                 if (data.week.pendingTime.millis <= 0) {
@@ -498,16 +500,20 @@
                 var
                     max = _getMaxMinutesPerDayInMillis(),
                     millis = 0,
-                    humanMillis = '00:00';
+                    humanMillis = Time.zero;
 
                 if (laborTimeInMillis < max) {
                     millis = max - laborTimeInMillis;
-                    data.week.balanceTime.millis -= millis;
                     humanMillis = '-' + Time.Millis.toHumanTime(millis);
+                    if (Time.isToday(Time.toDate(_getDate(eDay) + " " + Time.fake)) == false) {
+                        data.week.balanceTime.millis -= millis;
+                    }
                 } else if (laborTimeInMillis > max) {
                     millis = laborTimeInMillis - max;
-                    data.week.balanceTime.millis += millis;
                     humanMillis = '+' + Time.Millis.toHumanTime(millis);
+                    if (Time.isToday(Time.toDate(_getDate(eDay) + " " + Time.fake)) == false) {
+                        data.week.balanceTime.millis += millis;
+                    }
                 }
                 eDay.appendChild(Snippet.balanceTimePerDay(humanMillis));
             },
@@ -566,12 +572,11 @@
                 var
                     _selectedDays = [],
                     _foundInitialWeekday = false,
-                    _fakeTime = '12:34',
                     _eDays = View.getAll(Selector.COLUMN_DAY);
 
                 _eDays.forEach(function(eDay) {
                     var
-                        _stringDay = _getDate(eDay) + " " + _fakeTime,
+                        _stringDay = _getDate(eDay) + " " + Time.fake,
                         _dateDay = Time.toDate(_stringDay);
 
                     if (data.week.laborTime.millis === 0) { // first time

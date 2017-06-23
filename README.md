@@ -1,4 +1,4 @@
-# Queiroz.js 2.7.12
+# Queiroz.js 2.7.13
 JavaScript Extension for Dimep Kairos
 
 ### Autor
@@ -37,7 +37,7 @@ Cálculos considerando o dia:
 
 Cálculos considerando a semana:
 * Total de horas efetuadas;
-* Total de horas que faltam para completar a semana;
+* Total de horas pendentes;
 * Total de horas extras;
 * Saldo de horas;
 * Hora estimada de saída quando faltam menos de 8h48min para completar 44h;

@@ -76,7 +76,7 @@
                 _buildHumanBalanceTime: function() {
                     var millis = this.balanceTime.millis;
                     if (millis == 0) {
-                        return '00:00';
+                        return Time.zero;
                     } else if (millis > 0) {
                         return '+' + Time.Millis.toHumanTime(millis);
                     } else if (millis < 0) {
@@ -109,11 +109,11 @@
 
         var
             _lastInDate = '',
-            _getCheckpoints = function(eColumnDay) {
-                return View.getAll(Selector.CHECKPOINT, eColumnDay);
+            _getCheckpoints = function(eDay) {
+                return View.getAll(Selector.CHECKPOINT, eDay);
             },
-            _getDate = function(eColumnDay) {
-                return View.get(Selector.DATE, eColumnDay).value;
+            _getDate = function(eDay) {
+                return View.get(Selector.DATE, eDay).value;
             },
             _buildTimeToLeave = function() {
                 if (data.week.pendingTime.millis <= 0) {
@@ -196,16 +196,20 @@
                 var
                     max = _getMaxMinutesPerDayInMillis(),
                     millis = 0,
-                    humanMillis = '00:00';
+                    humanMillis = Time.zero;
 
                 if (laborTimeInMillis < max) {
                     millis = max - laborTimeInMillis;
-                    data.week.balanceTime.millis -= millis;
                     humanMillis = '-' + Time.Millis.toHumanTime(millis);
+                    if (Time.isToday(Time.toDate(_getDate(eDay) + " " + Time.fake)) == false) {
+                        data.week.balanceTime.millis -= millis;
+                    }
                 } else if (laborTimeInMillis > max) {
                     millis = laborTimeInMillis - max;
-                    data.week.balanceTime.millis += millis;
                     humanMillis = '+' + Time.Millis.toHumanTime(millis);
+                    if (Time.isToday(Time.toDate(_getDate(eDay) + " " + Time.fake)) == false) {
+                        data.week.balanceTime.millis += millis;
+                    }
                 }
                 eDay.appendChild(Snippet.balanceTimePerDay(humanMillis));
             },
@@ -264,12 +268,11 @@
                 var
                     _selectedDays = [],
                     _foundInitialWeekday = false,
-                    _fakeTime = '12:34',
                     _eDays = View.getAll(Selector.COLUMN_DAY);
 
                 _eDays.forEach(function(eDay) {
                     var
-                        _stringDay = _getDate(eDay) + " " + _fakeTime,
+                        _stringDay = _getDate(eDay) + " " + Time.fake,
                         _dateDay = Time.toDate(_stringDay);
 
                     if (data.week.laborTime.millis === 0) { // first time
