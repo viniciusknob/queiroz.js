@@ -324,7 +324,7 @@
 
         var
             _NAME = 'Queiroz.js',
-            VERSION = '2.7.14',
+            VERSION = '2.7.15',
 
             Settings = {
                 INITIAL_WEEKDAY: Time.Weekday.MONDAY,
@@ -551,7 +551,7 @@
                             }
                         } else {
                             _lastInDate = inDate;
-                            if (Time.isToday(inDate)) {
+                            if (Time.isToday(inDate) && ((_getMaxHoursPerWeekInMillis() - data.week.laborTime.millis) > _getMaxMinutesPerDayInMillis())) {
                                 _renderTodayTimeToLeave(inElement, inDate.getTime());
                             }
                             var diffUntilNow = Time.Millis.diff(inDate, new Date());

@@ -247,7 +247,7 @@
                             }
                         } else {
                             _lastInDate = inDate;
-                            if (Time.isToday(inDate)) {
+                            if (Time.isToday(inDate) && ((_getMaxHoursPerWeekInMillis() - data.week.laborTime.millis) > _getMaxMinutesPerDayInMillis())) {
                                 _renderTodayTimeToLeave(inElement, inDate.getTime());
                             }
                             var diffUntilNow = Time.Millis.diff(inDate, new Date());
