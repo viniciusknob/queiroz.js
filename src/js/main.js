@@ -43,13 +43,13 @@
 
         var
             _getMaxHoursPerWeekInMillis = function() {
-                return Time.Hour.toMillis(Settings.MAX_HOURS_PER_WEEK);
+                return Time.hourToMillis(Settings.MAX_HOURS_PER_WEEK);
             },
             _getMaxConsecutiveHoursPerDayInMillis = function() {
-                return Time.Hour.toMillis(Settings.MAX_CONSECUTIVE_HOURS_PER_DAY);
+                return Time.hourToMillis(Settings.MAX_CONSECUTIVE_HOURS_PER_DAY);
             },
             _getMaxMinutesPerDayInMillis = function() {
-                return Time.Minute.toMillis(Settings.MAX_MINUTES_PER_DAY);
+                return Time.minuteToMillis(Settings.MAX_MINUTES_PER_DAY);
             };
 
 
@@ -78,9 +78,9 @@
                     if (millis == 0) {
                         return Time.zero;
                     } else if (millis > 0) {
-                        return '+' + Time.Millis.toHumanTime(millis);
+                        return '+' + Time.millisToHuman(millis);
                     } else if (millis < 0) {
-                        return '-' + Time.Millis.toHumanTime(millis * -1);
+                        return '-' + Time.millisToHuman(millis * -1);
                     }
                 },
                 buildTime: function() {
@@ -88,10 +88,10 @@
                     this.extraTime.millis = this._computeExtraTimeInMillis();
                 },
                 buildHumanTime: function() {
-                    this.laborTime.human = Time.Millis.toHumanTime(this.laborTime.millis);
+                    this.laborTime.human = Time.millisToHuman(this.laborTime.millis);
                     this.balanceTime.human = this._buildHumanBalanceTime();
-                    this.pendingTime.human = Time.Millis.toHumanTime(this.pendingTime.millis > 0 ? this.pendingTime.millis : 0);
-                    this.extraTime.human = Time.Millis.toHumanTime(this.extraTime.millis > 0 ? this.extraTime.millis : 0);
+                    this.pendingTime.human = Time.millisToHuman(this.pendingTime.millis > 0 ? this.pendingTime.millis : 0);
+                    this.extraTime.human = Time.millisToHuman(this.extraTime.millis > 0 ? this.extraTime.millis : 0);
                 },
                 buildHtmlTime: function() {
                     this.laborTime.html = Snippet.headerLaborTime(this.laborTime.human);
@@ -130,7 +130,7 @@
                         return '';
                     }
 
-                    var humanTimeToLeave = Time.dateToHumanTime(new Date(timeToLeaveInMillis));
+                    var humanTimeToLeave = Time.dateToHuman(new Date(timeToLeaveInMillis));
                     htmlHumanTimeToLeave = Snippet.headerWeekTimeToLeave(humanTimeToLeave);
                 }
                 return htmlHumanTimeToLeave;
@@ -181,7 +181,7 @@
             },
             _renderLaborTimePerShift = function(context, shift, finished) {
                 if (shift < 0) shift = 0; // normalize
-                var humanMillis = Time.Millis.toHumanTime(shift);
+                var humanMillis = Time.millisToHuman(shift);
                 var html = Snippet.laborTimePerShift(humanMillis, finished);
                 var container = document.createElement('div');
                 container.appendChild(html);
@@ -189,7 +189,7 @@
                 filledSlotOut.parentNode.insertBefore(html, filledSlotOut.nextSibling);
             },
             _renderLaborTimePerDay = function(eDay, millis) {
-                var humanMillis = Time.Millis.toHumanTime(millis);
+                var humanMillis = Time.millisToHuman(millis);
                 eDay.appendChild(Snippet.laborTimePerDay(humanMillis));
             },
             _renderBalanceTimePerDay = function(eDay, laborTimeInMillis) {
@@ -200,13 +200,13 @@
 
                 if (laborTimeInMillis < max) {
                     millis = max - laborTimeInMillis;
-                    humanMillis = '-' + Time.Millis.toHumanTime(millis);
+                    humanMillis = '-' + Time.millisToHuman(millis);
                     if (Time.isToday(Time.toDate(_getDate(eDay) + " " + Time.fake)) == false) {
                         data.week.balanceTime.millis -= millis;
                     }
                 } else if (laborTimeInMillis > max) {
                     millis = laborTimeInMillis - max;
-                    humanMillis = '+' + Time.Millis.toHumanTime(millis);
+                    humanMillis = '+' + Time.millisToHuman(millis);
                     if (Time.isToday(Time.toDate(_getDate(eDay) + " " + Time.fake)) == false) {
                         data.week.balanceTime.millis += millis;
                     }
@@ -216,7 +216,7 @@
             _renderTodayTimeToLeave = function(context, inputMillis) {
                 var pendingTime = _getMaxMinutesPerDayInMillis() - data.today.laborTime.millis;
                 var timeToLeaveInMillis = inputMillis + (pendingTime < 0 ? 0 : pendingTime);
-                var humanTimeToLeave = Time.dateToHumanTime(new Date(timeToLeaveInMillis));
+                var humanTimeToLeave = Time.dateToHuman(new Date(timeToLeaveInMillis));
                 var html = Snippet.todayTimeToLeave(humanTimeToLeave);
                 var filledSlotOut = context.parentNode;
                 filledSlotOut.parentNode.insertBefore(html, filledSlotOut.nextSibling);
@@ -235,7 +235,7 @@
                             var
                                 outText = outElement.textContent, // 04:34
                                 outDate = Time.toDate(_getDate(eDay) + " " + outText),  // typeOf outDate == Date
-                                shiftInMillis = Time.Millis.diff(inDate, outDate);
+                                shiftInMillis = Time.diff(inDate, outDate);
 
                             millis += shiftInMillis;
 
@@ -250,7 +250,7 @@
                             if (Time.isToday(inDate) && ((_getMaxHoursPerWeekInMillis() - data.week.laborTime.millis) > _getMaxMinutesPerDayInMillis())) {
                                 _renderTodayTimeToLeave(inElement, inDate.getTime());
                             }
-                            var diffUntilNow = Time.Millis.diff(inDate, new Date());
+                            var diffUntilNow = Time.diff(inDate, new Date());
                             if (diffUntilNow < (_getMaxConsecutiveHoursPerDayInMillis())) {
                                 var shiftInMillisUntilNow = millis + diffUntilNow;
                                 _renderLaborTimePerShift(inElement, shiftInMillisUntilNow, false);

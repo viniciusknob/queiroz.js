@@ -17,8 +17,14 @@
     var Time = function() {
 
         var
+            MINUTE_IN_MILLIS = 1000 * 60,
+            HOUR_IN_MILLIS = MINUTE_IN_MILLIS * 60,
+
+            _normalize = function(number) {
+                return (number < 10 ? '0' + number : number);
+            },
             // Date object, getDay() method returns the weekday as a number
-            Weekday = {
+            _weekday = {
                 SUNDAY: 0,
                 MONDAY: 1,
                 TUESDAY: 2,
@@ -26,63 +32,36 @@
                 THURSDAY: 4,
                 FRIDAY: 5,
                 SATURDAY: 6
-            },
-            _normalize = function(number) {
-                return (number < 10 ? '0' + number : number);
-            },
-            _Hour = (function() {
-                return {
-                    toMillis: function(hour) {
-                        return hour * _Millis.IN_HOUR;
-                    }
-                };
-            })(),
-            _Minute = (function() {
-                return {
-                    toMillis: function(minute) {
-                        return minute * _Millis.IN_MINUTE;
-                    }
-                };
-            })(),
-            _Millis = (function() {
-
-                var
-                    MINUTE_IN_MILLIS = 1000 * 60,
-                    HOUR_IN_MILLIS = MINUTE_IN_MILLIS * 60;
-
-                /* PUBLIC */
-
-                return {
-                    IN_MINUTE: MINUTE_IN_MILLIS,
-                    IN_HOUR: HOUR_IN_MILLIS,
-                    diff: function(init, end) {
-                        if (init instanceof Date && end instanceof Date) {
-                            return end.getTime() - init.getTime();
-                        } else {
-                            return end - init;
-                        }
-                    },
-                    toHumanTime: function(millis) {
-                        var
-                            diffHour = parseInt(millis / HOUR_IN_MILLIS),
-                            diffMin = parseInt((millis / MINUTE_IN_MILLIS) % 60);
-
-                        return _normalize(diffHour) + ':' + _normalize(diffMin);
-                    }
-                };
-            })();
+            };
 
         /* PUBLIC */
 
         return {
-            Hour: _Hour,
-            Minute: _Minute,
-            Millis: _Millis,
-            Weekday: Weekday,
-            dateToHumanTime: function(date) {
+            zero: '00:00',
+            fake: '12:34',
+            dateToHuman: function(date) {
                 return _normalize(date.getHours()) + ':' + _normalize(date.getMinutes());
             },
-            fake: '12:34',
+            millisToHuman: function(millis) {
+                var
+                    diffHour = parseInt(millis / HOUR_IN_MILLIS),
+                    diffMin = parseInt((millis / MINUTE_IN_MILLIS) % 60);
+
+                return _normalize(diffHour) + ':' + _normalize(diffMin);
+            },
+            diff: function(init, end) {
+                if (init instanceof Date && end instanceof Date) {
+                    return end.getTime() - init.getTime();
+                } else {
+                    return end - init;
+                }
+            },
+            hourToMillis: function(hour) {
+                return hour * HOUR_IN_MILLIS;
+            },
+            minuteToMillis: function(minute) {
+                return minute * MINUTE_IN_MILLIS;
+            },
             isToday: function(date) {
                 var today = new Date();
                 return date.getDate() === today.getDate() &&
@@ -96,7 +75,7 @@
                     time = dateTime[1].split(':');
                 return new Date(date[2], date[1] - 1, date[0], time[0], time[1]);
             },
-            zero: '00:00'
+            Weekday: _weekday
         };
     }();
 

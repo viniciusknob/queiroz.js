@@ -182,8 +182,14 @@
     var Time = function() {
 
         var
+            MINUTE_IN_MILLIS = 1000 * 60,
+            HOUR_IN_MILLIS = MINUTE_IN_MILLIS * 60,
+
+            _normalize = function(number) {
+                return (number < 10 ? '0' + number : number);
+            },
             // Date object, getDay() method returns the weekday as a number
-            Weekday = {
+            _weekday = {
                 SUNDAY: 0,
                 MONDAY: 1,
                 TUESDAY: 2,
@@ -191,63 +197,36 @@
                 THURSDAY: 4,
                 FRIDAY: 5,
                 SATURDAY: 6
-            },
-            _normalize = function(number) {
-                return (number < 10 ? '0' + number : number);
-            },
-            _Hour = (function() {
-                return {
-                    toMillis: function(hour) {
-                        return hour * _Millis.IN_HOUR;
-                    }
-                };
-            })(),
-            _Minute = (function() {
-                return {
-                    toMillis: function(minute) {
-                        return minute * _Millis.IN_MINUTE;
-                    }
-                };
-            })(),
-            _Millis = (function() {
-
-                var
-                    MINUTE_IN_MILLIS = 1000 * 60,
-                    HOUR_IN_MILLIS = MINUTE_IN_MILLIS * 60;
-
-                /* PUBLIC */
-
-                return {
-                    IN_MINUTE: MINUTE_IN_MILLIS,
-                    IN_HOUR: HOUR_IN_MILLIS,
-                    diff: function(init, end) {
-                        if (init instanceof Date && end instanceof Date) {
-                            return end.getTime() - init.getTime();
-                        } else {
-                            return end - init;
-                        }
-                    },
-                    toHumanTime: function(millis) {
-                        var
-                            diffHour = parseInt(millis / HOUR_IN_MILLIS),
-                            diffMin = parseInt((millis / MINUTE_IN_MILLIS) % 60);
-
-                        return _normalize(diffHour) + ':' + _normalize(diffMin);
-                    }
-                };
-            })();
+            };
 
         /* PUBLIC */
 
         return {
-            Hour: _Hour,
-            Minute: _Minute,
-            Millis: _Millis,
-            Weekday: Weekday,
-            dateToHumanTime: function(date) {
+            zero: '00:00',
+            fake: '12:34',
+            dateToHuman: function(date) {
                 return _normalize(date.getHours()) + ':' + _normalize(date.getMinutes());
             },
-            fake: '12:34',
+            millisToHuman: function(millis) {
+                var
+                    diffHour = parseInt(millis / HOUR_IN_MILLIS),
+                    diffMin = parseInt((millis / MINUTE_IN_MILLIS) % 60);
+
+                return _normalize(diffHour) + ':' + _normalize(diffMin);
+            },
+            diff: function(init, end) {
+                if (init instanceof Date && end instanceof Date) {
+                    return end.getTime() - init.getTime();
+                } else {
+                    return end - init;
+                }
+            },
+            hourToMillis: function(hour) {
+                return hour * HOUR_IN_MILLIS;
+            },
+            minuteToMillis: function(minute) {
+                return minute * MINUTE_IN_MILLIS;
+            },
             isToday: function(date) {
                 var today = new Date();
                 return date.getDate() === today.getDate() &&
@@ -261,7 +240,7 @@
                     time = dateTime[1].split(':');
                 return new Date(date[2], date[1] - 1, date[0], time[0], time[1]);
             },
-            zero: '00:00'
+            Weekday: _weekday
         };
     }();
 
@@ -324,7 +303,7 @@
 
         var
             _NAME = 'Queiroz.js',
-            VERSION = '2.7.15',
+            VERSION = '2.7.16',
 
             Settings = {
                 INITIAL_WEEKDAY: Time.Weekday.MONDAY,
@@ -347,13 +326,13 @@
 
         var
             _getMaxHoursPerWeekInMillis = function() {
-                return Time.Hour.toMillis(Settings.MAX_HOURS_PER_WEEK);
+                return Time.hourToMillis(Settings.MAX_HOURS_PER_WEEK);
             },
             _getMaxConsecutiveHoursPerDayInMillis = function() {
-                return Time.Hour.toMillis(Settings.MAX_CONSECUTIVE_HOURS_PER_DAY);
+                return Time.hourToMillis(Settings.MAX_CONSECUTIVE_HOURS_PER_DAY);
             },
             _getMaxMinutesPerDayInMillis = function() {
-                return Time.Minute.toMillis(Settings.MAX_MINUTES_PER_DAY);
+                return Time.minuteToMillis(Settings.MAX_MINUTES_PER_DAY);
             };
 
 
@@ -382,9 +361,9 @@
                     if (millis == 0) {
                         return Time.zero;
                     } else if (millis > 0) {
-                        return '+' + Time.Millis.toHumanTime(millis);
+                        return '+' + Time.millisToHuman(millis);
                     } else if (millis < 0) {
-                        return '-' + Time.Millis.toHumanTime(millis * -1);
+                        return '-' + Time.millisToHuman(millis * -1);
                     }
                 },
                 buildTime: function() {
@@ -392,10 +371,10 @@
                     this.extraTime.millis = this._computeExtraTimeInMillis();
                 },
                 buildHumanTime: function() {
-                    this.laborTime.human = Time.Millis.toHumanTime(this.laborTime.millis);
+                    this.laborTime.human = Time.millisToHuman(this.laborTime.millis);
                     this.balanceTime.human = this._buildHumanBalanceTime();
-                    this.pendingTime.human = Time.Millis.toHumanTime(this.pendingTime.millis > 0 ? this.pendingTime.millis : 0);
-                    this.extraTime.human = Time.Millis.toHumanTime(this.extraTime.millis > 0 ? this.extraTime.millis : 0);
+                    this.pendingTime.human = Time.millisToHuman(this.pendingTime.millis > 0 ? this.pendingTime.millis : 0);
+                    this.extraTime.human = Time.millisToHuman(this.extraTime.millis > 0 ? this.extraTime.millis : 0);
                 },
                 buildHtmlTime: function() {
                     this.laborTime.html = Snippet.headerLaborTime(this.laborTime.human);
@@ -434,7 +413,7 @@
                         return '';
                     }
 
-                    var humanTimeToLeave = Time.dateToHumanTime(new Date(timeToLeaveInMillis));
+                    var humanTimeToLeave = Time.dateToHuman(new Date(timeToLeaveInMillis));
                     htmlHumanTimeToLeave = Snippet.headerWeekTimeToLeave(humanTimeToLeave);
                 }
                 return htmlHumanTimeToLeave;
@@ -485,7 +464,7 @@
             },
             _renderLaborTimePerShift = function(context, shift, finished) {
                 if (shift < 0) shift = 0; // normalize
-                var humanMillis = Time.Millis.toHumanTime(shift);
+                var humanMillis = Time.millisToHuman(shift);
                 var html = Snippet.laborTimePerShift(humanMillis, finished);
                 var container = document.createElement('div');
                 container.appendChild(html);
@@ -493,7 +472,7 @@
                 filledSlotOut.parentNode.insertBefore(html, filledSlotOut.nextSibling);
             },
             _renderLaborTimePerDay = function(eDay, millis) {
-                var humanMillis = Time.Millis.toHumanTime(millis);
+                var humanMillis = Time.millisToHuman(millis);
                 eDay.appendChild(Snippet.laborTimePerDay(humanMillis));
             },
             _renderBalanceTimePerDay = function(eDay, laborTimeInMillis) {
@@ -504,13 +483,13 @@
 
                 if (laborTimeInMillis < max) {
                     millis = max - laborTimeInMillis;
-                    humanMillis = '-' + Time.Millis.toHumanTime(millis);
+                    humanMillis = '-' + Time.millisToHuman(millis);
                     if (Time.isToday(Time.toDate(_getDate(eDay) + " " + Time.fake)) == false) {
                         data.week.balanceTime.millis -= millis;
                     }
                 } else if (laborTimeInMillis > max) {
                     millis = laborTimeInMillis - max;
-                    humanMillis = '+' + Time.Millis.toHumanTime(millis);
+                    humanMillis = '+' + Time.millisToHuman(millis);
                     if (Time.isToday(Time.toDate(_getDate(eDay) + " " + Time.fake)) == false) {
                         data.week.balanceTime.millis += millis;
                     }
@@ -520,7 +499,7 @@
             _renderTodayTimeToLeave = function(context, inputMillis) {
                 var pendingTime = _getMaxMinutesPerDayInMillis() - data.today.laborTime.millis;
                 var timeToLeaveInMillis = inputMillis + (pendingTime < 0 ? 0 : pendingTime);
-                var humanTimeToLeave = Time.dateToHumanTime(new Date(timeToLeaveInMillis));
+                var humanTimeToLeave = Time.dateToHuman(new Date(timeToLeaveInMillis));
                 var html = Snippet.todayTimeToLeave(humanTimeToLeave);
                 var filledSlotOut = context.parentNode;
                 filledSlotOut.parentNode.insertBefore(html, filledSlotOut.nextSibling);
@@ -539,7 +518,7 @@
                             var
                                 outText = outElement.textContent, // 04:34
                                 outDate = Time.toDate(_getDate(eDay) + " " + outText),  // typeOf outDate == Date
-                                shiftInMillis = Time.Millis.diff(inDate, outDate);
+                                shiftInMillis = Time.diff(inDate, outDate);
 
                             millis += shiftInMillis;
 
@@ -554,7 +533,7 @@
                             if (Time.isToday(inDate) && ((_getMaxHoursPerWeekInMillis() - data.week.laborTime.millis) > _getMaxMinutesPerDayInMillis())) {
                                 _renderTodayTimeToLeave(inElement, inDate.getTime());
                             }
-                            var diffUntilNow = Time.Millis.diff(inDate, new Date());
+                            var diffUntilNow = Time.diff(inDate, new Date());
                             if (diffUntilNow < (_getMaxConsecutiveHoursPerDayInMillis())) {
                                 var shiftInMillisUntilNow = millis + diffUntilNow;
                                 _renderLaborTimePerShift(inElement, shiftInMillisUntilNow, false);
