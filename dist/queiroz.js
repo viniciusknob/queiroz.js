@@ -303,7 +303,7 @@
 
         var
             _NAME = 'Queiroz.js',
-            VERSION = '2.7.17',
+            VERSION = '2.7.18',
 
             Settings = {
                 INITIAL_WEEKDAY: Time.Weekday.MONDAY,

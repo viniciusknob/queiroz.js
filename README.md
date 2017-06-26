@@ -1,14 +1,9 @@
-# Queiroz.js 2.7.17
+# Queiroz.js 2.7.18
 JavaScript Extension for Dimep Kairos
 
 ### Autor
 
-* Vinícius M. Knob
-
-### Contribuidores
-
-* Matheus Barbieri
-* Kelvin Klann
+* Vinícius M. Knob `<knob.vinicius@gmail.com>`
 
 ### Como utilizar
 
@@ -50,18 +45,15 @@ Outros recursos:
 
 OBS: Todos os cálculos são efetuados a partir da primeira Segunda-feira, isso é necessário para não bagunçar o resultado final, e também por que o script se limita ao que está sendo apresentado na view.
 
-### Versionamento
-
-* 'gulp dev' gera uma versão de desenvolvimento adicionando um número ao final da versão. O número indica a data e hora sem sinais. Use esse recurso quantas vezes precisar durante o desenvolvimento. OBS: Antes de usá-lo, é necessário alterar a versão em Settings.VERSION no [gulpfile.js](../master/gulpfile.js).
-* 'gulp release' normaliza a versão para x.x.x, preparando o código para ser commitado.
-
-* 1.x.x : Drástica mudança na extenção, seja na estrutura ou na forma de apresentação.
-* x.1.x : Mudanças relacionadas a novos recursos e plugins.
-* x.x.1 : Correções de bugs, refatorações e pequenas modificações que não representem um risco.
-
 ### Contribuindo
 
-Por favor, consulte as [Diretrizes de Contribuição](../master/CONTRIBUTING) para obter mais detalhes.
+Por favor, consulte as [Diretrizes de Contribuição](../master/CONTRIBUTING.md) para obter mais detalhes.
+
+### Agradecimentos
+
+* **Matheus Barbieri**: Pelas diversas discussões, e constantes, sobre possíveis modificações envolvendo melhorias e novas funcionalidades. Pela sugestão, e código, de e para o uso de UserScript Managers. Obrigado.
+* **Kelvin Klann**: Pela sugestão de uso do Gulp, facilitando a organização e controle do código, bem como minha vida de Desenvolvedor. Obrigado.
+* **Aos demais**: Pelos bug reports e pelas novas ideias. Obrigado.
 
 ### Licença
 
