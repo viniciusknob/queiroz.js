@@ -1,4 +1,4 @@
-# Queiroz.js 2.7.16
+# Queiroz.js 2.7.17
 JavaScript Extension for Dimep Kairos
 
 ### Autor
@@ -52,13 +52,17 @@ OBS: Todos os cálculos são efetuados a partir da primeira Segunda-feira, isso 
 
 ### Versionamento
 
-* 'gulp dev' gera uma versão de desenvolvimento adicionando um número ao final da versão. O número indica a data e hora sem sinais. Use esse recurso quantas vezes precisar durante o desenvolvimento. OBS: Antes de usá-lo, é necessário alterar a versão em Settings.VERSION no gulpfile.js.
+* 'gulp dev' gera uma versão de desenvolvimento adicionando um número ao final da versão. O número indica a data e hora sem sinais. Use esse recurso quantas vezes precisar durante o desenvolvimento. OBS: Antes de usá-lo, é necessário alterar a versão em Settings.VERSION no [gulpfile.js](../master/gulpfile.js).
 * 'gulp release' normaliza a versão para x.x.x, preparando o código para ser commitado.
 
 * 1.x.x : Drástica mudança na extenção, seja na estrutura ou na forma de apresentação.
 * x.1.x : Mudanças relacionadas a novos recursos e plugins.
 * x.x.1 : Correções de bugs, refatorações e pequenas modificações que não representem um risco.
 
+### Contribuindo
+
+Por favor, consulte as [Diretrizes de Contribuição](../master/CONTRIBUTING) para obter mais detalhes.
+
 ### Licença
 
-Código liberado sob [MIT License](../master/LICENSE).
+Código licenciado sob os termos de [MIT License](../master/LICENSE).
