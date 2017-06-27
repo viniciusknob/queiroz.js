@@ -11,7 +11,7 @@ var
 
 var
     Settings = {
-        VERSION: '2.7.18',
+        VERSION: '2.7.19',
         versionRegex: '(?:\\d+\\.){2}\\d+(?:-beta\\.\\d+)?',
         env: {
             DEV: {
@@ -57,44 +57,44 @@ var
 ;
 
 
-gulp.task('set-dev-version', [
-    'set-dev-version-dist'
+gulp.task('dev.setVersion', [
+    'dev.setVersion-dist'
 ], function(callback) {
     callback();
 });
 
-gulp.task('set-dev-version-dist', function() {
+gulp.task('dev.setVersion-dist', function() {
     return setVersion.dist(Settings.env.DEV);
 });
 
 
-gulp.task('set-version', [
-    'set-version-root',
-    'set-version-src',
-    'set-version-dist'
+gulp.task('all.setVersion', [
+    'all.setVersion-root',
+    'all.setVersion-src',
+    'all.setVersion-dist'
 ], function(callback) {
      callback();
 });
 
-gulp.task('set-version-root', function() {
+gulp.task('all.setVersion-root', function() {
     return setVersion.root(Settings.env.PRD);
 });
 
-gulp.task('set-version-src', function() {
+gulp.task('all.setVersion-src', function() {
     return setVersion.src(Settings.env.PRD);
 });
 
-gulp.task('set-version-dist', function() {
+gulp.task('all.setVersion-dist', function() {
     return setVersion.dist(Settings.env.PRD);
 });
 
-gulp.task('style-replace', function() {
+gulp.task('css.minToJS', function() {
     return gulp.src('dist/queiroz.js')
             .pipe(replace('%css%', fs.readFileSync('src/css/style.min.css', 'utf8')))
             .pipe(gulp.dest('dist'));
 });
 
-gulp.task('style-compress', function() {
+gulp.task('css.compress', function() {
     return gulp.src('src/css/style.css')
         .pipe(cleanCSS())
         .pipe(rename({
@@ -103,11 +103,11 @@ gulp.task('style-compress', function() {
         .pipe(gulp.dest('src/css'));
 });
 
-gulp.task('style', function(callback) {
-    runSequence('style-compress', 'style-replace', callback);
+gulp.task('css.compile', function(callback) {
+    runSequence('css.compress', 'css.minToJS', callback);
 });
 
-gulp.task('compress', function() {
+gulp.task('js.compress', function() {
     return gulp.src('dist/queiroz.js')
         .pipe(minify({
            ext: {
@@ -117,7 +117,7 @@ gulp.task('compress', function() {
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task('concat-min', function() {
+gulp.task('js.setHeader', function() {
     return gulp.src([
             'src/js/dochead.js',
             'dist/queiroz.min.js'
@@ -126,7 +126,7 @@ gulp.task('concat-min', function() {
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task('concat', function() {
+gulp.task('js.concat', function() {
     return gulp.src([
             'src/js/snippet.js',
             'src/js/view.js',
@@ -141,11 +141,24 @@ gulp.task('concat', function() {
 
 
 gulp.task('dev', function(callback) {
-    runSequence('concat','set-dev-version','style','compress', callback);
+    runSequence(
+      'js.concat',
+      'dev.setVersion',
+      'css.compile',
+      'js.compress',
+      callback
+    );
 });
 
 gulp.task('release', function(callback) {
-    runSequence('concat','set-version','style','compress','concat-min', callback);
+    runSequence(
+      'js.concat',
+      'all.setVersion',
+      'css.compile',
+      'js.compress',
+      'js.setHeader',
+      callback
+    );
 });
 
 

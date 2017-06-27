@@ -303,7 +303,7 @@
 
         var
             _NAME = 'Queiroz.js',
-            VERSION = '2.7.18',
+            VERSION = '2.7.19',
 
             Settings = {
                 INITIAL_WEEKDAY: Time.Weekday.MONDAY,
@@ -477,6 +477,7 @@
             },
             _renderBalanceTimePerDay = function(eDay, laborTimeInMillis) {
                 var
+                    isToday = Time.isToday(Time.toDate(_getDate(eDay) + " " + Time.fake)),
                     max = _getMaxMinutesPerDayInMillis(),
                     millis = 0,
                     humanMillis = Time.zero;
@@ -484,17 +485,19 @@
                 if (laborTimeInMillis < max) {
                     millis = max - laborTimeInMillis;
                     humanMillis = '-' + Time.millisToHuman(millis);
-                    if (Time.isToday(Time.toDate(_getDate(eDay) + " " + Time.fake)) == false) {
+                    if (isToday == false) {
                         data.week.balanceTime.millis -= millis;
                     }
                 } else if (laborTimeInMillis > max) {
                     millis = laborTimeInMillis - max;
                     humanMillis = '+' + Time.millisToHuman(millis);
-                    if (Time.isToday(Time.toDate(_getDate(eDay) + " " + Time.fake)) == false) {
+                    if (isToday == false) {
                         data.week.balanceTime.millis += millis;
                     }
                 }
-                eDay.appendChild(Snippet.balanceTimePerDay(humanMillis));
+                if (isToday == false) {
+                  eDay.appendChild(Snippet.balanceTimePerDay(humanMillis));
+                }
             },
             _renderTodayTimeToLeave = function(context, inputMillis) {
                 var pendingTime = _getMaxMinutesPerDayInMillis() - data.today.laborTime.millis;
@@ -619,6 +622,7 @@
     window[NAME] = Queiroz;
 
 })(window, view, time, util, snippet);
+
 
 /*!
  * Queiroz.js: autoexec.js
