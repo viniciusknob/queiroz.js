@@ -1,6 +1,6 @@
 
 /*!
- * Queiroz.js: main.js
+ * Queiroz.js: core.js
  * JavaScript Extension for Dimep Kairos
  * https://github.com/viniciusknob/queiroz.js
  */
@@ -10,10 +10,10 @@
     /* Plugins */
 
     var
-        Kairos  = Queiroz.pl.kairos
-        View    = Queiroz.pl.view
-        Time    = Queiroz.pl.time
-        Util    = Queiroz.pl.util
+        Kairos  = Queiroz.pl.kairos,
+        View    = Queiroz.pl.view,
+        Time    = Queiroz.pl.time,
+        Util    = Queiroz.pl.util,
         Snippet = Queiroz.pl.snippet;
 
     /* Constants */
