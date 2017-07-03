@@ -5,19 +5,11 @@
  * https://github.com/viniciusknob/queiroz.js
  */
 
-(function(window) {
+(function(Queiroz) {
 
-    /* Constants */
-
-    var NAME = 'util';
-
-
-    /* Module Definition */
+    /* Class Definition */
 
     var Util = function() {
-
-        /* PUBLIC */
-
         return {
             textFormat: function(pattern, args) {
                 for (var index = 0; index < args.length; index++) {
@@ -29,6 +21,8 @@
         };
     }();
 
-    window[NAME] = Util;
+    /* Plugin Definition */
 
-})(window);
+    Queiroz.pl.util = Util;
+
+})(Queiroz);

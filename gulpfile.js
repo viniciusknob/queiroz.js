@@ -11,18 +11,18 @@ var
 
 var
     Settings = {
-        VERSION: '2.7.19',
+        VERSION: '2.8.0',
         versionRegex: '(?:\\d+\\.){2}\\d+(?:-beta\\.\\d+)?',
         env: {
             DEV: {
                 versionReplacer: function(match, $1) {
                     var devVersion = '-beta.' + new Date().toLocaleString().replace(/\D/g,'');
-                    return $1 + Settings.VERSION + devVersion;
+                    return ($1 || '') + Settings.VERSION + devVersion;
                 }
             },
             PRD: {
                 versionReplacer: function(match, $1) {
-                    return $1 + Settings.VERSION;
+                    return ($1 || '') + Settings.VERSION;
                 }
             }
         }
@@ -50,7 +50,7 @@ var
         dist: function(env) {
             return gulp
                 .src('dist/queiroz.js')
-                .pipe(replace(new RegExp('(VERSION.{4})'+Settings.versionRegex), env.versionReplacer)) // VERSION = '2.2.3-beta.1234567890'
+                .pipe(replace('@VERSION', env.versionReplacer))
                 .pipe(gulp.dest('dist'));
             }
     }
@@ -128,6 +128,8 @@ gulp.task('js.setHeader', function() {
 
 gulp.task('js.concat', function() {
     return gulp.src([
+            'src/js/queiroz.js',
+            'src/js/kairos.js',
             'src/js/snippet.js',
             'src/js/view.js',
             'src/js/time.js',

@@ -5,19 +5,11 @@
  * https://github.com/viniciusknob/queiroz.js
  */
 
-(function(window) {
+(function(document, Queiroz) {
 
-    /* Constants */
-
-    var NAME = 'view';
-
-
-    /* Module Definition */
+    /* Class Definition */
 
     var View = function() {
-
-        /* PUBLIC */
-
         return {
             append: function(selector, html) {
                 var _this = this;
@@ -47,6 +39,8 @@
         };
     }();
 
-    window[NAME] = View;
+    /* Plugin Definition */
 
-})(window);
+    Queiroz.pl.view = View;
+
+})(document, Queiroz);

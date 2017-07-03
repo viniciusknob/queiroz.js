@@ -5,13 +5,11 @@
  * https://github.com/viniciusknob/queiroz.js
  */
 
-(function(window) {
+(function(Queiroz) {
 
     /* Constants */
 
     var
-        NAME = 'snippet',
-
         TagName = {
             DIV: 'div',
             P: 'p',
@@ -20,11 +18,9 @@
         };
 
 
-    /* Module Definition */
+    /* Class Definition */
 
     var Snippet = function() {
-
-        /* PRIVATE */
 
         var
             _buildTag = function(name, clazz, text) {
@@ -45,7 +41,7 @@
                 return box;
             };
 
-        /* PUBLIC */
+        /* Public Functions */
 
         return {
             STYLE: '<style>%css%</style>',
@@ -108,6 +104,8 @@
         };
     }();
 
-    window[NAME] = Snippet;
+    /* Plugin Definition */
 
-})(window);
+    Queiroz.pl.snippet = Snippet;
+
+})(Queiroz);

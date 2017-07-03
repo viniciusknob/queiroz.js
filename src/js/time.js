@@ -1,18 +1,12 @@
-
 /*!
  * Queiroz.js: time.js
  * JavaScript Extension for Dimep Kairos
  * https://github.com/viniciusknob/queiroz.js
  */
 
-(function(window) {
+(function(Queiroz) {
 
-    /* Constants */
-
-    var NAME = 'time';
-
-
-    /* Module Definition */
+    /* Class Definition */
 
     var Time = function() {
 
@@ -34,7 +28,7 @@
                 SATURDAY: 6
             };
 
-        /* PUBLIC */
+        /* Public Functions */
 
         return {
             zero: '00:00',
@@ -79,6 +73,8 @@
         };
     }();
 
-    window[NAME] = Time;
+    /* Plugin Definition */
 
-})(window);
+    Queiroz.pl.time = Time;
+
+})(Queiroz);

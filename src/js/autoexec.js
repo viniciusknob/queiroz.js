@@ -5,4 +5,4 @@
  * https://github.com/viniciusknob/queiroz.js
  */
 
-QueirozJS.bless();
+Queiroz.bless();
