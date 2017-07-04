@@ -10,13 +10,28 @@ var
 ;
 
 var
+    currentDateTimeToString = function() {
+        var
+          now = new Date(),
+          normalize = function(number) {
+              return (number < 10 ? '0' + number : number);
+          },
+          year = now.getFullYear(),
+          month = normalize(now.getMonth()+1),
+          day = normalize(now.getDate()),
+          dateString = ''+year+month+day,
+          timeString = now.toTimeString().split(' ')[0];
+
+        return (dateString + timeString).replace(/\D/g,'');
+    },
+
     Settings = {
-        VERSION: '2.8.1',
+        VERSION: '2.8.2',
         versionRegex: '(?:\\d+\\.){2}\\d+(?:-beta\\.\\d+)?',
         env: {
             DEV: {
                 versionReplacer: function(match, $1) {
-                    var devVersion = '-beta.' + new Date().toLocaleString().replace(/\D/g,'');
+                    var devVersion = '-beta.' + currentDateTimeToString();
                     return ($1 || '') + Settings.VERSION + devVersion;
                 }
             },
