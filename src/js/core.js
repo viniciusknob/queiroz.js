@@ -325,7 +325,7 @@
                 _initWithDelay();
             }
         }
-        return this.name + ' ' + this.version;
+        return this.description;
     };
 
 })(Queiroz);

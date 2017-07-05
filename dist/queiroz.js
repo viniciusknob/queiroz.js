@@ -10,10 +10,15 @@
     /* Class Definition */
 
     var Queiroz = function() {
+        var
+            NAME = 'Queiroz.js',
+            VERSION = '2.8.3';
+
         return {
-          name    : 'Queiroz.js',
-          version : '2.8.2',
-          pl      : {}
+          name: NAME,
+          version: VERSION,
+          description: NAME + ' ' + VERSION,
+          pl: {}
         };
     }();
 
@@ -647,7 +652,7 @@
                 _initWithDelay();
             }
         }
-        return this.name + ' ' + this.version;
+        return this.description;
     };
 
 })(Queiroz);
