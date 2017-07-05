@@ -33,7 +33,8 @@
             CHECKPOINT: '.FilledSlot span',
             DATE: '[id^=hiddenDiaApont]',
             HEADER: '#SemanaApontamentos div',
-            TIME_IN: '.TimeIN,.TimeINVisualizacao'
+            TIME_IN: '.TimeIN,.TimeINVisualizacao',
+            FOOTER: 'footer label'
         };
 
     /* Private Functions */
@@ -325,6 +326,7 @@
                 _initWithDelay();
             }
         }
+        View.get(Selector.FOOTER).textContent += " | " + this.description;
         return this.description;
     };
 

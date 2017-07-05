@@ -12,7 +12,7 @@
     var Queiroz = function() {
         var
             NAME = 'Queiroz.js',
-            VERSION = '2.8.3';
+            VERSION = '2.8.4';
 
         return {
           name: NAME,
@@ -360,7 +360,8 @@
             CHECKPOINT: '.FilledSlot span',
             DATE: '[id^=hiddenDiaApont]',
             HEADER: '#SemanaApontamentos div',
-            TIME_IN: '.TimeIN,.TimeINVisualizacao'
+            TIME_IN: '.TimeIN,.TimeINVisualizacao',
+            FOOTER: 'footer label'
         };
 
     /* Private Functions */
@@ -652,6 +653,7 @@
                 _initWithDelay();
             }
         }
+        View.get(Selector.FOOTER).textContent += " | " + this.description;
         return this.description;
     };
 
