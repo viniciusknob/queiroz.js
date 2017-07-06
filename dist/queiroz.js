@@ -12,7 +12,7 @@
     var Queiroz = function() {
         var
             NAME = 'Queiroz.js',
-            VERSION = '2.8.5';
+            VERSION = '2.8.6';
 
         return {
           name: NAME,
