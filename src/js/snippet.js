@@ -10,10 +10,12 @@
     /* Constants */
 
     var
+        Style = '__css__',
         TagName = {
             DIV: 'div',
             P: 'p',
             SPAN: 'span',
+            STYLE: 'style',
             STRONG: 'strong'
         };
 
@@ -44,7 +46,9 @@
         /* Public Functions */
 
         return {
-            STYLE: '<style>%css%</style>',
+            style: function() {
+                return _buildTag(TagName.STYLE, '', Style);
+            },
             header: function() {
                 return _buildTag(TagName.P, 'qz-box-head');
             },

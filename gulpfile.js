@@ -26,7 +26,7 @@ var
     },
 
     Settings = {
-        VERSION: '2.8.4',
+        VERSION: '2.8.5',
         versionRegex: '(?:\\d+\\.){2}\\d+(?:-beta\\.\\d+)?',
         env: {
             DEV: {
@@ -105,7 +105,7 @@ gulp.task('all.setVersion-dist', function() {
 
 gulp.task('css.minToJS', function() {
     return gulp.src('dist/queiroz.js')
-            .pipe(replace('%css%', fs.readFileSync('src/css/style.min.css', 'utf8')))
+            .pipe(replace('__css__', fs.readFileSync('src/css/style.min.css', 'utf8')))
             .pipe(gulp.dest('dist'));
 });
 

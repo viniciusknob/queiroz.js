@@ -12,7 +12,7 @@
     var Queiroz = function() {
         var
             NAME = 'Queiroz.js',
-            VERSION = '2.8.4';
+            VERSION = '2.8.5';
 
         return {
           name: NAME,
@@ -68,10 +68,12 @@
     /* Constants */
 
     var
+        Style = 'strong{font-weight:700}#SemanaApontamentos{cursor:default!important}.ContentTable{margin-top:inherit}.FilledSlot,.LastSlot,.emptySlot{height:inherit;padding:5px}.FilledSlot span{margin:inherit!important}.qz-text-primary{color:brown}.qz-text-golden{color:#b8860b}.qz-text-green{color:green}.qz-text-teal{color:teal}.qz-box{padding:5px 10px;margin:5px 1px;border:#a9a9a9 1px solid}.qz-box-head{float:right;padding:10px 0}.qz-box-muted{background-color:#d3d3d3}.qz-box .qz-box-content{vertical-align:middle}.qz-help-text{font-size:10px}',
         TagName = {
             DIV: 'div',
             P: 'p',
             SPAN: 'span',
+            STYLE: 'style',
             STRONG: 'strong'
         };
 
@@ -102,7 +104,9 @@
         /* Public Functions */
 
         return {
-            STYLE: '<style>strong{font-weight:700}#SemanaApontamentos{cursor:default!important}.ContentTable{margin-top:inherit}.FilledSlot,.LastSlot,.emptySlot{height:inherit;padding:5px}.FilledSlot span{margin:inherit!important}.qz-text-primary{color:brown}.qz-text-golden{color:#b8860b}.qz-text-green{color:green}.qz-text-teal{color:teal}.qz-box{padding:5px 10px;margin:5px 1px;border:#a9a9a9 1px solid}.qz-box-head{float:right;padding:10px 0}.qz-box-muted{background-color:#d3d3d3}.qz-box .qz-box-content{vertical-align:middle}.qz-help-text{font-size:10px}</style>',
+            style: function() {
+                return _buildTag(TagName.STYLE, '', Style);
+            },
             header: function() {
                 return _buildTag(TagName.P, 'qz-box-head');
             },
@@ -620,7 +624,7 @@
             return _selectedDays;
         },
         _init = function() {
-            View.append('head', Snippet.STYLE);
+            View.append('head', Snippet.style());
             var _selectedDays = _selectDaysToAnalyze();
             _selectedDays.forEach(_analyzeDay);
             _buildStats();

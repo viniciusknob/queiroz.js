@@ -293,7 +293,7 @@
             return _selectedDays;
         },
         _init = function() {
-            View.append('head', Snippet.STYLE);
+            View.append('head', Snippet.style());
             var _selectedDays = _selectDaysToAnalyze();
             _selectedDays.forEach(_analyzeDay);
             _buildStats();
