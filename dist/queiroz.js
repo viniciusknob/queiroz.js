@@ -12,7 +12,7 @@
     var Queiroz = function() {
         var
             NAME = 'Queiroz.js',
-            VERSION = '2.8.6';
+            VERSION = '2.8.7';
 
         return {
           name: NAME,
@@ -58,12 +58,51 @@
 
 
 /*!
+ * Queiroz.js: strings.js
+ * JavaScript Extension for Dimep Kairos
+ * https://github.com/viniciusknob/queiroz.js
+ */
+
+(function(Queiroz, Resource) {
+
+    /* Class Definition */
+
+    var Strings = function(key) {
+        return Strings._[key];
+    };
+
+    Strings._ = Resource;
+
+    /* Plugin Definition */
+
+    Queiroz.pl.strings = Strings;
+
+})(Queiroz, {
+    "hLastWeek" : "SEMANA PASSADA",
+    "hLabor" : "Efetuado: ",
+    "hBalance" : "Saldo: ",
+    "hPending" : "Pendente: ",
+    "hExtra" : "Extra: ",
+    "hExit" : "Saída: ",
+    "balance" : "Saldo",
+    "labor" : "Efetuado",
+    "working" : "Trabalhando...",
+    "exit" : "Saída"
+}
+);
+
+
+/*!
  * Queiroz.js: snippet.js
  * JavaScript Extension for Dimep Kairos
  * https://github.com/viniciusknob/queiroz.js
  */
 
 (function(Queiroz) {
+
+    /* Plugins */
+
+    var Strings = Queiroz.pl.strings;
 
     /* Constants */
 
@@ -111,25 +150,25 @@
                 return _buildTag(TagName.P, 'qz-box-head');
             },
             headerLastWeekModeOn: function() {
-                return _buildBoxHeader('', 'SEMANA ANTERIOR', 'qz-text-primary');
+                return _buildBoxHeader('', Strings('hLastWeek'), 'qz-text-primary');
             },
             headerLaborTime: function(laborTime) {
-                return _buildBoxHeader('Efetuado: ', laborTime, 'qz-text-green');
+                return _buildBoxHeader(Strings('hLabor'), laborTime, 'qz-text-green');
             },
             headerBalanceTime: function(balanceTime) {
-                return _buildBoxHeader('Saldo: ', balanceTime, 'qz-text-teal');
+                return _buildBoxHeader(Strings('hBalance'), balanceTime, 'qz-text-teal');
             },
             headerWeekPendingTime: function(pendingTime) {
-                return _buildBoxHeader('Pendente: ', pendingTime, 'qz-text-primary');
+                return _buildBoxHeader(Strings('hPending'), pendingTime, 'qz-text-primary');
             },
             headerExtraTime: function(extraTime) {
-                return _buildBoxHeader('Extra: ', extraTime, 'qz-text-green');
+                return _buildBoxHeader(Strings('hExtra'), extraTime, 'qz-text-green');
             },
             headerWeekTimeToLeave: function(timeToLeave) {
-                return _buildBoxHeader('Saída: ', timeToLeave, 'qz-text-primary');
+                return _buildBoxHeader(Strings('hExit'), timeToLeave, 'qz-text-primary');
             },
             balanceTimePerDay: function(balanceTime) {
-                var helpText = _buildTag(TagName.DIV, 'qz-help-text', 'Saldo');
+                var helpText = _buildTag(TagName.DIV, 'qz-help-text', Strings('balance'));
                 var time = _buildTag(TagName.STRONG, 'qz-box-content qz-text-teal', balanceTime);
                 var div = _buildTag(TagName.DIV, 'qz-box qz-box-muted');
                 div.appendChild(helpText);
@@ -137,7 +176,7 @@
                 return div;
             },
             laborTimePerDay: function(laborTime) {
-                var helpText = _buildTag(TagName.DIV, 'qz-help-text', 'Efetuado');
+                var helpText = _buildTag(TagName.DIV, 'qz-help-text', Strings('labor'));
                 var time = _buildTag(TagName.STRONG, 'qz-box-content qz-text-green', laborTime);
                 var div = _buildTag(TagName.DIV, 'qz-box qz-box-muted');
                 div.appendChild(helpText);
@@ -148,7 +187,7 @@
                 var div = _buildTag(TagName.DIV, 'qz-box qz-box-muted');
                 var time = _buildTag(TagName.STRONG, 'qz-box-content', laborTime);
                 if (!finished) {
-                    var helpText = _buildTag(TagName.DIV, 'qz-help-text', 'Trabalhando...');
+                    var helpText = _buildTag(TagName.DIV, 'qz-help-text', Strings('working'));
                     div.appendChild(helpText);
                     time.classList.add('qz-text-golden');
                 }
@@ -156,7 +195,7 @@
                 return div;
             },
             todayTimeToLeave: function(timeToLeave) {
-                var helpText = _buildTag(TagName.DIV, 'qz-help-text', 'Saída');
+                var helpText = _buildTag(TagName.DIV, 'qz-help-text', Strings('exit'));
                 var time = _buildTag(TagName.STRONG, 'qz-box-content qz-text-primary', timeToLeave);
                 var div = _buildTag(TagName.DIV, 'qz-box qz-box-muted');
                 div.appendChild(helpText);

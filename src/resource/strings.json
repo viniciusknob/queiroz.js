@@ -1,0 +1,12 @@
+{
+    "hLastWeek" : "SEMANA PASSADA",
+    "hLabor" : "Efetuado: ",
+    "hBalance" : "Saldo: ",
+    "hPending" : "Pendente: ",
+    "hExtra" : "Extra: ",
+    "hExit" : "Saída: ",
+    "balance" : "Saldo",
+    "labor" : "Efetuado",
+    "working" : "Trabalhando...",
+    "exit" : "Saída"
+}

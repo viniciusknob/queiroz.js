@@ -26,7 +26,7 @@ var
     },
 
     Settings = {
-        VERSION: '2.8.6',
+        VERSION: '2.8.7',
         versionRegex: '(?:\\d+\\.){2}\\d+(?:-beta\\.\\d+)?',
         env: {
             DEV: {
@@ -88,6 +88,12 @@ gulp.task('all.version-dist', function() {
     return setVersion.dist(Settings.env.PRD);
 });
 
+gulp.task('resource.compile', function(callback) {
+    return gulp.src('dist/queiroz.js')
+            .pipe(replace('__strings__', fs.readFileSync('src/resource/strings.json', 'utf8')))
+            .pipe(gulp.dest('dist'));
+});
+
 gulp.task('css.minToJS', function() {
     return gulp.src('dist/queiroz.js')
             .pipe(replace('__css__', fs.readFileSync('src/css/style.min.css', 'utf8')))
@@ -130,6 +136,7 @@ gulp.task('js.concat', function() {
     return gulp.src([
             'src/js/queiroz.js',
             'src/js/kairos.js',
+            'src/js/strings.js',
             'src/js/snippet.js',
             'src/js/view.js',
             'src/js/time.js',
@@ -141,12 +148,19 @@ gulp.task('js.concat', function() {
         .pipe(gulp.dest('dist'));
 });
 
-
-gulp.task('dev', function(callback) {
+gulp.task('commons', function(callback) {
     runSequence(
       'js.concat',
       'css.compile',
+      'resource.compile',
       'js.compress',
+      callback
+    );
+});
+
+gulp.task('dev', function(callback) {
+    runSequence(
+      'commons',
       'dev.version',
       callback
     );
@@ -154,9 +168,7 @@ gulp.task('dev', function(callback) {
 
 gulp.task('release', function(callback) {
     runSequence(
-      'js.concat',
-      'css.compile',
-      'js.compress',
+      'commons',
       'js.docToMin',
       'all.version',
       callback
