@@ -12,7 +12,7 @@
     var Queiroz = function() {
         var
             NAME = 'Queiroz.js',
-            VERSION = '2.8.7';
+            VERSION = '2.8.8';
 
         return {
           name: NAME,
@@ -93,6 +93,29 @@
 
 
 /*!
+ * Queiroz.js: style.js
+ * JavaScript Extension for Dimep Kairos
+ * https://github.com/viniciusknob/queiroz.js
+ */
+
+(function(Queiroz) {
+
+    /* Class Definition */
+
+    var Style = function() {
+        return {
+            CSS: 'strong{font-weight:700}#SemanaApontamentos{cursor:default!important}.ContentTable{margin-top:inherit}.FilledSlot,.LastSlot,.emptySlot{height:inherit;padding:5px}.FilledSlot span{margin:inherit!important}.qz-text-primary{color:brown}.qz-text-golden{color:#b8860b}.qz-text-green{color:green}.qz-text-teal{color:teal}.qz-box{padding:5px 10px;margin:5px 1px;border:#a9a9a9 1px solid}.qz-box-head{float:right;padding:10px 0}.qz-box-muted{background-color:#d3d3d3}.qz-box .qz-box-content{vertical-align:middle}.qz-help-text{font-size:10px}'
+        };
+    }();
+
+    /* Plugin Definition */
+
+    Queiroz.pl.style = Style;
+
+})(Queiroz);
+
+
+/*!
  * Queiroz.js: snippet.js
  * JavaScript Extension for Dimep Kairos
  * https://github.com/viniciusknob/queiroz.js
@@ -102,12 +125,13 @@
 
     /* Plugins */
 
-    var Strings = Queiroz.pl.strings;
+    var
+      Strings = Queiroz.pl.strings,
+      Style = Queiroz.pl.style;
 
     /* Constants */
 
     var
-        Style = 'strong{font-weight:700}#SemanaApontamentos{cursor:default!important}.ContentTable{margin-top:inherit}.FilledSlot,.LastSlot,.emptySlot{height:inherit;padding:5px}.FilledSlot span{margin:inherit!important}.qz-text-primary{color:brown}.qz-text-golden{color:#b8860b}.qz-text-green{color:green}.qz-text-teal{color:teal}.qz-box{padding:5px 10px;margin:5px 1px;border:#a9a9a9 1px solid}.qz-box-head{float:right;padding:10px 0}.qz-box-muted{background-color:#d3d3d3}.qz-box .qz-box-content{vertical-align:middle}.qz-help-text{font-size:10px}',
         TagName = {
             DIV: 'div',
             P: 'p',
@@ -144,7 +168,7 @@
 
         return {
             style: function() {
-                return _buildTag(TagName.STYLE, '', Style);
+                return _buildTag(TagName.STYLE, '', Style.CSS);
             },
             header: function() {
                 return _buildTag(TagName.P, 'qz-box-head');

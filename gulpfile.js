@@ -26,7 +26,7 @@ var
     },
 
     Settings = {
-        VERSION: '2.8.7',
+        VERSION: '2.8.8',
         versionRegex: '(?:\\d+\\.){2}\\d+(?:-beta\\.\\d+)?',
         env: {
             DEV: {
@@ -137,6 +137,7 @@ gulp.task('js.concat', function() {
             'src/js/queiroz.js',
             'src/js/kairos.js',
             'src/js/strings.js',
+            'src/js/style.js',
             'src/js/snippet.js',
             'src/js/view.js',
             'src/js/time.js',

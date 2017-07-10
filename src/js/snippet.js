@@ -9,12 +9,13 @@
 
     /* Plugins */
 
-    var Strings = Queiroz.pl.strings;
+    var
+      Strings = Queiroz.pl.strings,
+      Style = Queiroz.pl.style;
 
     /* Constants */
 
     var
-        Style = '__css__',
         TagName = {
             DIV: 'div',
             P: 'p',
@@ -51,7 +52,7 @@
 
         return {
             style: function() {
-                return _buildTag(TagName.STYLE, '', Style);
+                return _buildTag(TagName.STYLE, '', Style.CSS);
             },
             header: function() {
                 return _buildTag(TagName.P, 'qz-box-head');
