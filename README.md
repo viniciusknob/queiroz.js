@@ -1,4 +1,4 @@
-# Queiroz.js 2.8.9
+# Queiroz.js 2.8.10
 JavaScript Extension for Dimep Kairos
 
 ### Autor
@@ -10,11 +10,11 @@ JavaScript Extension for Dimep Kairos
 Manualmente:
 1. Após efetuar login, acesse um dos menus de apresentação dos horários: Ponto ou Pedidos;
 2. Abra as Ferramentas do Desenvolvedor;
-3. Copie, cole e execute o código contido [aqui](../master/dist/queiroz.min.js).
+3. Copie, cole e execute o código contido [aqui](../raw/master/dist/queiroz.min.js).
 
 Automatizado, utilizando como UserScript:
-1. Copie a configuração contida [aqui](../master/queiroz.user.js);
-2. Crie um novo script para execução em algum Gerenciador de Script.
+1. Instale um dos Gerenciadores de Script indicados abaixo;
+2. Clique [aqui](../raw/master/queiroz.user.js).
 
 Indicados:
 * Tampermonkey (Chrome)
@@ -52,7 +52,7 @@ Por favor, consulte as [Diretrizes de Contribuição](../master/CONTRIBUTING.md)
 ### Agradecimentos
 
 * **Matheus Barbieri**: Pelas diversas discussões, e constantes, sobre possíveis modificações envolvendo melhorias e novas funcionalidades. Pela sugestão, e código, de e para o uso de UserScript Managers. Obrigado.
-* **Kelvin Klann**: Pela sugestão de uso do Gulp, facilitando a organização e controle do código, bem como minha vida de Desenvolvedor. Obrigado.
+* **Kelvin Klann**: Pela sugestão de uso do Gulp, entre outras dicas, facilitando a organização e controle do código, bem como minha vida de Desenvolvedor. Obrigado.
 * **Aos demais**: Pelos bug reports e pelas novas ideias. Obrigado.
 
 ### Licença

@@ -26,7 +26,7 @@ var
     },
 
     Settings = {
-        VERSION: '2.8.9',
+        VERSION: '2.8.10',
         versionRegex: '(?:\\d+\\.){2}\\d+(?:-beta\\.\\d+)?',
         env: {
             DEV: {
@@ -50,10 +50,12 @@ var
             return gulp
                 .src([
                     './README.md',   // Queiroz.js 2.2.3
-                    './package.json' // "version": "2.2.3"
+                    './package.json', // "version": "2.2.3"
+                    './queiroz.user.js'
                 ])
-                .pipe(replace(new RegExp('(js )'+Settings.versionRegex), env.versionReplacer))
+                .pipe(replace(new RegExp('(js\\s+)'+Settings.versionRegex), env.versionReplacer))
                 .pipe(replace(new RegExp('(version.{4})'+Settings.versionRegex), env.versionReplacer))
+                .pipe(replace(new RegExp('(version\\s+)'+Settings.versionRegex), env.versionReplacer))
                 .pipe(gulp.dest('./'));
         },
         dist: function(env) {
@@ -73,19 +75,16 @@ gulp.task('dev.version', function() {
     return setVersion.dist(Settings.env.DEV);
 });
 
-gulp.task('all.version', [
-    'all.version-root',
-    'all.version-dist'
-], function(callback) {
-     callback();
-});
-
 gulp.task('all.version-root', function() {
     return setVersion.root(Settings.env.PRD);
 });
 
 gulp.task('all.version-dist', function() {
     return setVersion.dist(Settings.env.PRD);
+});
+
+gulp.task('all.version', function(callback) {
+    runSequence('all.version-root', 'all.version-dist', callback);
 });
 
 gulp.task('resource.compile', function(callback) {
