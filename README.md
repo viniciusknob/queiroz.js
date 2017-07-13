@@ -1,4 +1,4 @@
-# Queiroz.js 2.8.8
+# Queiroz.js 2.8.9
 JavaScript Extension for Dimep Kairos
 
 ### Autor
@@ -13,7 +13,7 @@ Manualmente:
 3. Copie, cole e execute o código contido [aqui](../master/dist/queiroz.min.js).
 
 Automatizado, utilizando como UserScript:
-1. Copie a configuração contida [aqui](../master/UserScript.js);
+1. Copie a configuração contida [aqui](../master/queiroz.user.js);
 2. Crie um novo script para execução em algum Gerenciador de Script.
 
 Indicados:
