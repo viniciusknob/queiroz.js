@@ -20,8 +20,8 @@
         };
     }();
 
-    /* Plugin Definition */
+    /* Module Definition */
 
-    Queiroz.pl.kairos = Kairos;
+    Queiroz.module.kairos = Kairos;
 
 })(window, Queiroz);

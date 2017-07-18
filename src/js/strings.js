@@ -15,8 +15,8 @@
 
     Strings._ = Resource;
 
-    /* Plugin Definition */
+    /* Module Definition */
 
-    Queiroz.pl.strings = Strings;
+    Queiroz.module.strings = Strings;
 
 })(Queiroz, __strings__);

@@ -7,11 +7,11 @@
 
 (function(Queiroz) {
 
-    /* Plugins */
+    /* Modules */
 
     var
-      Strings = Queiroz.pl.strings,
-      Style = Queiroz.pl.style;
+      Strings = Queiroz.module.strings,
+      Style = Queiroz.module.style;
 
     /* Constants */
 
@@ -113,8 +113,8 @@
         };
     }();
 
-    /* Plugin Definition */
+    /* Module Definition */
 
-    Queiroz.pl.snippet = Snippet;
+    Queiroz.module.snippet = Snippet;
 
 })(Queiroz);

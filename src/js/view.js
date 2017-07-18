@@ -39,8 +39,8 @@
         };
     }();
 
-    /* Plugin Definition */
+    /* Module Definition */
 
-    Queiroz.pl.view = View;
+    Queiroz.module.view = View;
 
 })(document, Queiroz);

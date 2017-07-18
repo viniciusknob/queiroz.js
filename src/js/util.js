@@ -21,8 +21,8 @@
         };
     }();
 
-    /* Plugin Definition */
+    /* Module Definition */
 
-    Queiroz.pl.util = Util;
+    Queiroz.module.util = Util;
 
 })(Queiroz);

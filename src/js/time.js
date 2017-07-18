@@ -73,8 +73,8 @@
         };
     }();
 
-    /* Plugin Definition */
+    /* Module Definition */
 
-    Queiroz.pl.time = Time;
+    Queiroz.module.time = Time;
 
 })(Queiroz);

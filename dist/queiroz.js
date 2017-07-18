@@ -12,13 +12,13 @@
     var Queiroz = function() {
         var
             NAME = 'Queiroz.js',
-            VERSION = '2.8.12';
+            VERSION = '2.8.13';
 
         return {
           name: NAME,
           version: VERSION,
           description: NAME + ' ' + VERSION,
-          pl: {}
+          module: {}
         };
     }();
 
@@ -50,9 +50,9 @@
         };
     }();
 
-    /* Plugin Definition */
+    /* Module Definition */
 
-    Queiroz.pl.kairos = Kairos;
+    Queiroz.module.kairos = Kairos;
 
 })(window, Queiroz);
 
@@ -73,9 +73,9 @@
 
     Strings._ = Resource;
 
-    /* Plugin Definition */
+    /* Module Definition */
 
-    Queiroz.pl.strings = Strings;
+    Queiroz.module.strings = Strings;
 
 })(Queiroz, {
     "hLastWeek" : "SEMANA PASSADA",
@@ -108,9 +108,9 @@
         };
     }();
 
-    /* Plugin Definition */
+    /* Module Definition */
 
-    Queiroz.pl.style = Style;
+    Queiroz.module.style = Style;
 
 })(Queiroz);
 
@@ -123,11 +123,11 @@
 
 (function(Queiroz) {
 
-    /* Plugins */
+    /* Modules */
 
     var
-      Strings = Queiroz.pl.strings,
-      Style = Queiroz.pl.style;
+      Strings = Queiroz.module.strings,
+      Style = Queiroz.module.style;
 
     /* Constants */
 
@@ -229,9 +229,9 @@
         };
     }();
 
-    /* Plugin Definition */
+    /* Module Definition */
 
-    Queiroz.pl.snippet = Snippet;
+    Queiroz.module.snippet = Snippet;
 
 })(Queiroz);
 
@@ -276,9 +276,9 @@
         };
     }();
 
-    /* Plugin Definition */
+    /* Module Definition */
 
-    Queiroz.pl.view = View;
+    Queiroz.module.view = View;
 
 })(document, Queiroz);
 
@@ -357,9 +357,9 @@
         };
     }();
 
-    /* Plugin Definition */
+    /* Module Definition */
 
-    Queiroz.pl.time = Time;
+    Queiroz.module.time = Time;
 
 })(Queiroz);
 
@@ -386,9 +386,9 @@
         };
     }();
 
-    /* Plugin Definition */
+    /* Module Definition */
 
-    Queiroz.pl.util = Util;
+    Queiroz.module.util = Util;
 
 })(Queiroz);
 
@@ -401,14 +401,15 @@
 
 (function(Queiroz) {
 
-    /* Plugins */
+    /* Modules */
 
     var
-        Kairos  = Queiroz.pl.kairos,
-        View    = Queiroz.pl.view,
-        Time    = Queiroz.pl.time,
-        Util    = Queiroz.pl.util,
-        Snippet = Queiroz.pl.snippet;
+        mod     = Queiroz.module,
+        Kairos  = mod.kairos,
+        View    = mod.view,
+        Time    = mod.time,
+        Util    = mod.util,
+        Snippet = mod.snippet;
 
     /* Constants */
 

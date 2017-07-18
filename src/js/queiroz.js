@@ -18,7 +18,7 @@
           name: NAME,
           version: VERSION,
           description: NAME + ' ' + VERSION,
-          pl: {}
+          module: {}
         };
     }();
 

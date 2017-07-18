@@ -7,14 +7,15 @@
 
 (function(Queiroz) {
 
-    /* Plugins */
+    /* Modules */
 
     var
-        Kairos  = Queiroz.pl.kairos,
-        View    = Queiroz.pl.view,
-        Time    = Queiroz.pl.time,
-        Util    = Queiroz.pl.util,
-        Snippet = Queiroz.pl.snippet;
+        mod     = Queiroz.module,
+        Kairos  = mod.kairos,
+        View    = mod.view,
+        Time    = mod.time,
+        Util    = mod.util,
+        Snippet = mod.snippet;
 
     /* Constants */
 

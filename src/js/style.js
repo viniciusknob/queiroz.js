@@ -15,8 +15,8 @@
         };
     }();
 
-    /* Plugin Definition */
+    /* Module Definition */
 
-    Queiroz.pl.style = Style;
+    Queiroz.module.style = Style;
 
 })(Queiroz);
