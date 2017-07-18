@@ -12,7 +12,7 @@
     var Queiroz = function() {
         var
             NAME = 'Queiroz.js',
-            VERSION = '2.8.11';
+            VERSION = '2.8.12';
 
         return {
           name: NAME,
@@ -428,7 +428,7 @@
             DATE: '[id^=hiddenDiaApont]',
             HEADER: '#SemanaApontamentos div',
             TIME_IN: '.TimeIN,.TimeINVisualizacao',
-            FOOTER: 'footer label'
+            FOOTER: 'footer .LabelEmpresa'
         };
 
     /* Private Functions */

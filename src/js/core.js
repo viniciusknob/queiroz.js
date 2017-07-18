@@ -34,7 +34,7 @@
             DATE: '[id^=hiddenDiaApont]',
             HEADER: '#SemanaApontamentos div',
             TIME_IN: '.TimeIN,.TimeINVisualizacao',
-            FOOTER: 'footer label'
+            FOOTER: 'footer .LabelEmpresa'
         };
 
     /* Private Functions */

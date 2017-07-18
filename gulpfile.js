@@ -26,7 +26,7 @@ var
     },
 
     Settings = {
-        VERSION: '2.8.11',
+        VERSION: '2.8.12',
         versionRegex: '(?:\\d+\\.){2}\\d+(?:-beta\\.\\d+)?',
         env: {
             DEV: {
@@ -49,9 +49,9 @@ var
         root: function(env) {
             return gulp
                 .src([
-                    './README.md',   // Queiroz.js 2.2.3
-                    './package.json', // "version": "2.2.3"
-                    './queiroz.user.js'
+                    './README.md',   // Queiroz.js 2.8.12
+                    './package.json', // "version": "2.8.12"
+                    './queiroz.user.js' // version 2.8.12
                 ])
                 .pipe(replace(new RegExp('(js\\s+)'+Settings.versionRegex), env.versionReplacer))
                 .pipe(replace(new RegExp('(version.{4})'+Settings.versionRegex), env.versionReplacer))
