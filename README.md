@@ -1,4 +1,4 @@
-# Queiroz.js 2.8.13
+# Queiroz.js 2.8.14
 JavaScript Extension for Dimep Kairos
 
 ### Autor
@@ -8,6 +8,8 @@ JavaScript Extension for Dimep Kairos
 ### Como utilizar
 
 UserScript: [queiroz.user.js](../../raw/master/queiroz.user.js)
+
+ou
 
 Manualmente:
 1. Após efetuar login, acesse um dos menus de apresentação dos horários: Ponto ou Pedidos;
