@@ -188,11 +188,21 @@
               eDay.appendChild(Snippet.balanceTimePerDay(humanMillis));
             }
         },
+        _renderTodayBalancedTimeToLeave = function(context, inputMillis) {
+            var pendingTime = (_getMaxMinutesPerDayInMillis() - data.today.laborTime.millis) - data.week.balanceTime.millis;
+            var timeToLeaveInMillis = inputMillis + (pendingTime < 0 ? 0 : pendingTime);
+            var humanTimeToLeave = new Date(timeToLeaveInMillis).getTimeAsString();
+            var html = Snippet.todayTimeToLeave(humanTimeToLeave, true);
+            var filledSlotOut = context.parentNode;
+            filledSlotOut.parentNode.insertBefore(html, filledSlotOut.nextSibling);
+        },
         _renderTodayTimeToLeave = function(context, inputMillis) {
+            _renderTodayBalancedTimeToLeave(context, inputMillis);
+
             var pendingTime = _getMaxMinutesPerDayInMillis() - data.today.laborTime.millis;
             var timeToLeaveInMillis = inputMillis + (pendingTime < 0 ? 0 : pendingTime);
             var humanTimeToLeave = new Date(timeToLeaveInMillis).getTimeAsString();
-            var html = Snippet.todayTimeToLeave(humanTimeToLeave);
+            var html = Snippet.todayTimeToLeave(humanTimeToLeave, false);
             var filledSlotOut = context.parentNode;
             filledSlotOut.parentNode.insertBefore(html, filledSlotOut.nextSibling);
         },
@@ -222,9 +232,11 @@
                         }
                     } else {
                         _lastInDate = inDate;
-                        if (Time.isToday(inDate) && ((_getMaxHoursPerWeekInMillis() - data.week.laborTime.millis) > _getMaxMinutesPerDayInMillis())) {
-                            _renderTodayTimeToLeave(inElement, inDate.getMillis());
-                        }
+
+                        if (Time.isToday(inDate))
+                            if ((_getMaxHoursPerWeekInMillis() - data.week.laborTime.millis) > _getMaxMinutesPerDayInMillis())
+                                _renderTodayTimeToLeave(inElement, inDate.getMillis());
+
                         var diffUntilNow = Time.diff(inDate, new Date());
                         if (diffUntilNow < (_getMaxConsecutiveHoursPerDayInMillis())) {
                             var shiftInMillisUntilNow = millis + diffUntilNow;

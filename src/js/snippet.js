@@ -117,11 +117,12 @@
                 div.appendChild(time);
                 return div;
             },
-            todayTimeToLeave: function(timeToLeave) {
-                var helpText = _buildTag(TagName.DIV, 'qz-help-text', Strings('exit'));
+            todayTimeToLeave: function(timeToLeave, balanced) {
+                var helpText = balanced ? Strings('balancedExit') : Strings('exit');
+                var content = _buildTag(TagName.DIV, 'qz-help-text', helpText);
                 var time = _buildTag(TagName.STRONG, 'qz-box-content qz-text-primary', timeToLeave);
                 var div = _buildTag(TagName.DIV, 'qz-box qz-box-muted');
-                div.appendChild(helpText);
+                div.appendChild(content);
                 div.appendChild(time);
                 return div;
             }

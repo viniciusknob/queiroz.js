@@ -8,5 +8,6 @@
     "balance" : "Saldo",
     "labor" : "Efetuado",
     "working" : "Trabalhando...",
-    "exit" : "Saída"
+    "exit" : "Saída (08:48)",
+    "balancedExit" : "Saída + Saldo"
 }
