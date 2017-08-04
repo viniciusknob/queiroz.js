@@ -10,24 +10,13 @@
     /* Modules */
 
     var
-        mod     = Queiroz.module,
-        Kairos  = mod.kairos,
-        View    = mod.view,
-        Time    = mod.time,
-        Util    = mod.util,
-        Snippet = mod.snippet;
-
-    /* Constants */
-
-    var
-        Settings = {
-            INITIAL_WEEKDAY: Time.Weekday.MONDAY,
-            LAST_WEEK_MODE: false, // false, ON, DOING, DONE
-            MAX_CONSECUTIVE_HOURS_PER_DAY: 6,
-            MAX_HOURS_PER_WEEK: 44,
-            MAX_MINUTES_PER_DAY: (8 * 60) + 48,
-            USERSCRIPT_DELAY_MILLIS: 1000
-        };
+        Settings = Queiroz.settings,
+        mod      = Queiroz.module,
+        Kairos   = mod.kairos,
+        View     = mod.view,
+        Time     = mod.time,
+        Util     = mod.util,
+        Snippet  = mod.snippet;
 
     /* Private Functions */
 
@@ -41,7 +30,6 @@
         _getMaxMinutesPerDayInMillis = function() {
             return Time.minuteToMillis(Settings.MAX_MINUTES_PER_DAY);
         };
-
 
     var data = {
         week: {
@@ -64,14 +52,7 @@
                 return this.laborTime.millis - _getMaxHoursPerWeekInMillis();
             },
             _buildHumanBalanceTime: function() {
-                var millis = this.balanceTime.millis;
-                if (millis == 0) {
-                    return Time.zero;
-                } else if (millis > 0) {
-                    return '+' + Time.millisToHuman(millis);
-                } else if (millis < 0) {
-                    return '-' + Time.millisToHuman(millis * -1);
-                }
+                return Time.millisToHumanWithSign(this.balanceTime.millis);
             },
             buildTime: function() {
                 this.pendingTime.millis = this._computePendingTimeInMillis();
@@ -115,12 +96,12 @@
 
             var htmlHumanTimeToLeave = '';
             if (_lastInDate) {
-                var timeToLeaveInMillis = _lastInDate.getTime() + data.week.pendingTime.millis;
-                if (!timeToLeaveInMillis || timeToLeaveInMillis < new Date().getTime()) {
+                var timeToLeaveInMillis = _lastInDate.getMillis() + data.week.pendingTime.millis;
+                if (!timeToLeaveInMillis || timeToLeaveInMillis < new Date().getMillis()) {
                     return '';
                 }
 
-                var humanTimeToLeave = Time.dateToHuman(new Date(timeToLeaveInMillis));
+                var humanTimeToLeave = new Date(timeToLeaveInMillis).getTimeAsString();
                 htmlHumanTimeToLeave = Snippet.headerWeekTimeToLeave(humanTimeToLeave);
             }
             return htmlHumanTimeToLeave;
@@ -152,7 +133,8 @@
                     data.week.laborTime.html,
                     data.week.balanceTime.html,
                     htmlPendingOrExtraTime,
-                    htmlHumanTimeToLeave
+                    htmlHumanTimeToLeave,
+                    Snippet.headerBeta()
                 ],
                 html = _buildHtmlHeader(args);
 
@@ -209,7 +191,7 @@
         _renderTodayTimeToLeave = function(context, inputMillis) {
             var pendingTime = _getMaxMinutesPerDayInMillis() - data.today.laborTime.millis;
             var timeToLeaveInMillis = inputMillis + (pendingTime < 0 ? 0 : pendingTime);
-            var humanTimeToLeave = Time.dateToHuman(new Date(timeToLeaveInMillis));
+            var humanTimeToLeave = new Date(timeToLeaveInMillis).getTimeAsString();
             var html = Snippet.todayTimeToLeave(humanTimeToLeave);
             var filledSlotOut = context.parentNode;
             filledSlotOut.parentNode.insertBefore(html, filledSlotOut.nextSibling);
@@ -224,7 +206,7 @@
                         inDate = Time.toDate(_getDate(eDay) + " " + inText), // typeOf inDate == Date
                         outElement = checkpoints[(index * 2) + 1];
 
-                    if (outElement && !outElement.parentElement.classList.contains('LastSlot')) { // TODO
+                    if (outElement && outElement.parentElement.classList.contains('LastSlot') == false) { // TODO
                         var
                             outText = outElement.textContent, // 04:34
                             outDate = Time.toDate(_getDate(eDay) + " " + outText),  // typeOf outDate == Date
@@ -241,7 +223,7 @@
                     } else {
                         _lastInDate = inDate;
                         if (Time.isToday(inDate) && ((_getMaxHoursPerWeekInMillis() - data.week.laborTime.millis) > _getMaxMinutesPerDayInMillis())) {
-                            _renderTodayTimeToLeave(inElement, inDate.getTime());
+                            _renderTodayTimeToLeave(inElement, inDate.getMillis());
                         }
                         var diffUntilNow = Time.diff(inDate, new Date());
                         if (diffUntilNow < (_getMaxConsecutiveHoursPerDayInMillis())) {
@@ -284,6 +266,16 @@
             });
             return _selectedDays;
         },
+        _removeLastWeekDays = function(data) {
+            var
+                targetIndex = 0,
+                days = data.days;
+            days.forEach(function(day, index) {
+                if (day.date.getDay() === Settings.INITIAL_WEEKDAY)
+                    targetIndex = index;
+            });
+            data.days = days.slice(targetIndex);
+        },
         _init = function() {
             View.appendToHead(Snippet.style());
             var _selectedDays = _selectDaysToAnalyze();
@@ -320,6 +312,31 @@
         }
         View.appendToFooter(this.description);
         return this.description;
+    };
+
+    Queiroz.beta = function() {
+        var modal = document.querySelector('.qz-modal');
+        if (modal) {
+            modal.classList.remove('js-hide');
+            modal.classList.add('js-show');
+            return;
+        }
+        /*
+        var data = View.collectData();
+        Time.transformToDate(data);
+        _removeLastWeekDays(data);
+        Time.computeTimes(data);
+        Time.transformToHuman(data);
+        */
+        View.appendToBody('__modal__', function() {
+            document.querySelector(".qz-modal-close").onclick = function() {
+                if (!modal) {
+                    modal = document.querySelector('.qz-modal');
+                }
+                modal.classList.remove('js-show');
+                modal.classList.add('js-hide');
+            };
+        });
     };
 
 })(Queiroz);

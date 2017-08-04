@@ -1,13 +1,13 @@
 var
     gulp = require('gulp'),
+    fs = require('fs'),
     replace = require('gulp-replace'),
-    minify = require('gulp-minify'),
-    cleanCSS = require('gulp-clean-css'),
-    runSequence = require('run-sequence'),
     concat = require('gulp-concat'),
     rename = require('gulp-rename'),
-    fs = require('fs')
-;
+    jsMinify = require('gulp-minify'),
+    cssMinify = require('gulp-clean-css'),
+    htmlMinify = require('gulp-htmlmin'),
+    runSequence = require('run-sequence');
 
 var
     currentDateTimeToString = function() {
@@ -26,7 +26,7 @@ var
     },
 
     Settings = {
-        VERSION: '2.8.14',
+        VERSION: '2.9.0',
         versionRegex: '(?:\\d+\\.){2}\\d+(?:-beta\\.\\d+)?',
         env: {
             DEV: {
@@ -89,23 +89,44 @@ gulp.task('all.version', function(callback) {
 
 gulp.task('resource.compile', function(callback) {
     return gulp.src('dist/queiroz.js')
-            .pipe(replace('__strings__', fs.readFileSync('src/resource/strings.json', 'utf8')))
-            .pipe(gulp.dest('dist'));
+        .pipe(replace('__strings__', fs.readFileSync('src/resource/strings.json', 'utf8')))
+        .pipe(gulp.dest('dist'));
+});
+
+gulp.task('html.minToJS', function() {
+    return gulp.src('dist/queiroz.js')
+        .pipe(replace('__modal__', fs.readFileSync('build/html/modal.min.html', 'utf8')))
+        .pipe(gulp.dest('dist'));
+});
+
+gulp.task('html.compress', function() {
+    return gulp.src('src/html/modal.html')
+        .pipe(htmlMinify({
+            collapseWhitespace: true
+        }))
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(gulp.dest('build/html'));
+});
+
+gulp.task('html.compile', function(callback) {
+    runSequence('html.compress', 'html.minToJS', callback);
 });
 
 gulp.task('css.minToJS', function() {
     return gulp.src('dist/queiroz.js')
-            .pipe(replace('__css__', fs.readFileSync('src/css/style.min.css', 'utf8')))
-            .pipe(gulp.dest('dist'));
+        .pipe(replace('__css__', fs.readFileSync('build/css/style.min.css', 'utf8')))
+        .pipe(gulp.dest('dist'));
 });
 
 gulp.task('css.compress', function() {
     return gulp.src('src/css/style.css')
-        .pipe(cleanCSS())
+        .pipe(cssMinify())
         .pipe(rename({
             suffix: '.min'
         }))
-        .pipe(gulp.dest('src/css'));
+        .pipe(gulp.dest('build/css'));
 });
 
 gulp.task('css.compile', function(callback) {
@@ -114,7 +135,7 @@ gulp.task('css.compile', function(callback) {
 
 gulp.task('js.compress', function() {
     return gulp.src('dist/queiroz.js')
-        .pipe(minify({
+        .pipe(jsMinify({
            ext: {
                min:'.min.js'
            }
@@ -152,6 +173,7 @@ gulp.task('commons', function(callback) {
     runSequence(
       'js.concat',
       'css.compile',
+      'html.compile',
       'resource.compile',
       'js.compress',
       callback

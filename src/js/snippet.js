@@ -5,7 +5,7 @@
  * https://github.com/viniciusknob/queiroz.js
  */
 
-(function(Queiroz) {
+(function(document, Queiroz) {
 
     /* Modules */
 
@@ -21,7 +21,15 @@
             P: 'p',
             SPAN: 'span',
             STYLE: 'style',
-            STRONG: 'strong'
+            STRONG: 'strong',
+            BUTTON: 'button',
+            SMALL: 'small',
+            TABLE: 'table',
+            THEAD: 'thead',
+            TBODY: 'tbody',
+            TH: 'th',
+            TR: 'tr',
+            TD: 'td'
         };
 
 
@@ -75,6 +83,13 @@
             headerWeekTimeToLeave: function(timeToLeave) {
                 return _buildBoxHeader(Strings('hExit'), timeToLeave, 'qz-text-primary');
             },
+            headerBeta: function() {
+                var box = _buildBoxHeader('', '', 'fa fa-flask');
+                box.onclick = function() {
+                    Queiroz.beta();
+                }
+                return box;
+            },
             balanceTimePerDay: function(balanceTime) {
                 var helpText = _buildTag(TagName.DIV, 'qz-help-text', Strings('balance'));
                 var time = _buildTag(TagName.STRONG, 'qz-box-content qz-text-teal', balanceTime);
@@ -117,4 +132,4 @@
 
     Queiroz.module.snippet = Snippet;
 
-})(Queiroz);
+})(document, Queiroz);

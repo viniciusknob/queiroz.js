@@ -7,6 +7,10 @@
 
 (function(document, Queiroz) {
 
+    /* Modules */
+
+    var Snippet = Queiroz.snippet;
+
     /* Class Definition */
 
     var View = function() {
@@ -16,6 +20,7 @@
         var
             Selector = {
                 HEAD: 'head',
+                BODY: 'body',
                 COLUMN_DAY: '.DiaApontamento',
                 CHECKPOINT: '.FilledSlot span',
                 DATE: '[id^=hiddenDiaApont]',
@@ -36,7 +41,7 @@
             _getAll = function(selector, target) {
                 return (target || document).querySelectorAll(selector);
             },
-            _append = function(selector, html) {
+            _append = function(selector, html, callback) {
               _asyncReflow(function() {
                   var
                       element = _get(selector),
@@ -49,14 +54,54 @@
                   }
 
                   element.appendChild(container);
+
+                  if (callback)
+                    callback();
               });
             };
 
         /* Public Functions */
 
         return {
+            collectData: function() {
+                var
+                    data = {},
+                    days = [],
+                    eColumns = _getAll(Selector.COLUMN_DAY);
+
+                eColumns.forEach(function(eDay) {
+                    var
+                        day = {
+                            date: _get(Selector.DATE, eDay).value,
+                            periods: []
+                        },
+                        eCheckpoints = _getAll(Selector.CHECKPOINT, eDay);
+
+                    eCheckpoints.forEach(function(eTime) {
+                        var
+                            _classes = eTime.classList.value,
+                            _time = eTime.textContent,
+                            _periods = day.periods;
+
+                        if (/TimeIN/.test(_classes)) {
+                            _periods.push({in:_time, out:false});
+                        } else
+                            if (/TimeOUT/.test(_classes)) {
+                                var _last = _periods.last();
+                                if (_last && _last.out == false) {
+                                    _last.out = _time;
+                                } else {
+                                    _periods.push({in:false, out:_time});
+                                }
+                            }
+                    });
+                    days.push(day);
+                });
+                data.days = days;
+                return data;
+            },
             isLoaded: function() {
-              return _get(Selector.CHECKPOINT);
+                return _get(Selector.CHECKPOINT);
             },
             getAllColumnDay: function() {
                 return _getAll(Selector.COLUMN_DAY);
@@ -72,6 +117,9 @@
             },
             appendToHead: function(html) {
                 _append(Selector.HEAD, html);
+            },
+            appendToBody: function(html, callback) {
+                _append(Selector.BODY, html, callback);
             },
             appendToHeader: function(html) {
                 _append(Selector.HEADER, html);
