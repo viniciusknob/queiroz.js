@@ -1,0 +1,17 @@
+/* Override */
+
+#SemanaApontamentos {
+    cursor: default !important;
+}
+.ContentTable {
+    margin-top: inherit;
+}
+.emptySlot,
+.FilledSlot,
+.LastSlot {
+    height: inherit;
+    padding: 5px;
+}
+.FilledSlot span {
+    margin: inherit !important;
+}

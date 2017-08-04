@@ -2,7 +2,8 @@ var
     gulp = require('gulp'),
     fs = require('fs'),
     replace = require('gulp-replace'),
-    concat = require('gulp-concat'),
+    jsConcat = require('gulp-concat'),
+    cssConcat = require('gulp-concat-css'),
     rename = require('gulp-rename'),
     jsMinify = require('gulp-minify'),
     cssMinify = require('gulp-clean-css'),
@@ -26,7 +27,7 @@ var
     },
 
     Settings = {
-        VERSION: '2.9.0',
+        VERSION: '2.9.1',
         versionRegex: '(?:\\d+\\.){2}\\d+(?:-beta\\.\\d+)?',
         env: {
             DEV: {
@@ -116,12 +117,12 @@ gulp.task('html.compile', function(callback) {
 
 gulp.task('css.minToJS', function() {
     return gulp.src('dist/queiroz.js')
-        .pipe(replace('__css__', fs.readFileSync('build/css/style.min.css', 'utf8')))
+        .pipe(replace('__css__', fs.readFileSync('build/css/queiroz.min.css', 'utf8')))
         .pipe(gulp.dest('dist'));
 });
 
 gulp.task('css.compress', function() {
-    return gulp.src('src/css/style.css')
+    return gulp.src('build/css/queiroz.css')
         .pipe(cssMinify())
         .pipe(rename({
             suffix: '.min'
@@ -129,8 +130,18 @@ gulp.task('css.compress', function() {
         .pipe(gulp.dest('build/css'));
 });
 
+gulp.task('css.concat', function() {
+    return gulp.src([
+            'src/css/normalize.css',
+            'src/css/kairos.css',
+            'src/css/queiroz.css'
+        ])
+        .pipe(cssConcat('queiroz.css'))
+        .pipe(gulp.dest('build/css'));
+});
+
 gulp.task('css.compile', function(callback) {
-    runSequence('css.compress', 'css.minToJS', callback);
+    runSequence('css.concat', 'css.compress', 'css.minToJS', callback);
 });
 
 gulp.task('js.compress', function() {
@@ -148,7 +159,7 @@ gulp.task('js.docToMin', function() {
             'src/js/dochead.js',
             'dist/queiroz.min.js'
         ])
-        .pipe(concat('queiroz.min.js'))
+        .pipe(jsConcat('queiroz.min.js'))
         .pipe(gulp.dest('dist'));
 });
 
@@ -165,7 +176,7 @@ gulp.task('js.concat', function() {
             'src/js/core.js',
             'src/js/autoexec.js'
         ])
-        .pipe(concat('queiroz.js'))
+        .pipe(jsConcat('queiroz.js'))
         .pipe(gulp.dest('dist'));
 });
 

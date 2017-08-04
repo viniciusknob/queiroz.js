@@ -1,0 +1,97 @@
+
+/* Queiroz.js CSS */
+
+.qz-text-center {
+    text-align: center;
+}
+.qz-text-primary {
+    color: brown;
+}
+.qz-text-golden {
+    color: darkgoldenrod;
+}
+.qz-text-green {
+    color: green;
+}
+.qz-text-teal {
+    color: teal;
+}
+.qz-box {
+    padding: 5px 10px;
+    margin: 5px 1px;
+    border: darkgrey 1px solid;
+}
+.qz-box-head {
+    float: right;
+    padding: 10px 0;
+}
+.qz-box-muted {
+    background-color: lightgray;
+}
+.qz-box .qz-box-content {
+    vertical-align: middle;
+}
+.qz-help-text {
+    font-size: 10px;
+}
+
+/* Queiroz.js Event */
+
+.js-show {
+    display: block;
+}
+
+.js-hide {
+    display: none;
+}
+
+/* Queiroz.js Modal */
+
+.qz-modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1024;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.qz-modal-dialog {
+    position: relative;
+    width: 900px;
+    margin: 30px auto;
+}
+
+.qz-modal-content {
+    position: relative;
+    background-color: white;
+    background-clip: padding-box;
+    border-radius: 5px;
+}
+
+.qz-modal-header {
+    padding: 10px;
+    border-bottom: 1px solid lightgray;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.qz-modal-close {
+    float: right;
+    cursor: pointer;
+    background: 0 0;
+    border: 0;
+    padding: 0;
+    color: silver;
+}
+
+.qz-modal-body {
+    padding: 10px;
+}
+
+.qz-modal-footer {
+    padding: 10px;
+    border-top: 1px solid lightgray;
+    text-align: center;
+}
