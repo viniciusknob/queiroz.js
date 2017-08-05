@@ -123,15 +123,23 @@
             data.week.buildHtmlTime();
 
             var
-                htmlLastWeekModeOn = Settings.LAST_WEEK_MODE ? Snippet.headerLastWeekModeOn() : '',
+                htmlLastWeekModeOn = Snippet.headerLastWeekModeOn(),
+                htmlBalanceTime = data.week.balanceTime.html,
                 htmlPendingOrExtraTime = _getPendingOrExtraTime(),
                 htmlHumanTimeToLeave = _buildTimeToLeave();
+
+            if (Settings.LAST_WEEK_MODE == false)
+                htmlLastWeekModeOn = '';
+
+            // prevents confusion on exit x balance time
+            if ((_getMaxHoursPerWeekInMillis() - data.week.laborTime.millis) < _getMaxConsecutiveHoursPerDayInMillis())
+                htmlBalanceTime = '';
 
             var
                 args = [
                     htmlLastWeekModeOn,
                     data.week.laborTime.html,
-                    data.week.balanceTime.html,
+                    htmlBalanceTime,
                     htmlPendingOrExtraTime,
                     htmlHumanTimeToLeave,
                     Snippet.headerBeta()

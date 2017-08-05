@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '2.9.2',
+            VERSION = '2.9.3',
 
             Settings = {
                 USERSCRIPT_DELAY_MILLIS: 1000,
@@ -759,15 +759,23 @@
             data.week.buildHtmlTime();
 
             var
-                htmlLastWeekModeOn = Settings.LAST_WEEK_MODE ? Snippet.headerLastWeekModeOn() : '',
+                htmlLastWeekModeOn = Snippet.headerLastWeekModeOn(),
+                htmlBalanceTime = data.week.balanceTime.html,
                 htmlPendingOrExtraTime = _getPendingOrExtraTime(),
                 htmlHumanTimeToLeave = _buildTimeToLeave();
+
+            if (Settings.LAST_WEEK_MODE == false)
+                htmlLastWeekModeOn = '';
+
+            // prevents confusion on exit x balance time
+            if ((_getMaxHoursPerWeekInMillis() - data.week.laborTime.millis) < _getMaxConsecutiveHoursPerDayInMillis())
+                htmlBalanceTime = '';
 
             var
                 args = [
                     htmlLastWeekModeOn,
                     data.week.laborTime.html,
-                    data.week.balanceTime.html,
+                    htmlBalanceTime,
                     htmlPendingOrExtraTime,
                     htmlHumanTimeToLeave,
                     Snippet.headerBeta()
@@ -976,7 +984,7 @@
         Time.computeTimes(data);
         Time.transformToHuman(data);
         */
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 2.9.2</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 2.9.3</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');
