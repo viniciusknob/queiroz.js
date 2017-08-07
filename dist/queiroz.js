@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '2.9.3',
+            VERSION = '2.9.4',
 
             Settings = {
                 USERSCRIPT_DELAY_MILLIS: 1000,
@@ -100,7 +100,6 @@
     "hBalance" : "Saldo: ",
     "hPending" : "Pendente: ",
     "hExtra" : "Extra: ",
-    "hExit" : "Saída: ",
     "balance" : "Saldo",
     "labor" : "Efetuado",
     "working" : "Trabalhando...",
@@ -213,9 +212,6 @@
             },
             headerExtraTime: function(extraTime) {
                 return _buildBoxHeader(Strings('hExtra'), extraTime, 'qz-text-green');
-            },
-            headerWeekTimeToLeave: function(timeToLeave) {
-                return _buildBoxHeader(Strings('hExit'), timeToLeave, 'qz-text-primary');
             },
             headerBeta: function() {
                 var box = _buildBoxHeader('', '', 'fa fa-flask');
@@ -715,32 +711,11 @@
     };
 
     var
-        _lastInDate = '',
         _getCheckpoints = function(eDay) {
             return View.getAllCheckpoint(eDay);
         },
         _getDate = function(eDay) {
             return View.getDateFromTargetAsString(eDay);
-        },
-        _buildTimeToLeave = function() {
-            if (data.week.pendingTime.millis <= 0) {
-                return '';
-            }
-            if (data.week.pendingTime.millis > _getMaxMinutesPerDayInMillis()) {
-                return '';
-            }
-
-            var htmlHumanTimeToLeave = '';
-            if (_lastInDate) {
-                var timeToLeaveInMillis = _lastInDate.getMillis() + data.week.pendingTime.millis;
-                if (!timeToLeaveInMillis || timeToLeaveInMillis < new Date().getMillis()) {
-                    return '';
-                }
-
-                var humanTimeToLeave = new Date(timeToLeaveInMillis).getTimeAsString();
-                htmlHumanTimeToLeave = Snippet.headerWeekTimeToLeave(humanTimeToLeave);
-            }
-            return htmlHumanTimeToLeave;
         },
         _getPendingOrExtraTime = function() {
             return data.week.pendingTime.millis >= 0 ? data.week.pendingTime.html : data.week.extraTime.html;
@@ -761,8 +736,7 @@
             var
                 htmlLastWeekModeOn = Snippet.headerLastWeekModeOn(),
                 htmlBalanceTime = data.week.balanceTime.html,
-                htmlPendingOrExtraTime = _getPendingOrExtraTime(),
-                htmlHumanTimeToLeave = _buildTimeToLeave();
+                htmlPendingOrExtraTime = _getPendingOrExtraTime();
 
             if (Settings.LAST_WEEK_MODE == false)
                 htmlLastWeekModeOn = '';
@@ -777,7 +751,6 @@
                     data.week.laborTime.html,
                     htmlBalanceTime,
                     htmlPendingOrExtraTime,
-                    htmlHumanTimeToLeave,
                     Snippet.headerBeta()
                 ],
                 html = _buildHtmlHeader(args);
@@ -875,11 +848,7 @@
                             data.today.laborTime.millis += shiftInMillis;
                         }
                     } else {
-                        _lastInDate = inDate;
-
-                        if (Time.isToday(inDate))
-                            if ((_getMaxHoursPerWeekInMillis() - data.week.laborTime.millis) > _getMaxMinutesPerDayInMillis())
-                                _renderTodayTimeToLeave(inElement, inDate.getMillis());
+                        _renderTodayTimeToLeave(inElement, inDate.getMillis());
 
                         var diffUntilNow = Time.diff(inDate, new Date());
                         if (diffUntilNow < (_getMaxConsecutiveHoursPerDayInMillis())) {
@@ -984,7 +953,7 @@
         Time.computeTimes(data);
         Time.transformToHuman(data);
         */
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 2.9.3</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 2.9.4</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');

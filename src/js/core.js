@@ -79,32 +79,11 @@
     };
 
     var
-        _lastInDate = '',
         _getCheckpoints = function(eDay) {
             return View.getAllCheckpoint(eDay);
         },
         _getDate = function(eDay) {
             return View.getDateFromTargetAsString(eDay);
-        },
-        _buildTimeToLeave = function() {
-            if (data.week.pendingTime.millis <= 0) {
-                return '';
-            }
-            if (data.week.pendingTime.millis > _getMaxMinutesPerDayInMillis()) {
-                return '';
-            }
-
-            var htmlHumanTimeToLeave = '';
-            if (_lastInDate) {
-                var timeToLeaveInMillis = _lastInDate.getMillis() + data.week.pendingTime.millis;
-                if (!timeToLeaveInMillis || timeToLeaveInMillis < new Date().getMillis()) {
-                    return '';
-                }
-
-                var humanTimeToLeave = new Date(timeToLeaveInMillis).getTimeAsString();
-                htmlHumanTimeToLeave = Snippet.headerWeekTimeToLeave(humanTimeToLeave);
-            }
-            return htmlHumanTimeToLeave;
         },
         _getPendingOrExtraTime = function() {
             return data.week.pendingTime.millis >= 0 ? data.week.pendingTime.html : data.week.extraTime.html;
@@ -125,8 +104,7 @@
             var
                 htmlLastWeekModeOn = Snippet.headerLastWeekModeOn(),
                 htmlBalanceTime = data.week.balanceTime.html,
-                htmlPendingOrExtraTime = _getPendingOrExtraTime(),
-                htmlHumanTimeToLeave = _buildTimeToLeave();
+                htmlPendingOrExtraTime = _getPendingOrExtraTime();
 
             if (Settings.LAST_WEEK_MODE == false)
                 htmlLastWeekModeOn = '';
@@ -141,7 +119,6 @@
                     data.week.laborTime.html,
                     htmlBalanceTime,
                     htmlPendingOrExtraTime,
-                    htmlHumanTimeToLeave,
                     Snippet.headerBeta()
                 ],
                 html = _buildHtmlHeader(args);
@@ -239,11 +216,7 @@
                             data.today.laborTime.millis += shiftInMillis;
                         }
                     } else {
-                        _lastInDate = inDate;
-
-                        if (Time.isToday(inDate))
-                            if ((_getMaxHoursPerWeekInMillis() - data.week.laborTime.millis) > _getMaxMinutesPerDayInMillis())
-                                _renderTodayTimeToLeave(inElement, inDate.getMillis());
+                        _renderTodayTimeToLeave(inElement, inDate.getMillis());
 
                         var diffUntilNow = Time.diff(inDate, new Date());
                         if (diffUntilNow < (_getMaxConsecutiveHoursPerDayInMillis())) {

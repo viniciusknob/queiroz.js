@@ -80,9 +80,6 @@
             headerExtraTime: function(extraTime) {
                 return _buildBoxHeader(Strings('hExtra'), extraTime, 'qz-text-green');
             },
-            headerWeekTimeToLeave: function(timeToLeave) {
-                return _buildBoxHeader(Strings('hExit'), timeToLeave, 'qz-text-primary');
-            },
             headerBeta: function() {
                 var box = _buildBoxHeader('', '', 'fa fa-flask');
                 box.onclick = function() {
