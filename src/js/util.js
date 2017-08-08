@@ -27,6 +27,9 @@
     Date.prototype.getMillis = function() {
         return this.getTime();
     };
+    Element.prototype.remove = function() {
+        this.parentElement.removeChild(this);
+    }
 
     /* Class Definition */
 

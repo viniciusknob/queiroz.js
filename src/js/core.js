@@ -174,22 +174,25 @@
             }
         },
         _renderTodayBalancedTimeToLeave = function(context, inputMillis) {
-            var pendingTime = (_getMaxMinutesPerDayInMillis() - data.today.laborTime.millis) - data.week.balanceTime.millis;
-            var timeToLeaveInMillis = inputMillis + (pendingTime < 0 ? 0 : pendingTime);
-            var humanTimeToLeave = new Date(timeToLeaveInMillis).getTimeAsString();
-            var html = Snippet.todayTimeToLeave(humanTimeToLeave, true);
-            var filledSlotOut = context.parentNode;
-            filledSlotOut.parentNode.insertBefore(html, filledSlotOut.nextSibling);
+            if (data.week.balanceTime.millis) {
+                var pendingTime = (_getMaxMinutesPerDayInMillis() - data.today.laborTime.millis) - data.week.balanceTime.millis;
+                var timeToLeaveInMillis = inputMillis + (pendingTime < 0 ? 0 : pendingTime);
+                var humanTimeToLeave = new Date(timeToLeaveInMillis).getTimeAsString();
+                var html = Snippet.todayTimeToLeave(humanTimeToLeave, true);
+                var filledSlotOut = context.parentNode;
+                filledSlotOut.parentNode.insertBefore(html, filledSlotOut.nextSibling);
+            }
         },
         _renderTodayTimeToLeave = function(context, inputMillis) {
-            _renderTodayBalancedTimeToLeave(context, inputMillis);
-
-            var pendingTime = _getMaxMinutesPerDayInMillis() - data.today.laborTime.millis;
-            var timeToLeaveInMillis = inputMillis + (pendingTime < 0 ? 0 : pendingTime);
-            var humanTimeToLeave = new Date(timeToLeaveInMillis).getTimeAsString();
-            var html = Snippet.todayTimeToLeave(humanTimeToLeave, false);
-            var filledSlotOut = context.parentNode;
-            filledSlotOut.parentNode.insertBefore(html, filledSlotOut.nextSibling);
+            if (data.today.laborTime.millis < _getMaxMinutesPerDayInMillis()) {
+                _renderTodayBalancedTimeToLeave(context, inputMillis);
+                var pendingTime = _getMaxMinutesPerDayInMillis() - data.today.laborTime.millis;
+                var timeToLeaveInMillis = inputMillis + pendingTime;
+                var humanTimeToLeave = new Date(timeToLeaveInMillis).getTimeAsString();
+                var html = Snippet.todayTimeToLeave(humanTimeToLeave, false);
+                var filledSlotOut = context.parentNode;
+                filledSlotOut.parentNode.insertBefore(html, filledSlotOut.nextSibling);
+            }
         },
         _analyzeDay = function(eDay) {
             var checkpoints = _getCheckpoints(eDay);
@@ -246,6 +249,8 @@
                 if (data.week.laborTime.millis === 0) { // first time
                     if (_foundInitialWeekday || (_foundInitialWeekday = _dateDay.getDay() === Settings.INITIAL_WEEKDAY)) {
                         _selectedDays.push(eDay);
+                    } else {
+                        eDay.remove();
                     }
                 } else { // second time
                     if (_dateDay.getDay() === Settings.INITIAL_WEEKDAY) {

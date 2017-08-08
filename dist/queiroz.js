@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '2.9.4',
+            VERSION = '2.9.5',
 
             Settings = {
                 USERSCRIPT_DELAY_MILLIS: 1000,
@@ -609,6 +609,9 @@
     Date.prototype.getMillis = function() {
         return this.getTime();
     };
+    Element.prototype.remove = function() {
+        this.parentElement.removeChild(this);
+    }
 
     /* Class Definition */
 
@@ -806,22 +809,25 @@
             }
         },
         _renderTodayBalancedTimeToLeave = function(context, inputMillis) {
-            var pendingTime = (_getMaxMinutesPerDayInMillis() - data.today.laborTime.millis) - data.week.balanceTime.millis;
-            var timeToLeaveInMillis = inputMillis + (pendingTime < 0 ? 0 : pendingTime);
-            var humanTimeToLeave = new Date(timeToLeaveInMillis).getTimeAsString();
-            var html = Snippet.todayTimeToLeave(humanTimeToLeave, true);
-            var filledSlotOut = context.parentNode;
-            filledSlotOut.parentNode.insertBefore(html, filledSlotOut.nextSibling);
+            if (data.week.balanceTime.millis) {
+                var pendingTime = (_getMaxMinutesPerDayInMillis() - data.today.laborTime.millis) - data.week.balanceTime.millis;
+                var timeToLeaveInMillis = inputMillis + (pendingTime < 0 ? 0 : pendingTime);
+                var humanTimeToLeave = new Date(timeToLeaveInMillis).getTimeAsString();
+                var html = Snippet.todayTimeToLeave(humanTimeToLeave, true);
+                var filledSlotOut = context.parentNode;
+                filledSlotOut.parentNode.insertBefore(html, filledSlotOut.nextSibling);
+            }
         },
         _renderTodayTimeToLeave = function(context, inputMillis) {
-            _renderTodayBalancedTimeToLeave(context, inputMillis);
-
-            var pendingTime = _getMaxMinutesPerDayInMillis() - data.today.laborTime.millis;
-            var timeToLeaveInMillis = inputMillis + (pendingTime < 0 ? 0 : pendingTime);
-            var humanTimeToLeave = new Date(timeToLeaveInMillis).getTimeAsString();
-            var html = Snippet.todayTimeToLeave(humanTimeToLeave, false);
-            var filledSlotOut = context.parentNode;
-            filledSlotOut.parentNode.insertBefore(html, filledSlotOut.nextSibling);
+            if (data.today.laborTime.millis < _getMaxMinutesPerDayInMillis()) {
+                _renderTodayBalancedTimeToLeave(context, inputMillis);
+                var pendingTime = _getMaxMinutesPerDayInMillis() - data.today.laborTime.millis;
+                var timeToLeaveInMillis = inputMillis + pendingTime;
+                var humanTimeToLeave = new Date(timeToLeaveInMillis).getTimeAsString();
+                var html = Snippet.todayTimeToLeave(humanTimeToLeave, false);
+                var filledSlotOut = context.parentNode;
+                filledSlotOut.parentNode.insertBefore(html, filledSlotOut.nextSibling);
+            }
         },
         _analyzeDay = function(eDay) {
             var checkpoints = _getCheckpoints(eDay);
@@ -878,6 +884,8 @@
                 if (data.week.laborTime.millis === 0) { // first time
                     if (_foundInitialWeekday || (_foundInitialWeekday = _dateDay.getDay() === Settings.INITIAL_WEEKDAY)) {
                         _selectedDays.push(eDay);
+                    } else {
+                        eDay.remove();
                     }
                 } else { // second time
                     if (_dateDay.getDay() === Settings.INITIAL_WEEKDAY) {
@@ -953,7 +961,7 @@
         Time.computeTimes(data);
         Time.transformToHuman(data);
         */
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 2.9.4</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 2.9.5</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');
