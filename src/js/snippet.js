@@ -49,11 +49,15 @@
                 }
                 return element;
             },
-            _buildBoxHeader = function(boxContent, strongValue, strongClass) {
-                var box = _buildTag(TagName.SPAN, 'qz-box qz-box-muted', boxContent);
-                var time = _buildTag(TagName.STRONG, strongClass, strongValue);
-                box.appendChild(time);
-                return box;
+            _buildBox = function(helpText, strongValue, strongClass) {
+                var eBox = _buildTag(TagName.DIV, 'qz-box qz-box-inline qz-box-muted qz-text-center');
+                if (helpText) {
+                    var eHelpText = _buildTag(TagName.DIV, 'qz-help-text', helpText);
+                    eBox.appendChild(eHelpText);
+                }
+                var eTime = _buildTag(TagName.STRONG, 'qz-box-content '+strongClass, strongValue);
+                eBox.appendChild(eTime);
+                return eBox;
             };
 
         /* Public Functions */
@@ -65,23 +69,21 @@
             header: function() {
                 return _buildTag(TagName.P, 'qz-box-head');
             },
-            headerLastWeekModeOn: function() {
-                return _buildBoxHeader('', Strings('hLastWeek'), 'qz-text-primary');
-            },
             headerLaborTime: function(laborTime) {
-                return _buildBoxHeader(Strings('hLabor'), laborTime, 'qz-text-green');
+                return _buildBox(Strings('hLabor'), laborTime, 'qz-text-green');
             },
             headerBalanceTime: function(balanceTime) {
-                return _buildBoxHeader(Strings('hBalance'), balanceTime, 'qz-text-teal');
+                return _buildBox(Strings('hBalance'), balanceTime, 'qz-text-teal');
             },
             headerWeekPendingTime: function(pendingTime) {
-                return _buildBoxHeader(Strings('hPending'), pendingTime, 'qz-text-primary');
+                return _buildBox(Strings('hPending'), pendingTime, 'qz-text-primary');
             },
             headerExtraTime: function(extraTime) {
-                return _buildBoxHeader(Strings('hExtra'), extraTime, 'qz-text-green');
+                return _buildBox(Strings('hExtra'), extraTime, 'qz-text-green');
             },
             headerBeta: function() {
-                var box = _buildBoxHeader('', '', 'fa fa-flask');
+                var box = _buildBox('New', '', 'fa fa-flask qz-text-golden');
+                box.className += ' qz-box-compact';
                 box.onclick = function() {
                     Queiroz.beta();
                 }

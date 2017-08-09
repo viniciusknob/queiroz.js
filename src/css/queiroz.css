@@ -20,10 +20,16 @@
     padding: 5px 10px;
     margin: 5px 1px;
     border: darkgrey 1px solid;
+    min-width: 60px;
+}
+.qz-box-compact {
+    min-width: auto;
+}
+.qz-box-inline {
+    display: inline-block;
 }
 .qz-box-head {
     float: right;
-    padding: 10px 0;
 }
 .qz-box-muted {
     background-color: lightgray;

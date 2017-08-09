@@ -102,12 +102,8 @@
             data.week.buildHtmlTime();
 
             var
-                htmlLastWeekModeOn = Snippet.headerLastWeekModeOn(),
                 htmlBalanceTime = data.week.balanceTime.html,
                 htmlPendingOrExtraTime = _getPendingOrExtraTime();
-
-            if (Settings.LAST_WEEK_MODE == false)
-                htmlLastWeekModeOn = '';
 
             // prevents confusion on exit x balance time
             if ((_getMaxHoursPerWeekInMillis() - data.week.laborTime.millis) < _getMaxConsecutiveHoursPerDayInMillis())
@@ -115,7 +111,6 @@
 
             var
                 args = [
-                    htmlLastWeekModeOn,
                     data.week.laborTime.html,
                     htmlBalanceTime,
                     htmlPendingOrExtraTime,

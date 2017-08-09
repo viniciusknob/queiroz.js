@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '2.9.5',
+            VERSION = '2.9.6',
 
             Settings = {
                 USERSCRIPT_DELAY_MILLIS: 1000,
@@ -95,11 +95,10 @@
     Queiroz.module.strings = Strings;
 
 })(Queiroz, {
-    "hLastWeek" : "SEMANA PASSADA",
-    "hLabor" : "Efetuado: ",
-    "hBalance" : "Saldo: ",
-    "hPending" : "Pendente: ",
-    "hExtra" : "Extra: ",
+    "hLabor" : "Efetuado",
+    "hBalance" : "Saldo",
+    "hPending" : "Pendente",
+    "hExtra" : "Extra",
     "balance" : "Saldo",
     "labor" : "Efetuado",
     "working" : "Trabalhando...",
@@ -121,7 +120,7 @@
 
     var Style = function() {
         return {
-            CSS: 'html{line-height:1.15;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,footer,header,nav,section{display:block}h1{font-size:2em;margin:.67em 0}figcaption,figure,main{display:block}figure{margin:1em 40px}hr{box-sizing:content-box;height:0;overflow:visible}pre{font-family:monospace,monospace;font-size:1em}a{background-color:transparent;-webkit-text-decoration-skip:objects}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:inherit}b,strong{font-weight:bolder}code,kbd,samp{font-family:monospace,monospace;font-size:1em}dfn{font-style:italic}mark{background-color:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}audio,video{display:inline-block}audio:not([controls]){display:none;height:0}img{border-style:none}svg:not(:root){overflow:hidden}button,input,optgroup,select,textarea{font-family:sans-serif;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button,select{text-transform:none}[type=reset],[type=submit],button,html [type=button]{-webkit-appearance:button}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring,button:-moz-focusring{outline:1px dotted ButtonText}fieldset{padding:.35em .75em .625em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}progress{display:inline-block;vertical-align:baseline}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-cancel-button,[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}details,menu{display:block}summary{display:list-item}canvas{display:inline-block}template{display:none}[hidden]{display:none}#SemanaApontamentos{cursor:default!important}.ContentTable{margin-top:inherit}.FilledSlot,.LastSlot,.emptySlot{height:inherit;padding:5px}.FilledSlot span{margin:inherit!important}.qz-text-center{text-align:center}.qz-text-primary{color:brown}.qz-text-golden{color:#b8860b}.qz-text-green{color:green}.qz-text-teal{color:teal}.qz-box{padding:5px 10px;margin:5px 1px;border:#a9a9a9 1px solid}.qz-box-head{float:right;padding:10px 0}.qz-box-muted{background-color:#d3d3d3}.qz-box .qz-box-content{vertical-align:middle}.qz-help-text{font-size:10px}.js-show{display:block}.js-hide{display:none}.qz-modal{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1024;background-color:rgba(0,0,0,.5)}.qz-modal-dialog{position:relative;width:900px;margin:30px auto}.qz-modal-content{position:relative;background-color:#fff;background-clip:padding-box;border-radius:5px}.qz-modal-header{padding:10px;border-bottom:1px solid #d3d3d3;font-weight:700;font-size:16px}.qz-modal-close{float:right;cursor:pointer;background:0 0;border:0;padding:0;color:silver}.qz-modal-body{padding:10px}.qz-modal-footer{padding:10px;border-top:1px solid #d3d3d3;text-align:center}'
+            CSS: 'html{line-height:1.15;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,footer,header,nav,section{display:block}h1{font-size:2em;margin:.67em 0}figcaption,figure,main{display:block}figure{margin:1em 40px}hr{box-sizing:content-box;height:0;overflow:visible}pre{font-family:monospace,monospace;font-size:1em}a{background-color:transparent;-webkit-text-decoration-skip:objects}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:inherit}b,strong{font-weight:bolder}code,kbd,samp{font-family:monospace,monospace;font-size:1em}dfn{font-style:italic}mark{background-color:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}audio,video{display:inline-block}audio:not([controls]){display:none;height:0}img{border-style:none}svg:not(:root){overflow:hidden}button,input,optgroup,select,textarea{font-family:sans-serif;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button,select{text-transform:none}[type=reset],[type=submit],button,html [type=button]{-webkit-appearance:button}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring,button:-moz-focusring{outline:1px dotted ButtonText}fieldset{padding:.35em .75em .625em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}progress{display:inline-block;vertical-align:baseline}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-cancel-button,[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}details,menu{display:block}summary{display:list-item}canvas{display:inline-block}template{display:none}[hidden]{display:none}#SemanaApontamentos{cursor:default!important}.ContentTable{margin-top:inherit}.FilledSlot,.LastSlot,.emptySlot{height:inherit;padding:5px}.FilledSlot span{margin:inherit!important}.qz-text-center{text-align:center}.qz-text-primary{color:brown}.qz-text-golden{color:#b8860b}.qz-text-green{color:green}.qz-text-teal{color:teal}.qz-box{padding:5px 10px;margin:5px 1px;border:#a9a9a9 1px solid;min-width:60px}.qz-box-compact{min-width:auto}.qz-box-inline{display:inline-block}.qz-box-head{float:right}.qz-box-muted{background-color:#d3d3d3}.qz-box .qz-box-content{vertical-align:middle}.qz-help-text{font-size:10px}.js-show{display:block}.js-hide{display:none}.qz-modal{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1024;background-color:rgba(0,0,0,.5)}.qz-modal-dialog{position:relative;width:900px;margin:30px auto}.qz-modal-content{position:relative;background-color:#fff;background-clip:padding-box;border-radius:5px}.qz-modal-header{padding:10px;border-bottom:1px solid #d3d3d3;font-weight:700;font-size:16px}.qz-modal-close{float:right;cursor:pointer;background:0 0;border:0;padding:0;color:silver}.qz-modal-body{padding:10px}.qz-modal-footer{padding:10px;border-top:1px solid #d3d3d3;text-align:center}'
         };
     }();
 
@@ -182,11 +181,15 @@
                 }
                 return element;
             },
-            _buildBoxHeader = function(boxContent, strongValue, strongClass) {
-                var box = _buildTag(TagName.SPAN, 'qz-box qz-box-muted', boxContent);
-                var time = _buildTag(TagName.STRONG, strongClass, strongValue);
-                box.appendChild(time);
-                return box;
+            _buildBox = function(helpText, strongValue, strongClass) {
+                var eBox = _buildTag(TagName.DIV, 'qz-box qz-box-inline qz-box-muted qz-text-center');
+                if (helpText) {
+                    var eHelpText = _buildTag(TagName.DIV, 'qz-help-text', helpText);
+                    eBox.appendChild(eHelpText);
+                }
+                var eTime = _buildTag(TagName.STRONG, 'qz-box-content '+strongClass, strongValue);
+                eBox.appendChild(eTime);
+                return eBox;
             };
 
         /* Public Functions */
@@ -198,23 +201,21 @@
             header: function() {
                 return _buildTag(TagName.P, 'qz-box-head');
             },
-            headerLastWeekModeOn: function() {
-                return _buildBoxHeader('', Strings('hLastWeek'), 'qz-text-primary');
-            },
             headerLaborTime: function(laborTime) {
-                return _buildBoxHeader(Strings('hLabor'), laborTime, 'qz-text-green');
+                return _buildBox(Strings('hLabor'), laborTime, 'qz-text-green');
             },
             headerBalanceTime: function(balanceTime) {
-                return _buildBoxHeader(Strings('hBalance'), balanceTime, 'qz-text-teal');
+                return _buildBox(Strings('hBalance'), balanceTime, 'qz-text-teal');
             },
             headerWeekPendingTime: function(pendingTime) {
-                return _buildBoxHeader(Strings('hPending'), pendingTime, 'qz-text-primary');
+                return _buildBox(Strings('hPending'), pendingTime, 'qz-text-primary');
             },
             headerExtraTime: function(extraTime) {
-                return _buildBoxHeader(Strings('hExtra'), extraTime, 'qz-text-green');
+                return _buildBox(Strings('hExtra'), extraTime, 'qz-text-green');
             },
             headerBeta: function() {
-                var box = _buildBoxHeader('', '', 'fa fa-flask');
+                var box = _buildBox('New', '', 'fa fa-flask qz-text-golden');
+                box.className += ' qz-box-compact';
                 box.onclick = function() {
                     Queiroz.beta();
                 }
@@ -737,12 +738,8 @@
             data.week.buildHtmlTime();
 
             var
-                htmlLastWeekModeOn = Snippet.headerLastWeekModeOn(),
                 htmlBalanceTime = data.week.balanceTime.html,
                 htmlPendingOrExtraTime = _getPendingOrExtraTime();
-
-            if (Settings.LAST_WEEK_MODE == false)
-                htmlLastWeekModeOn = '';
 
             // prevents confusion on exit x balance time
             if ((_getMaxHoursPerWeekInMillis() - data.week.laborTime.millis) < _getMaxConsecutiveHoursPerDayInMillis())
@@ -750,7 +747,6 @@
 
             var
                 args = [
-                    htmlLastWeekModeOn,
                     data.week.laborTime.html,
                     htmlBalanceTime,
                     htmlPendingOrExtraTime,
@@ -961,7 +957,7 @@
         Time.computeTimes(data);
         Time.transformToHuman(data);
         */
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 2.9.5</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 2.9.6</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');
