@@ -169,7 +169,7 @@
             }
         },
         _renderTodayBalancedTimeToLeave = function(context, inputMillis) {
-            if (data.week.balanceTime.millis) {
+            if (inputMillis && data.week.balanceTime.millis) {
                 var pendingTime = (_getMaxMinutesPerDayInMillis() - data.today.laborTime.millis) - data.week.balanceTime.millis;
                 var timeToLeaveInMillis = inputMillis + (pendingTime < 0 ? 0 : pendingTime);
                 var humanTimeToLeave = new Date(timeToLeaveInMillis).getTimeAsString();
@@ -179,7 +179,7 @@
             }
         },
         _renderTodayTimeToLeave = function(context, inputMillis) {
-            if (data.today.laborTime.millis < _getMaxMinutesPerDayInMillis()) {
+            if (inputMillis && (data.today.laborTime.millis < _getMaxMinutesPerDayInMillis())) {
                 _renderTodayBalancedTimeToLeave(context, inputMillis);
                 var pendingTime = _getMaxMinutesPerDayInMillis() - data.today.laborTime.millis;
                 var timeToLeaveInMillis = inputMillis + pendingTime;
@@ -194,8 +194,12 @@
             if (checkpoints.length) {
                 var millis = 0;
                 View.getAllTimeIn(eDay).forEach(function(inElement, index) {
+                    var inText = inElement.textContent; // ex.: 15:45
+
+                    // prevents false time elements
+                    if (inText == false) return;
+
                     var
-                        inText = inElement.textContent, // 15:45
                         inDate = Time.toDate(_getDate(eDay) + " " + inText), // typeOf inDate == Date
                         outElement = checkpoints[(index * 2) + 1];
 

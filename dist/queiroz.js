@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '2.9.6',
+            VERSION = '2.9.7',
 
             Settings = {
                 USERSCRIPT_DELAY_MILLIS: 1000,
@@ -805,7 +805,7 @@
             }
         },
         _renderTodayBalancedTimeToLeave = function(context, inputMillis) {
-            if (data.week.balanceTime.millis) {
+            if (inputMillis && data.week.balanceTime.millis) {
                 var pendingTime = (_getMaxMinutesPerDayInMillis() - data.today.laborTime.millis) - data.week.balanceTime.millis;
                 var timeToLeaveInMillis = inputMillis + (pendingTime < 0 ? 0 : pendingTime);
                 var humanTimeToLeave = new Date(timeToLeaveInMillis).getTimeAsString();
@@ -815,7 +815,7 @@
             }
         },
         _renderTodayTimeToLeave = function(context, inputMillis) {
-            if (data.today.laborTime.millis < _getMaxMinutesPerDayInMillis()) {
+            if (inputMillis && (data.today.laborTime.millis < _getMaxMinutesPerDayInMillis())) {
                 _renderTodayBalancedTimeToLeave(context, inputMillis);
                 var pendingTime = _getMaxMinutesPerDayInMillis() - data.today.laborTime.millis;
                 var timeToLeaveInMillis = inputMillis + pendingTime;
@@ -830,8 +830,12 @@
             if (checkpoints.length) {
                 var millis = 0;
                 View.getAllTimeIn(eDay).forEach(function(inElement, index) {
+                    var inText = inElement.textContent; // ex.: 15:45
+
+                    // prevents false time elements
+                    if (inText == false) return;
+
                     var
-                        inText = inElement.textContent, // 15:45
                         inDate = Time.toDate(_getDate(eDay) + " " + inText), // typeOf inDate == Date
                         outElement = checkpoints[(index * 2) + 1];
 
@@ -957,7 +961,7 @@
         Time.computeTimes(data);
         Time.transformToHuman(data);
         */
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 2.9.6</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 2.9.7</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');
