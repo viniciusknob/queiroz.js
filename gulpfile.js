@@ -8,6 +8,7 @@ var
     jsMinify = require('gulp-minify'),
     cssMinify = require('gulp-clean-css'),
     htmlMinify = require('gulp-htmlmin'),
+    jsonMinify = require('gulp-jsonminify'),
     runSequence = require('run-sequence');
 
 var
@@ -27,7 +28,7 @@ var
     },
 
     Settings = {
-        VERSION: '2.9.7',
+        VERSION: '2.9.8',
         versionRegex: '(?:\\d+\\.){2}\\d+(?:-beta\\.\\d+)?',
         env: {
             DEV: {
@@ -88,10 +89,23 @@ gulp.task('all.version', function(callback) {
     runSequence('all.version-root', 'all.version-dist', callback);
 });
 
-gulp.task('resource.compile', function(callback) {
+gulp.task('resource.minToJS', function() {
     return gulp.src('dist/queiroz.js')
-        .pipe(replace('__strings__', fs.readFileSync('src/resource/strings.json', 'utf8')))
+        .pipe(replace('__strings__', fs.readFileSync('build/resource/strings.min.json', 'utf8')))
         .pipe(gulp.dest('dist'));
+});
+
+gulp.task('resource.compress', function() {
+    return gulp.src('src/resource/strings.json')
+        .pipe(jsonMinify())
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(gulp.dest('build/resource'));
+});
+
+gulp.task('resource.compile', function(callback) {
+    runSequence('resource.compress', 'resource.minToJS', callback);
 });
 
 gulp.task('html.minToJS', function() {

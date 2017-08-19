@@ -2,7 +2,7 @@
   "name": "Queiroz.js",
   "description": "JavaScript Extension for Dimep Kairos",
   "homepage": "https://github.com/viniciusknob/queiroz.js",
-  "version": "2.9.7",
+  "version": "2.9.8",
   "author": "Vinícius M. Knob <knob.vinicius@gmail.com>",
   "devDependencies": {
     "gulp": "^3.9.1",
@@ -10,6 +10,7 @@
     "gulp-concat": "^2.6.1",
     "gulp-concat-css": "^2.3.0",
     "gulp-htmlmin": "^3.0.0",
+    "gulp-jsonminify": "^1.0.0",
     "gulp-minify": "^1.0.0",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",

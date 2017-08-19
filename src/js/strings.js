@@ -5,7 +5,7 @@
  * https://github.com/viniciusknob/queiroz.js
  */
 
-(function(Queiroz, Resource) {
+(function(Queiroz) {
 
     /* Class Definition */
 
@@ -13,10 +13,10 @@
         return Strings._[key];
     };
 
-    Strings._ = Resource;
+    Strings._ = __strings__;
 
     /* Module Definition */
 
     Queiroz.module.strings = Strings;
 
-})(Queiroz, __strings__);
+})(Queiroz);

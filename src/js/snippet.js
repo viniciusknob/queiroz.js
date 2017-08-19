@@ -70,16 +70,16 @@
                 return _buildTag(TagName.P, 'qz-box-head');
             },
             headerLaborTime: function(laborTime) {
-                return _buildBox(Strings('hLabor'), laborTime, 'qz-text-green');
+                return _buildBox(Strings('labor'), laborTime, 'qz-text-green');
             },
             headerBalanceTime: function(balanceTime) {
-                return _buildBox(Strings('hBalance'), balanceTime, 'qz-text-teal');
+                return _buildBox(Strings('balance'), balanceTime, 'qz-text-teal');
             },
             headerWeekPendingTime: function(pendingTime) {
-                return _buildBox(Strings('hPending'), pendingTime, 'qz-text-primary');
+                return _buildBox(Strings('pending'), pendingTime, 'qz-text-primary');
             },
             headerExtraTime: function(extraTime) {
-                return _buildBox(Strings('hExtra'), extraTime, 'qz-text-green');
+                return _buildBox(Strings('extra'), extraTime, 'qz-text-green');
             },
             headerBeta: function() {
                 var box = _buildBox('New', '', 'fa fa-flask qz-text-golden');
@@ -117,7 +117,7 @@
                 return div;
             },
             todayTimeToLeave: function(timeToLeave, balanced) {
-                var helpText = balanced ? Strings('balancedExit') : Strings('exit');
+                var helpText = balanced ? Strings('exit+') : Strings('exit');
                 var content = _buildTag(TagName.DIV, 'qz-help-text', helpText);
                 var time = _buildTag(TagName.STRONG, 'qz-box-content qz-text-primary', timeToLeave);
                 var div = _buildTag(TagName.DIV, 'qz-box qz-box-muted');

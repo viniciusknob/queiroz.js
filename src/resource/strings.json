@@ -1,11 +1,9 @@
 {
-    "hLabor" : "Efetuado",
-    "hBalance" : "Saldo",
-    "hPending" : "Pendente",
-    "hExtra" : "Extra",
+    "pending" : "Pendente",
+    "extra" : "Extra",
     "balance" : "Saldo",
     "labor" : "Efetuado",
     "working" : "Trabalhando...",
     "exit" : "Saída (08:48)",
-    "balancedExit" : "Saída + Saldo"
+    "exit+" : "Saída + Saldo"
 }

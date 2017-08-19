@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '2.9.7',
+            VERSION = '2.9.8',
 
             Settings = {
                 USERSCRIPT_DELAY_MILLIS: 1000,
@@ -80,7 +80,7 @@
  * https://github.com/viniciusknob/queiroz.js
  */
 
-(function(Queiroz, Resource) {
+(function(Queiroz) {
 
     /* Class Definition */
 
@@ -88,24 +88,13 @@
         return Strings._[key];
     };
 
-    Strings._ = Resource;
+    Strings._ = {"pending":"Pendente","extra":"Extra","balance":"Saldo","labor":"Efetuado","working":"Trabalhando...","exit":"Saída (08:48)","exit+":"Saída + Saldo"};
 
     /* Module Definition */
 
     Queiroz.module.strings = Strings;
 
-})(Queiroz, {
-    "hLabor" : "Efetuado",
-    "hBalance" : "Saldo",
-    "hPending" : "Pendente",
-    "hExtra" : "Extra",
-    "balance" : "Saldo",
-    "labor" : "Efetuado",
-    "working" : "Trabalhando...",
-    "exit" : "Saída (08:48)",
-    "balancedExit" : "Saída + Saldo"
-}
-);
+})(Queiroz);
 
 
 /*!
@@ -202,16 +191,16 @@
                 return _buildTag(TagName.P, 'qz-box-head');
             },
             headerLaborTime: function(laborTime) {
-                return _buildBox(Strings('hLabor'), laborTime, 'qz-text-green');
+                return _buildBox(Strings('labor'), laborTime, 'qz-text-green');
             },
             headerBalanceTime: function(balanceTime) {
-                return _buildBox(Strings('hBalance'), balanceTime, 'qz-text-teal');
+                return _buildBox(Strings('balance'), balanceTime, 'qz-text-teal');
             },
             headerWeekPendingTime: function(pendingTime) {
-                return _buildBox(Strings('hPending'), pendingTime, 'qz-text-primary');
+                return _buildBox(Strings('pending'), pendingTime, 'qz-text-primary');
             },
             headerExtraTime: function(extraTime) {
-                return _buildBox(Strings('hExtra'), extraTime, 'qz-text-green');
+                return _buildBox(Strings('extra'), extraTime, 'qz-text-green');
             },
             headerBeta: function() {
                 var box = _buildBox('New', '', 'fa fa-flask qz-text-golden');
@@ -249,7 +238,7 @@
                 return div;
             },
             todayTimeToLeave: function(timeToLeave, balanced) {
-                var helpText = balanced ? Strings('balancedExit') : Strings('exit');
+                var helpText = balanced ? Strings('exit+') : Strings('exit');
                 var content = _buildTag(TagName.DIV, 'qz-help-text', helpText);
                 var time = _buildTag(TagName.STRONG, 'qz-box-content qz-text-primary', timeToLeave);
                 var div = _buildTag(TagName.DIV, 'qz-box qz-box-muted');
@@ -961,7 +950,7 @@
         Time.computeTimes(data);
         Time.transformToHuman(data);
         */
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 2.9.7</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 2.9.8</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');
