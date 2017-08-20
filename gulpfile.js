@@ -28,7 +28,7 @@ var
     },
 
     Settings = {
-        VERSION: '2.9.8',
+        VERSION: '2.9.9',
         versionRegex: '(?:\\d+\\.){2}\\d+(?:-beta\\.\\d+)?',
         env: {
             DEV: {
@@ -67,6 +67,9 @@ var
                     'dist/queiroz.min.js'
                 ])
                 .pipe(replace('__version__', env.versionReplacer))
+                .on('end', function() {
+                    console.log('\n\tQueiroz.js %s\n', env.versionReplacer());
+                })
                 .pipe(gulp.dest('dist'));
             }
     }

@@ -43,17 +43,15 @@
             },
             _append = function(selector, html, callback) {
               _asyncReflow(function() {
-                  var
-                      element = _get(selector),
-                      container = document.createElement('div');
+                  var element = _get(selector);
 
                   if (typeof html === 'string') {
+                      var container = document.createElement('DIV');
                       container.innerHTML = html;
-                  } else {
-                      container.appendChild(html);
+                      html = container.firstChild;
                   }
 
-                  element.appendChild(container);
+                  element.appendChild(html);
 
                   if (callback)
                     callback();

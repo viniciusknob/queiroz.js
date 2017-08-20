@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '2.9.8',
+            VERSION = '2.9.9',
 
             Settings = {
                 USERSCRIPT_DELAY_MILLIS: 1000,
@@ -300,17 +300,15 @@
             },
             _append = function(selector, html, callback) {
               _asyncReflow(function() {
-                  var
-                      element = _get(selector),
-                      container = document.createElement('div');
+                  var element = _get(selector);
 
                   if (typeof html === 'string') {
+                      var container = document.createElement('DIV');
                       container.innerHTML = html;
-                  } else {
-                      container.appendChild(html);
+                      html = container.firstChild;
                   }
 
-                  element.appendChild(container);
+                  element.appendChild(html);
 
                   if (callback)
                     callback();
@@ -950,7 +948,7 @@
         Time.computeTimes(data);
         Time.transformToHuman(data);
         */
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 2.9.8</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 2.9.9</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');
