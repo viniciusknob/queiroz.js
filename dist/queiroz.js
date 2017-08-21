@@ -15,19 +15,8 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.0.0',
-
-            Settings = {
-                USERSCRIPT_DELAY_MILLIS: 1000,
-                MAX_CONSECUTIVE_HOURS_PER_DAY: 6,
-                MAX_HOURS_PER_WEEK: 44,
-                MAX_MINUTES_PER_DAY: (8 * 60) + 48,
-                // Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6
-                WORK_DAYS: [1,2,3,4,5],
-                INITIAL_WEEKDAY: 1,
-                // false, ON, DOING, DONE
-                LAST_WEEK_MODE: false
-            };
+            VERSION = '3.0.1',
+            SETTINGS = {"USERSCRIPT_DELAY_MILLIS":1000,"MAX_CONSECUTIVE_MINUTES":360,"WEEKLY_GOAL_MINUTES":2640,"DAILY_GOAL_MINUTES":528,"WORK_DAYS":[1,2,3,4,5],"INITIAL_WEEKDAY":1,"LAST_WEEK_MODE":false};
 
         /* Public Functions */
 
@@ -36,7 +25,7 @@
           version: VERSION,
           description: NAME + ' ' + VERSION,
           module: {},
-          settings: Settings
+          settings: SETTINGS
         };
     }();
 
@@ -422,9 +411,9 @@
             ZERO_TIME = '00:00',
             MINUTE_IN_MILLIS = 1000 * 60,
             HOUR_IN_MILLIS = MINUTE_IN_MILLIS * 60,
-            MAX_HOURS_PER_WEEK_IN_MILLIS = Settings.MAX_HOURS_PER_WEEK * HOUR_IN_MILLIS,
-            MAX_MINUTES_PER_DAY_IN_MILLIS = Settings.MAX_MINUTES_PER_DAY * MINUTE_IN_MILLIS,
-            MAX_CONSECUTIVE_HOURS_PER_DAY_IN_MILLIS = Settings.MAX_CONSECUTIVE_HOURS_PER_DAY * HOUR_IN_MILLIS;
+            WEEKLY_GOAL_MINUTES_IN_MILLIS = Settings.WEEKLY_GOAL_MINUTES * MINUTE_IN_MILLIS,
+            DAILY_GOAL_MINUTES_IN_MILLIS = Settings.DAILY_GOAL_MINUTES * MINUTE_IN_MILLIS,
+            MAX_CONSECUTIVE_MINUTES_IN_MILLIS = Settings.MAX_CONSECUTIVE_MINUTES * MINUTE_IN_MILLIS;
 
         /* Private Functions */
 
@@ -493,12 +482,12 @@
                 var _now = new Date();
                 data.totalPreviousBalance = 0;
                 data.days.forEach(function(day) {
-                    day.balance = (0 - MAX_MINUTES_PER_DAY_IN_MILLIS) + day.labor;
+                    day.balance = (0 - DAILY_GOAL_MINUTES_IN_MILLIS) + day.labor;
                     if (day.date.getDayOfMonth() < _now.getDayOfMonth()) {
                         data.totalPreviousBalance += day.balance;
                     }
                 });
-                data.totalBalance = (0 - MAX_HOURS_PER_WEEK_IN_MILLIS) + data.totalLabor;
+                data.totalBalance = (0 - WEEKLY_GOAL_MINUTES_IN_MILLIS) + data.totalLabor;
             },
             _computeTimeToLeave = function(data) {
                 data.days.forEach(function(day) {
@@ -506,8 +495,8 @@
                     if (_isToday(day.date) && _periods.length) {
                         var _time = _periods.last();
                         if (_time.out == false) {
-                            if (day.labor <= MAX_MINUTES_PER_DAY_IN_MILLIS) {
-                                var pending = _diff(day.labor, MAX_MINUTES_PER_DAY_IN_MILLIS);
+                            if (day.labor <= DAILY_GOAL_MINUTES_IN_MILLIS) {
+                                var pending = _diff(day.labor, DAILY_GOAL_MINUTES_IN_MILLIS);
                                 _time.leave = new Date(_time.in.getMillis() + pending);
                                 _time.balancedLeave = _time.leave + day.balance;
                             }
@@ -724,14 +713,14 @@
     /* Private Functions */
 
     var
-        _getMaxHoursPerWeekInMillis = function() {
-            return Time.hourToMillis(Settings.MAX_HOURS_PER_WEEK) - (data.dayOffCount * _getMaxMinutesPerDayInMillis());
+        _getWeeklyGoalInMillis = function() {
+            return Time.minuteToMillis(Settings.WEEKLY_GOAL_MINUTES) - (data.dayOffCount * _getDailyGoalInMillis());
         },
-        _getMaxConsecutiveHoursPerDayInMillis = function() {
-            return Time.hourToMillis(Settings.MAX_CONSECUTIVE_HOURS_PER_DAY);
+        _getMaxConsecutiveMinutesInMillis = function() {
+            return Time.minuteToMillis(Settings.MAX_CONSECUTIVE_MINUTES);
         },
-        _getMaxMinutesPerDayInMillis = function() {
-            return Time.minuteToMillis(Settings.MAX_MINUTES_PER_DAY);
+        _getDailyGoalInMillis = function() {
+            return Time.minuteToMillis(Settings.DAILY_GOAL_MINUTES);
         };
 
     var data = {
@@ -750,10 +739,10 @@
                 millis: 0, human: '', html: ''
             },
             _computePendingTimeInMillis: function() {
-                return _getMaxHoursPerWeekInMillis() - this.laborTime.millis;
+                return _getWeeklyGoalInMillis() - this.laborTime.millis;
             },
             _computeExtraTimeInMillis: function() {
-                return this.laborTime.millis - _getMaxHoursPerWeekInMillis();
+                return this.laborTime.millis - _getWeeklyGoalInMillis();
             },
             _buildHumanBalanceTime: function() {
                 return Time.millisToHumanWithSign(this.balanceTime.millis);
@@ -807,7 +796,7 @@
                 htmlPendingOrExtraTime = _getPendingOrExtraTime();
 
             // prevents confusion on exit x balance time
-            if ((_getMaxHoursPerWeekInMillis() - data.week.laborTime.millis) < _getMaxConsecutiveHoursPerDayInMillis())
+            if ((_getWeeklyGoalInMillis() - data.week.laborTime.millis) < _getMaxConsecutiveMinutesInMillis())
                 htmlBalanceTime = '';
 
             var
@@ -848,7 +837,7 @@
         _renderBalanceTimePerDay = function(eDay, laborTimeInMillis) {
             var
                 isToday = Time.isToday(Time.toDate(_getDate(eDay) + " " + Time.fake)),
-                max = _getMaxMinutesPerDayInMillis(),
+                max = _getDailyGoalInMillis(),
                 millis = 0,
                 humanMillis = Time.zero;
 
@@ -871,7 +860,7 @@
         },
         _renderTodayBalancedTimeToLeave = function(context, inputMillis) {
             if (inputMillis && data.week.balanceTime.millis) {
-                var pendingTime = (_getMaxMinutesPerDayInMillis() - data.today.laborTime.millis) - data.week.balanceTime.millis;
+                var pendingTime = (_getDailyGoalInMillis() - data.today.laborTime.millis) - data.week.balanceTime.millis;
                 var timeToLeaveInMillis = inputMillis + (pendingTime < 0 ? 0 : pendingTime);
                 var humanTimeToLeave = new Date(timeToLeaveInMillis).getTimeAsString();
                 var html = Snippet.todayTimeToLeave(humanTimeToLeave, true);
@@ -880,9 +869,9 @@
             }
         },
         _renderTodayTimeToLeave = function(context, inputMillis) {
-            if (inputMillis && (data.today.laborTime.millis < _getMaxMinutesPerDayInMillis())) {
+            if (inputMillis && (data.today.laborTime.millis < _getDailyGoalInMillis())) {
                 _renderTodayBalancedTimeToLeave(context, inputMillis);
-                var pendingTime = _getMaxMinutesPerDayInMillis() - data.today.laborTime.millis;
+                var pendingTime = _getDailyGoalInMillis() - data.today.laborTime.millis;
                 var timeToLeaveInMillis = inputMillis + pendingTime;
                 var humanTimeToLeave = new Date(timeToLeaveInMillis).getTimeAsString();
                 var html = Snippet.todayTimeToLeave(humanTimeToLeave, false);
@@ -948,7 +937,7 @@
                         _renderTodayTimeToLeave(inElement, inDate.getMillis());
 
                         var diffUntilNow = Time.diff(inDate, new Date());
-                        if (diffUntilNow < (_getMaxConsecutiveHoursPerDayInMillis())) {
+                        if (diffUntilNow < (_getMaxConsecutiveMinutesInMillis())) {
                             var shiftInMillisUntilNow = millis + diffUntilNow;
                             _renderLaborTimePerShift(inElement, shiftInMillisUntilNow, false);
                         }
@@ -1052,7 +1041,7 @@
         Time.computeTimes(data);
         Time.transformToHuman(data);
         */
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.0.0</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.0.1</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');

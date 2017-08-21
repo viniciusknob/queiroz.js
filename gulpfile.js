@@ -28,7 +28,7 @@ var
     },
 
     Settings = {
-        VERSION: '3.0.0',
+        VERSION: '3.0.1',
         versionRegex: '(?:\\d+\\.){2}\\d+(?:-beta\\.\\d+)?',
         env: {
             DEV: {
@@ -95,16 +95,30 @@ gulp.task('all.version', function(callback) {
 gulp.task('resource.minToJS', function() {
     return gulp.src('dist/queiroz.js')
         .pipe(replace('__strings__', fs.readFileSync('build/resource/strings.min.json', 'utf8')))
+        .pipe(replace('__settings__', fs.readFileSync('build/resource/settings.min.json', 'utf8')))
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task('resource.compress', function() {
+gulp.task('resource.compress.settings', function() {
+    return gulp.src('src/resource/settings.json')
+        .pipe(jsonMinify())
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(gulp.dest('build/resource'));
+});
+
+gulp.task('resource.compress.strings', function() {
     return gulp.src('src/resource/strings.json')
         .pipe(jsonMinify())
         .pipe(rename({
             suffix: '.min'
         }))
         .pipe(gulp.dest('build/resource'));
+});
+
+gulp.task('resource.compress', function(callback) {
+    runSequence('resource.compress.strings', 'resource.compress.settings', callback);
 });
 
 gulp.task('resource.compile', function(callback) {

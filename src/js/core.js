@@ -22,14 +22,14 @@
     /* Private Functions */
 
     var
-        _getMaxHoursPerWeekInMillis = function() {
-            return Time.hourToMillis(Settings.MAX_HOURS_PER_WEEK) - (data.dayOffCount * _getMaxMinutesPerDayInMillis());
+        _getWeeklyGoalInMillis = function() {
+            return Time.minuteToMillis(Settings.WEEKLY_GOAL_MINUTES) - (data.dayOffCount * _getDailyGoalInMillis());
         },
-        _getMaxConsecutiveHoursPerDayInMillis = function() {
-            return Time.hourToMillis(Settings.MAX_CONSECUTIVE_HOURS_PER_DAY);
+        _getMaxConsecutiveMinutesInMillis = function() {
+            return Time.minuteToMillis(Settings.MAX_CONSECUTIVE_MINUTES);
         },
-        _getMaxMinutesPerDayInMillis = function() {
-            return Time.minuteToMillis(Settings.MAX_MINUTES_PER_DAY);
+        _getDailyGoalInMillis = function() {
+            return Time.minuteToMillis(Settings.DAILY_GOAL_MINUTES);
         };
 
     var data = {
@@ -48,10 +48,10 @@
                 millis: 0, human: '', html: ''
             },
             _computePendingTimeInMillis: function() {
-                return _getMaxHoursPerWeekInMillis() - this.laborTime.millis;
+                return _getWeeklyGoalInMillis() - this.laborTime.millis;
             },
             _computeExtraTimeInMillis: function() {
-                return this.laborTime.millis - _getMaxHoursPerWeekInMillis();
+                return this.laborTime.millis - _getWeeklyGoalInMillis();
             },
             _buildHumanBalanceTime: function() {
                 return Time.millisToHumanWithSign(this.balanceTime.millis);
@@ -105,7 +105,7 @@
                 htmlPendingOrExtraTime = _getPendingOrExtraTime();
 
             // prevents confusion on exit x balance time
-            if ((_getMaxHoursPerWeekInMillis() - data.week.laborTime.millis) < _getMaxConsecutiveHoursPerDayInMillis())
+            if ((_getWeeklyGoalInMillis() - data.week.laborTime.millis) < _getMaxConsecutiveMinutesInMillis())
                 htmlBalanceTime = '';
 
             var
@@ -146,7 +146,7 @@
         _renderBalanceTimePerDay = function(eDay, laborTimeInMillis) {
             var
                 isToday = Time.isToday(Time.toDate(_getDate(eDay) + " " + Time.fake)),
-                max = _getMaxMinutesPerDayInMillis(),
+                max = _getDailyGoalInMillis(),
                 millis = 0,
                 humanMillis = Time.zero;
 
@@ -169,7 +169,7 @@
         },
         _renderTodayBalancedTimeToLeave = function(context, inputMillis) {
             if (inputMillis && data.week.balanceTime.millis) {
-                var pendingTime = (_getMaxMinutesPerDayInMillis() - data.today.laborTime.millis) - data.week.balanceTime.millis;
+                var pendingTime = (_getDailyGoalInMillis() - data.today.laborTime.millis) - data.week.balanceTime.millis;
                 var timeToLeaveInMillis = inputMillis + (pendingTime < 0 ? 0 : pendingTime);
                 var humanTimeToLeave = new Date(timeToLeaveInMillis).getTimeAsString();
                 var html = Snippet.todayTimeToLeave(humanTimeToLeave, true);
@@ -178,9 +178,9 @@
             }
         },
         _renderTodayTimeToLeave = function(context, inputMillis) {
-            if (inputMillis && (data.today.laborTime.millis < _getMaxMinutesPerDayInMillis())) {
+            if (inputMillis && (data.today.laborTime.millis < _getDailyGoalInMillis())) {
                 _renderTodayBalancedTimeToLeave(context, inputMillis);
-                var pendingTime = _getMaxMinutesPerDayInMillis() - data.today.laborTime.millis;
+                var pendingTime = _getDailyGoalInMillis() - data.today.laborTime.millis;
                 var timeToLeaveInMillis = inputMillis + pendingTime;
                 var humanTimeToLeave = new Date(timeToLeaveInMillis).getTimeAsString();
                 var html = Snippet.todayTimeToLeave(humanTimeToLeave, false);
@@ -246,7 +246,7 @@
                         _renderTodayTimeToLeave(inElement, inDate.getMillis());
 
                         var diffUntilNow = Time.diff(inDate, new Date());
-                        if (diffUntilNow < (_getMaxConsecutiveHoursPerDayInMillis())) {
+                        if (diffUntilNow < (_getMaxConsecutiveMinutesInMillis())) {
                             var shiftInMillisUntilNow = millis + diffUntilNow;
                             _renderLaborTimePerShift(inElement, shiftInMillisUntilNow, false);
                         }

@@ -21,9 +21,9 @@
             ZERO_TIME = '00:00',
             MINUTE_IN_MILLIS = 1000 * 60,
             HOUR_IN_MILLIS = MINUTE_IN_MILLIS * 60,
-            MAX_HOURS_PER_WEEK_IN_MILLIS = Settings.MAX_HOURS_PER_WEEK * HOUR_IN_MILLIS,
-            MAX_MINUTES_PER_DAY_IN_MILLIS = Settings.MAX_MINUTES_PER_DAY * MINUTE_IN_MILLIS,
-            MAX_CONSECUTIVE_HOURS_PER_DAY_IN_MILLIS = Settings.MAX_CONSECUTIVE_HOURS_PER_DAY * HOUR_IN_MILLIS;
+            WEEKLY_GOAL_MINUTES_IN_MILLIS = Settings.WEEKLY_GOAL_MINUTES * MINUTE_IN_MILLIS,
+            DAILY_GOAL_MINUTES_IN_MILLIS = Settings.DAILY_GOAL_MINUTES * MINUTE_IN_MILLIS,
+            MAX_CONSECUTIVE_MINUTES_IN_MILLIS = Settings.MAX_CONSECUTIVE_MINUTES * MINUTE_IN_MILLIS;
 
         /* Private Functions */
 
@@ -92,12 +92,12 @@
                 var _now = new Date();
                 data.totalPreviousBalance = 0;
                 data.days.forEach(function(day) {
-                    day.balance = (0 - MAX_MINUTES_PER_DAY_IN_MILLIS) + day.labor;
+                    day.balance = (0 - DAILY_GOAL_MINUTES_IN_MILLIS) + day.labor;
                     if (day.date.getDayOfMonth() < _now.getDayOfMonth()) {
                         data.totalPreviousBalance += day.balance;
                     }
                 });
-                data.totalBalance = (0 - MAX_HOURS_PER_WEEK_IN_MILLIS) + data.totalLabor;
+                data.totalBalance = (0 - WEEKLY_GOAL_MINUTES_IN_MILLIS) + data.totalLabor;
             },
             _computeTimeToLeave = function(data) {
                 data.days.forEach(function(day) {
@@ -105,8 +105,8 @@
                     if (_isToday(day.date) && _periods.length) {
                         var _time = _periods.last();
                         if (_time.out == false) {
-                            if (day.labor <= MAX_MINUTES_PER_DAY_IN_MILLIS) {
-                                var pending = _diff(day.labor, MAX_MINUTES_PER_DAY_IN_MILLIS);
+                            if (day.labor <= DAILY_GOAL_MINUTES_IN_MILLIS) {
+                                var pending = _diff(day.labor, DAILY_GOAL_MINUTES_IN_MILLIS);
                                 _time.leave = new Date(_time.in.getMillis() + pending);
                                 _time.balancedLeave = _time.leave + day.balance;
                             }
