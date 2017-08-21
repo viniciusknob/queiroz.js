@@ -64,7 +64,7 @@
 
         return {
             style: function() {
-                return _buildTag(TagName.STYLE, '', Style.CSS);
+                return _buildTag(TagName.STYLE, 'qz-style', Style.CSS);
             },
             header: function() {
                 return _buildTag(TagName.P, 'qz-box-head');
@@ -88,6 +88,9 @@
                     Queiroz.beta();
                 }
                 return box;
+            },
+            buildToggleForDayOff: function(key) {
+                return _buildTag(TagName.SPAN,'fa fa-toggle-'+key+' qz-toggle');
             },
             balanceTimePerDay: function(balanceTime) {
                 var helpText = _buildTag(TagName.DIV, 'qz-help-text', Strings('balance'));

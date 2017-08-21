@@ -23,6 +23,7 @@
                 MAX_HOURS_PER_WEEK: 44,
                 MAX_MINUTES_PER_DAY: (8 * 60) + 48,
                 // Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6
+                WORK_DAYS: [1,2,3,4,5],
                 INITIAL_WEEKDAY: 1,
                 // false, ON, DOING, DONE
                 LAST_WEEK_MODE: false

@@ -16,13 +16,14 @@
         View     = mod.view,
         Time     = mod.time,
         Util     = mod.util,
-        Snippet  = mod.snippet;
+        Snippet  = mod.snippet,
+        DayOff   = mod.dayoff;
 
     /* Private Functions */
 
     var
         _getMaxHoursPerWeekInMillis = function() {
-            return Time.hourToMillis(Settings.MAX_HOURS_PER_WEEK);
+            return Time.hourToMillis(Settings.MAX_HOURS_PER_WEEK) - (data.dayOffCount * _getMaxMinutesPerDayInMillis());
         },
         _getMaxConsecutiveHoursPerDayInMillis = function() {
             return Time.hourToMillis(Settings.MAX_CONSECUTIVE_HOURS_PER_DAY);
@@ -32,6 +33,7 @@
         };
 
     var data = {
+        dayOffCount: Settings.WORK_DAYS.length,
         week: {
             laborTime: {
                 millis: 0, human: '', html: ''
@@ -79,9 +81,6 @@
     };
 
     var
-        _getCheckpoints = function(eDay) {
-            return View.getAllCheckpoint(eDay);
-        },
         _getDate = function(eDay) {
             return View.getDateFromTargetAsString(eDay);
         },
@@ -189,8 +188,34 @@
                 filledSlotOut.parentNode.insertBefore(html, filledSlotOut.nextSibling);
             }
         },
+        _buildToggleForDayOff = function(day) {
+            var eToggle = Snippet.buildToggleForDayOff(DayOff.has(day) ? 'off' : 'on');
+            eToggle.onclick = function() {
+                var _day = day;
+                if (DayOff.has(_day)) {
+                    DayOff.remove(_day);
+                    data.dayOffCount--;
+                } else {
+                    DayOff.add(_day);
+                    data.dayOffCount++;
+                }
+                Queiroz.reload();
+            };
+            return eToggle;
+        },
         _analyzeDay = function(eDay) {
-            var checkpoints = _getCheckpoints(eDay);
+            var day = Time.toDate(_getDate(eDay) + " " + Time.fake);
+            if (Settings.WORK_DAYS.contains(day.getDay())) {
+                var eToggle = _buildToggleForDayOff(day);
+                View.appendToggle(eDay, eToggle);
+
+                // ignores stored days
+                if (DayOff.has(day)) return;
+
+                data.dayOffCount--;
+            }
+
+            var checkpoints = View.getAllCheckpoint(eDay);
             if (checkpoints.length) {
                 var millis = 0;
                 View.getAllTimeIn(eDay).forEach(function(inElement, index) {
@@ -334,6 +359,20 @@
                 modal.classList.add('js-hide');
             };
         });
+    };
+
+    Queiroz.reload = function() {
+        View.getAllQueirozElements().forEach(function(element) {
+            element.remove();
+        });
+
+        data.week.laborTime.millis = 0;
+        data.week.balanceTime.millis = 0;
+        data.week.pendingTime.millis = 0;
+        data.week.extraTime.millis = 0;
+        data.dayOffCount = Settings.WORK_DAYS.length;
+
+        Queiroz.bless();
     };
 
 })(Queiroz);

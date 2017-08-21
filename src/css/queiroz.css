@@ -41,6 +41,18 @@
     font-size: 10px;
 }
 
+/* Queiroz.js DayOff */
+
+.qz-toggle {
+    margin-top: 10px;
+}
+.fa-toggle-on {
+    color: green;
+}
+.fa-toggle-off {
+    color: grey;
+}
+
 /* Queiroz.js Event */
 
 .js-show {

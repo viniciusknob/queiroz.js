@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '2.9.9',
+            VERSION = '3.0.0',
 
             Settings = {
                 USERSCRIPT_DELAY_MILLIS: 1000,
@@ -23,6 +23,7 @@
                 MAX_HOURS_PER_WEEK: 44,
                 MAX_MINUTES_PER_DAY: (8 * 60) + 48,
                 // Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6
+                WORK_DAYS: [1,2,3,4,5],
                 INITIAL_WEEKDAY: 1,
                 // false, ON, DOING, DONE
                 LAST_WEEK_MODE: false
@@ -109,7 +110,7 @@
 
     var Style = function() {
         return {
-            CSS: 'html{line-height:1.15;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,footer,header,nav,section{display:block}h1{font-size:2em;margin:.67em 0}figcaption,figure,main{display:block}figure{margin:1em 40px}hr{box-sizing:content-box;height:0;overflow:visible}pre{font-family:monospace,monospace;font-size:1em}a{background-color:transparent;-webkit-text-decoration-skip:objects}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:inherit}b,strong{font-weight:bolder}code,kbd,samp{font-family:monospace,monospace;font-size:1em}dfn{font-style:italic}mark{background-color:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}audio,video{display:inline-block}audio:not([controls]){display:none;height:0}img{border-style:none}svg:not(:root){overflow:hidden}button,input,optgroup,select,textarea{font-family:sans-serif;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button,select{text-transform:none}[type=reset],[type=submit],button,html [type=button]{-webkit-appearance:button}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring,button:-moz-focusring{outline:1px dotted ButtonText}fieldset{padding:.35em .75em .625em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}progress{display:inline-block;vertical-align:baseline}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-cancel-button,[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}details,menu{display:block}summary{display:list-item}canvas{display:inline-block}template{display:none}[hidden]{display:none}#SemanaApontamentos{cursor:default!important}.ContentTable{margin-top:inherit}.FilledSlot,.LastSlot,.emptySlot{height:inherit;padding:5px}.FilledSlot span{margin:inherit!important}.qz-text-center{text-align:center}.qz-text-primary{color:brown}.qz-text-golden{color:#b8860b}.qz-text-green{color:green}.qz-text-teal{color:teal}.qz-box{padding:5px 10px;margin:5px 1px;border:#a9a9a9 1px solid;min-width:60px}.qz-box-compact{min-width:auto}.qz-box-inline{display:inline-block}.qz-box-head{float:right}.qz-box-muted{background-color:#d3d3d3}.qz-box .qz-box-content{vertical-align:middle}.qz-help-text{font-size:10px}.js-show{display:block}.js-hide{display:none}.qz-modal{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1024;background-color:rgba(0,0,0,.5)}.qz-modal-dialog{position:relative;width:900px;margin:30px auto}.qz-modal-content{position:relative;background-color:#fff;background-clip:padding-box;border-radius:5px}.qz-modal-header{padding:10px;border-bottom:1px solid #d3d3d3;font-weight:700;font-size:16px}.qz-modal-close{float:right;cursor:pointer;background:0 0;border:0;padding:0;color:silver}.qz-modal-body{padding:10px}.qz-modal-footer{padding:10px;border-top:1px solid #d3d3d3;text-align:center}'
+            CSS: 'html{line-height:1.15;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,footer,header,nav,section{display:block}h1{font-size:2em;margin:.67em 0}figcaption,figure,main{display:block}figure{margin:1em 40px}hr{box-sizing:content-box;height:0;overflow:visible}pre{font-family:monospace,monospace;font-size:1em}a{background-color:transparent;-webkit-text-decoration-skip:objects}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:inherit}b,strong{font-weight:bolder}code,kbd,samp{font-family:monospace,monospace;font-size:1em}dfn{font-style:italic}mark{background-color:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}audio,video{display:inline-block}audio:not([controls]){display:none;height:0}img{border-style:none}svg:not(:root){overflow:hidden}button,input,optgroup,select,textarea{font-family:sans-serif;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button,select{text-transform:none}[type=reset],[type=submit],button,html [type=button]{-webkit-appearance:button}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring,button:-moz-focusring{outline:1px dotted ButtonText}fieldset{padding:.35em .75em .625em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}progress{display:inline-block;vertical-align:baseline}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-cancel-button,[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}details,menu{display:block}summary{display:list-item}canvas{display:inline-block}template{display:none}[hidden]{display:none}#SemanaApontamentos{cursor:default!important}.ContentTable{margin-top:inherit}.FilledSlot,.LastSlot,.emptySlot{height:inherit;padding:5px}.FilledSlot span{margin:inherit!important}.qz-text-center{text-align:center}.qz-text-primary{color:brown}.qz-text-golden{color:#b8860b}.qz-text-green{color:green}.qz-text-teal{color:teal}.qz-box{padding:5px 10px;margin:5px 1px;border:#a9a9a9 1px solid;min-width:60px}.qz-box-compact{min-width:auto}.qz-box-inline{display:inline-block}.qz-box-head{float:right}.qz-box-muted{background-color:#d3d3d3}.qz-box .qz-box-content{vertical-align:middle}.qz-help-text{font-size:10px}.qz-toggle{margin-top:10px}.fa-toggle-on{color:green}.fa-toggle-off{color:grey}.js-show{display:block}.js-hide{display:none}.qz-modal{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1024;background-color:rgba(0,0,0,.5)}.qz-modal-dialog{position:relative;width:900px;margin:30px auto}.qz-modal-content{position:relative;background-color:#fff;background-clip:padding-box;border-radius:5px}.qz-modal-header{padding:10px;border-bottom:1px solid #d3d3d3;font-weight:700;font-size:16px}.qz-modal-close{float:right;cursor:pointer;background:0 0;border:0;padding:0;color:silver}.qz-modal-body{padding:10px}.qz-modal-footer{padding:10px;border-top:1px solid #d3d3d3;text-align:center}'
         };
     }();
 
@@ -185,7 +186,7 @@
 
         return {
             style: function() {
-                return _buildTag(TagName.STYLE, '', Style.CSS);
+                return _buildTag(TagName.STYLE, 'qz-style', Style.CSS);
             },
             header: function() {
                 return _buildTag(TagName.P, 'qz-box-head');
@@ -209,6 +210,9 @@
                     Queiroz.beta();
                 }
                 return box;
+            },
+            buildToggleForDayOff: function(key) {
+                return _buildTag(TagName.SPAN,'fa fa-toggle-'+key+' qz-toggle');
             },
             balanceTimePerDay: function(balanceTime) {
                 var helpText = _buildTag(TagName.DIV, 'qz-help-text', Strings('balance'));
@@ -264,10 +268,6 @@
 
 (function(document, Queiroz) {
 
-    /* Modules */
-
-    var Snippet = Queiroz.snippet;
-
     /* Class Definition */
 
     var View = function() {
@@ -283,7 +283,9 @@
                 DATE: '[id^=hiddenDiaApont]',
                 HEADER: '#SemanaApontamentos div',
                 TIME_IN: '.TimeIN,.TimeINVisualizacao',
-                FOOTER: 'footer .LabelEmpresa'
+                FOOTER: 'footer .LabelEmpresa',
+                TOOGLE: '.HfIsFolga',
+                QUEIROZ: '*[class*=qz-]'
             };
 
         /* Private Functions */
@@ -370,6 +372,9 @@
             getAllTimeIn: function(target) {
                 return _getAll(Selector.TIME_IN, target);
             },
+            getAllQueirozElements: function() {
+                return _getAll(Selector.QUEIROZ);
+            },
             appendToHead: function(html) {
                 _append(Selector.HEAD, html);
             },
@@ -381,6 +386,9 @@
             },
             appendToFooter: function(text) {
                 _get(Selector.FOOTER).textContent += " | " + text;
+            },
+            appendToggle: function(target, eToggle) {
+                _get(Selector.TOOGLE, target).parentElement.appendChild(eToggle);
             }
         };
     }();
@@ -582,6 +590,12 @@
     Array.prototype.last = function() {
         return this[this.length-1];
     };
+    Array.prototype.contains = function(value) {
+        return this.indexOf(value) > -1;
+    };
+    Storage.prototype.hasItem = function(name) {
+        return (this.getItem(name) || false);
+    };
     Number.prototype.format = function(length) {
         var _number = ''+this;
         while(_number.length < length)
@@ -599,7 +613,10 @@
     };
     Element.prototype.remove = function() {
         this.parentElement.removeChild(this);
-    }
+    };
+    String.prototype.contains = function(str) {
+        return this.search(str) > -1;
+    };
 
     /* Class Definition */
 
@@ -623,6 +640,68 @@
 
 
 /*!
+ * Queiroz.js: dayoff.js
+ * JavaScript Extension for Dimep Kairos
+ * https://github.com/viniciusknob/queiroz.js
+ */
+
+(function(localStorage, Queiroz) {
+
+    /* Class Definition */
+
+    var DayOff = function() {
+
+        var
+            NAME = "dayoff",
+            cache = [];
+
+        /* Private Functions */
+
+        var
+            _buildValue = function(date) {
+                return date.getDate().format(2) + "/" + (date.getMonth()+1).format(2);
+            },
+            _has = function(date) {
+                return cache.contains(_buildValue(date));
+            },
+            _add = function(date) {
+                if (_has(date))
+                    return;
+
+                cache.push(_buildValue(date));
+                localStorage.setItem(NAME, JSON.stringify(cache));
+            },
+            _remove = function(date) {
+                if (_has(date) == false)
+                    return;
+
+                var index = cache.indexOf(_buildValue(date));
+                cache.splice(index, 1);
+                localStorage.setItem(NAME, JSON.stringify(cache));
+            };
+
+        // Initialize cache
+        if (localStorage.hasItem(NAME)) {
+            cache = JSON.parse(localStorage.getItem(NAME));
+        }
+
+        /* Public Functions */
+
+        return {
+            has: _has,
+            add: _add,
+            remove: _remove
+        };
+    }();
+
+    /* Module Definition */
+
+    Queiroz.module.dayoff = DayOff;
+
+})(localStorage, Queiroz);
+
+
+/*!
  * Queiroz.js: core.js
  * JavaScript Extension for Dimep Kairos
  * https://github.com/viniciusknob/queiroz.js
@@ -639,13 +718,14 @@
         View     = mod.view,
         Time     = mod.time,
         Util     = mod.util,
-        Snippet  = mod.snippet;
+        Snippet  = mod.snippet,
+        DayOff   = mod.dayoff;
 
     /* Private Functions */
 
     var
         _getMaxHoursPerWeekInMillis = function() {
-            return Time.hourToMillis(Settings.MAX_HOURS_PER_WEEK);
+            return Time.hourToMillis(Settings.MAX_HOURS_PER_WEEK) - (data.dayOffCount * _getMaxMinutesPerDayInMillis());
         },
         _getMaxConsecutiveHoursPerDayInMillis = function() {
             return Time.hourToMillis(Settings.MAX_CONSECUTIVE_HOURS_PER_DAY);
@@ -655,6 +735,7 @@
         };
 
     var data = {
+        dayOffCount: Settings.WORK_DAYS.length,
         week: {
             laborTime: {
                 millis: 0, human: '', html: ''
@@ -702,9 +783,6 @@
     };
 
     var
-        _getCheckpoints = function(eDay) {
-            return View.getAllCheckpoint(eDay);
-        },
         _getDate = function(eDay) {
             return View.getDateFromTargetAsString(eDay);
         },
@@ -812,8 +890,34 @@
                 filledSlotOut.parentNode.insertBefore(html, filledSlotOut.nextSibling);
             }
         },
+        _buildToggleForDayOff = function(day) {
+            var eToggle = Snippet.buildToggleForDayOff(DayOff.has(day) ? 'off' : 'on');
+            eToggle.onclick = function() {
+                var _day = day;
+                if (DayOff.has(_day)) {
+                    DayOff.remove(_day);
+                    data.dayOffCount--;
+                } else {
+                    DayOff.add(_day);
+                    data.dayOffCount++;
+                }
+                Queiroz.reload();
+            };
+            return eToggle;
+        },
         _analyzeDay = function(eDay) {
-            var checkpoints = _getCheckpoints(eDay);
+            var day = Time.toDate(_getDate(eDay) + " " + Time.fake);
+            if (Settings.WORK_DAYS.contains(day.getDay())) {
+                var eToggle = _buildToggleForDayOff(day);
+                View.appendToggle(eDay, eToggle);
+
+                // ignores stored days
+                if (DayOff.has(day)) return;
+
+                data.dayOffCount--;
+            }
+
+            var checkpoints = View.getAllCheckpoint(eDay);
             if (checkpoints.length) {
                 var millis = 0;
                 View.getAllTimeIn(eDay).forEach(function(inElement, index) {
@@ -948,7 +1052,7 @@
         Time.computeTimes(data);
         Time.transformToHuman(data);
         */
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 2.9.9</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.0.0</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');
@@ -957,6 +1061,20 @@
                 modal.classList.add('js-hide');
             };
         });
+    };
+
+    Queiroz.reload = function() {
+        View.getAllQueirozElements().forEach(function(element) {
+            element.remove();
+        });
+
+        data.week.laborTime.millis = 0;
+        data.week.balanceTime.millis = 0;
+        data.week.pendingTime.millis = 0;
+        data.week.extraTime.millis = 0;
+        data.dayOffCount = Settings.WORK_DAYS.length;
+
+        Queiroz.bless();
     };
 
 })(Queiroz);

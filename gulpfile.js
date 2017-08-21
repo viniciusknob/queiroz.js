@@ -28,7 +28,7 @@ var
     },
 
     Settings = {
-        VERSION: '2.9.9',
+        VERSION: '3.0.0',
         versionRegex: '(?:\\d+\\.){2}\\d+(?:-beta\\.\\d+)?',
         env: {
             DEV: {
@@ -190,6 +190,7 @@ gulp.task('js.concat', function() {
             'src/js/view.js',
             'src/js/time.js',
             'src/js/util.js',
+            'src/js/dayoff.js',
             'src/js/core.js',
             'src/js/autoexec.js'
         ])

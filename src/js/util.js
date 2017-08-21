@@ -12,6 +12,12 @@
     Array.prototype.last = function() {
         return this[this.length-1];
     };
+    Array.prototype.contains = function(value) {
+        return this.indexOf(value) > -1;
+    };
+    Storage.prototype.hasItem = function(name) {
+        return (this.getItem(name) || false);
+    };
     Number.prototype.format = function(length) {
         var _number = ''+this;
         while(_number.length < length)
@@ -29,7 +35,10 @@
     };
     Element.prototype.remove = function() {
         this.parentElement.removeChild(this);
-    }
+    };
+    String.prototype.contains = function(str) {
+        return this.search(str) > -1;
+    };
 
     /* Class Definition */
 

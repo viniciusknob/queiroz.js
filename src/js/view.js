@@ -7,10 +7,6 @@
 
 (function(document, Queiroz) {
 
-    /* Modules */
-
-    var Snippet = Queiroz.snippet;
-
     /* Class Definition */
 
     var View = function() {
@@ -26,7 +22,9 @@
                 DATE: '[id^=hiddenDiaApont]',
                 HEADER: '#SemanaApontamentos div',
                 TIME_IN: '.TimeIN,.TimeINVisualizacao',
-                FOOTER: 'footer .LabelEmpresa'
+                FOOTER: 'footer .LabelEmpresa',
+                TOOGLE: '.HfIsFolga',
+                QUEIROZ: '*[class*=qz-]'
             };
 
         /* Private Functions */
@@ -113,6 +111,9 @@
             getAllTimeIn: function(target) {
                 return _getAll(Selector.TIME_IN, target);
             },
+            getAllQueirozElements: function() {
+                return _getAll(Selector.QUEIROZ);
+            },
             appendToHead: function(html) {
                 _append(Selector.HEAD, html);
             },
@@ -124,6 +125,9 @@
             },
             appendToFooter: function(text) {
                 _get(Selector.FOOTER).textContent += " | " + text;
+            },
+            appendToggle: function(target, eToggle) {
+                _get(Selector.TOOGLE, target).parentElement.appendChild(eToggle);
             }
         };
     }();
