@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.0.4',
+            VERSION = '3.0.5',
             SETTINGS = {"USERSCRIPT_DELAY_MILLIS":1000,"MAX_CONSECUTIVE_MINUTES":360,"WEEKLY_GOAL_MINUTES":2640,"DAILY_GOAL_MINUTES":528,"WORK_DAYS":[1,2,3,4,5],"INITIAL_WEEKDAY":1};
 
         /* Public Functions */
@@ -374,7 +374,9 @@
                 _append(Selector.HEADER, html);
             },
             appendToFooter: function(text) {
-                _get(Selector.FOOTER).textContent += " | " + text;
+                var footerContent = _get(Selector.FOOTER).textContent;
+                if (footerContent && footerContent.contains(text) == false)
+                    _get(Selector.FOOTER).textContent += " | " + text;
             },
             appendToggle: function(target, eToggle) {
                 _get(Selector.TOOGLE, target).parentElement.appendChild(eToggle);
@@ -999,7 +1001,7 @@
         Time.computeTimes(data);
         Time.transformToHuman(data);
         */
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.0.4</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.0.5</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');

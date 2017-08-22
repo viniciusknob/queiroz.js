@@ -124,7 +124,9 @@
                 _append(Selector.HEADER, html);
             },
             appendToFooter: function(text) {
-                _get(Selector.FOOTER).textContent += " | " + text;
+                var footerContent = _get(Selector.FOOTER).textContent;
+                if (footerContent && footerContent.contains(text) == false)
+                    _get(Selector.FOOTER).textContent += " | " + text;
             },
             appendToggle: function(target, eToggle) {
                 _get(Selector.TOOGLE, target).parentElement.appendChild(eToggle);
