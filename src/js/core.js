@@ -90,9 +90,8 @@
         _buildHtmlHeader = function(args) {
             var header = Snippet.header();
             args.forEach(function(element) {
-                if (element) {
+                if (element)
                     header.appendChild(element);
-                }
             });
             return header;
         },
@@ -120,15 +119,8 @@
             View.appendToHeader(html);
         },
         _buildStats = function() {
-            if (Settings.LAST_WEEK_MODE === 'ON') {
-                Settings.LAST_WEEK_MODE = 'DOING';
-            }
-
             data.week.buildTime();
-
-            if (Settings.LAST_WEEK_MODE !== 'DOING') {
-                _renderStats();
-            }
+            _renderStats();
         },
         _renderLaborTimePerShift = function(context, shift, finished) {
             if (shift < 0) shift = 0; // normalize
@@ -236,10 +228,7 @@
                             shiftInMillis = Time.diff(inDate, outDate);
 
                         millis += shiftInMillis;
-
-                        if (Settings.LAST_WEEK_MODE !== 'DOING') {
-                            _renderLaborTimePerShift(outElement, shiftInMillis, true);
-                        }
+                        _renderLaborTimePerShift(outElement, shiftInMillis, true);
                         if (Time.isToday(inDate)) {
                             data.today.laborTime.millis += shiftInMillis;
                         }
@@ -271,20 +260,10 @@
                     _stringDay = _getDate(eDay) + " " + Time.fake,
                     _dateDay = Time.toDate(_stringDay);
 
-                if (data.week.laborTime.millis === 0) { // first time
-                    if (_foundInitialWeekday || (_foundInitialWeekday = _dateDay.getDay() === Settings.INITIAL_WEEKDAY)) {
-                        _selectedDays.push(eDay);
-                    } else {
-                        eDay.remove();
-                    }
-                } else { // second time
-                    if (_dateDay.getDay() === Settings.INITIAL_WEEKDAY) {
-                        Settings.LAST_WEEK_MODE = 'DONE';
-                    } else {
-                        if (Settings.LAST_WEEK_MODE === 'DOING') {
-                            _selectedDays.push(eDay);
-                        }
-                    }
+                if (_foundInitialWeekday || (_foundInitialWeekday = _dateDay.getDay() === Settings.INITIAL_WEEKDAY)) {
+                    _selectedDays.push(eDay);
+                } else {
+                    eDay.remove();
                 }
             });
             return _selectedDays;
@@ -304,11 +283,6 @@
             var _selectedDays = _selectDaysToAnalyze();
             _selectedDays.forEach(_analyzeDay);
             _buildStats();
-
-            if (Settings.LAST_WEEK_MODE === 'DOING') {
-                Kairos.nextWeek();
-                setTimeout(_initWithDelay, 1000);
-            }
         },
         _initWithDelay = function() {
             var interval = setInterval(function() {
@@ -322,16 +296,10 @@
     /* Public Functions */
 
     Queiroz.bless = function(lastWeekMode) {
-        Settings.LAST_WEEK_MODE = lastWeekMode ? 'ON' : false;
-        if (Settings.LAST_WEEK_MODE === 'ON') {
-            Kairos.backWeek();
-            setTimeout(_initWithDelay, 1000);
+        if (View.isLoaded()) {
+            _init();
         } else {
-            if (View.isLoaded()) {
-                _init();
-            } else {
-                _initWithDelay();
-            }
+            _initWithDelay();
         }
         View.appendToFooter(this.description);
         return this.description;
