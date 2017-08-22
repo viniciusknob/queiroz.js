@@ -21,18 +21,18 @@
             _buildValue = function(date) {
                 return date.getDate().format(2) + "/" + (date.getMonth()+1).format(2);
             },
-            _has = function(date) {
+            _is = function(date) {
                 return cache.contains(_buildValue(date));
             },
             _add = function(date) {
-                if (_has(date))
+                if (_is(date))
                     return;
 
                 cache.push(_buildValue(date));
                 localStorage.setItem(NAME, JSON.stringify(cache));
             },
             _remove = function(date) {
-                if (_has(date) == false)
+                if (_is(date) == false)
                     return;
 
                 var index = cache.indexOf(_buildValue(date));
@@ -48,7 +48,7 @@
         /* Public Functions */
 
         return {
-            has: _has,
+            is: _is,
             add: _add,
             remove: _remove
         };

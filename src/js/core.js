@@ -33,7 +33,7 @@
         };
 
     var data = {
-        dayOffCount: Settings.WORK_DAYS.length,
+        dayOffCount: 0,
         week: {
             laborTime: {
                 millis: 0, human: '', html: ''
@@ -189,10 +189,10 @@
             }
         },
         _buildToggleForDayOff = function(day) {
-            var eToggle = Snippet.buildToggleForDayOff(DayOff.has(day) ? 'off' : 'on');
+            var eToggle = Snippet.buildToggleForDayOff(DayOff.is(day) ? 'off' : 'on');
             eToggle.onclick = function() {
                 var _day = day;
-                if (DayOff.has(_day)) {
+                if (DayOff.is(_day)) {
                     DayOff.remove(_day);
                     data.dayOffCount--;
                 } else {
@@ -210,9 +210,10 @@
                 View.appendToggle(eDay, eToggle);
 
                 // ignores stored days
-                if (DayOff.has(day)) return;
-
-                data.dayOffCount--;
+                if (DayOff.is(day)) {
+                    data.dayOffCount++;
+                    return;
+                }
             }
 
             var checkpoints = View.getAllCheckpoint(eDay);
@@ -366,11 +367,13 @@
             element.remove();
         });
 
+        // reset
+        data.dayOffCount = 0;
         data.week.laborTime.millis = 0;
         data.week.balanceTime.millis = 0;
         data.week.pendingTime.millis = 0;
         data.week.extraTime.millis = 0;
-        data.dayOffCount = Settings.WORK_DAYS.length;
+        data.today.laborTime.millis = 0;
 
         Queiroz.bless();
     };

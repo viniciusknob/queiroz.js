@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.0.1',
+            VERSION = '3.0.2',
             SETTINGS = {"USERSCRIPT_DELAY_MILLIS":1000,"MAX_CONSECUTIVE_MINUTES":360,"WEEKLY_GOAL_MINUTES":2640,"DAILY_GOAL_MINUTES":528,"WORK_DAYS":[1,2,3,4,5],"INITIAL_WEEKDAY":1,"LAST_WEEK_MODE":false};
 
         /* Public Functions */
@@ -650,18 +650,18 @@
             _buildValue = function(date) {
                 return date.getDate().format(2) + "/" + (date.getMonth()+1).format(2);
             },
-            _has = function(date) {
+            _is = function(date) {
                 return cache.contains(_buildValue(date));
             },
             _add = function(date) {
-                if (_has(date))
+                if (_is(date))
                     return;
 
                 cache.push(_buildValue(date));
                 localStorage.setItem(NAME, JSON.stringify(cache));
             },
             _remove = function(date) {
-                if (_has(date) == false)
+                if (_is(date) == false)
                     return;
 
                 var index = cache.indexOf(_buildValue(date));
@@ -677,7 +677,7 @@
         /* Public Functions */
 
         return {
-            has: _has,
+            is: _is,
             add: _add,
             remove: _remove
         };
@@ -724,7 +724,7 @@
         };
 
     var data = {
-        dayOffCount: Settings.WORK_DAYS.length,
+        dayOffCount: 0,
         week: {
             laborTime: {
                 millis: 0, human: '', html: ''
@@ -880,10 +880,10 @@
             }
         },
         _buildToggleForDayOff = function(day) {
-            var eToggle = Snippet.buildToggleForDayOff(DayOff.has(day) ? 'off' : 'on');
+            var eToggle = Snippet.buildToggleForDayOff(DayOff.is(day) ? 'off' : 'on');
             eToggle.onclick = function() {
                 var _day = day;
-                if (DayOff.has(_day)) {
+                if (DayOff.is(_day)) {
                     DayOff.remove(_day);
                     data.dayOffCount--;
                 } else {
@@ -901,9 +901,10 @@
                 View.appendToggle(eDay, eToggle);
 
                 // ignores stored days
-                if (DayOff.has(day)) return;
-
-                data.dayOffCount--;
+                if (DayOff.is(day)) {
+                    data.dayOffCount++;
+                    return;
+                }
             }
 
             var checkpoints = View.getAllCheckpoint(eDay);
@@ -1041,7 +1042,7 @@
         Time.computeTimes(data);
         Time.transformToHuman(data);
         */
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.0.1</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.0.2</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');
@@ -1057,11 +1058,13 @@
             element.remove();
         });
 
+        // reset
+        data.dayOffCount = 0;
         data.week.laborTime.millis = 0;
         data.week.balanceTime.millis = 0;
         data.week.pendingTime.millis = 0;
         data.week.extraTime.millis = 0;
-        data.dayOffCount = Settings.WORK_DAYS.length;
+        data.today.laborTime.millis = 0;
 
         Queiroz.bless();
     };

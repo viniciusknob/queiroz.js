@@ -28,7 +28,7 @@ var
     },
 
     Settings = {
-        VERSION: '3.0.1',
+        VERSION: '3.0.2',
         versionRegex: '(?:\\d+\\.){2}\\d+(?:-beta\\.\\d+)?',
         env: {
             DEV: {
