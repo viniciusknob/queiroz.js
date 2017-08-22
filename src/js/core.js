@@ -96,31 +96,20 @@
             return header;
         },
         _renderStats = function() {
+            data.week.buildTime();
             data.week.buildHumanTime();
             data.week.buildHtmlTime();
 
             var
-                htmlBalanceTime = data.week.balanceTime.html,
-                htmlPendingOrExtraTime = _getPendingOrExtraTime();
-
-            // prevents confusion on exit x balance time
-            if ((_getWeeklyGoalInMillis() - data.week.laborTime.millis) < _getMaxConsecutiveMinutesInMillis())
-                htmlBalanceTime = '';
-
-            var
                 args = [
                     data.week.laborTime.html,
-                    htmlBalanceTime,
-                    htmlPendingOrExtraTime,
+                    data.week.balanceTime.html,
+                    _getPendingOrExtraTime(),
                     Snippet.headerBeta()
                 ],
                 html = _buildHtmlHeader(args);
 
             View.appendToHeader(html);
-        },
-        _buildStats = function() {
-            data.week.buildTime();
-            _renderStats();
         },
         _renderLaborTimePerShift = function(context, shift, finished) {
             if (shift < 0) shift = 0; // normalize
@@ -282,7 +271,7 @@
             View.appendToHead(Snippet.style());
             var _selectedDays = _selectDaysToAnalyze();
             _selectedDays.forEach(_analyzeDay);
-            _buildStats();
+            _renderStats();
         },
         _initWithDelay = function() {
             var interval = setInterval(function() {
