@@ -8,7 +8,9 @@
 
     /* Modules */
 
-    var Settings = Queiroz.settings;
+    var
+        Settings = Queiroz.settings,
+        DayOff   = Queiroz.module.dayoff;
 
     /* Class Definition */
 
@@ -21,9 +23,12 @@
             ZERO_TIME = '00:00',
             MINUTE_IN_MILLIS = 1000 * 60,
             HOUR_IN_MILLIS = MINUTE_IN_MILLIS * 60,
-            WEEKLY_GOAL_MINUTES_IN_MILLIS = Settings.WEEKLY_GOAL_MINUTES * MINUTE_IN_MILLIS,
             DAILY_GOAL_MINUTES_IN_MILLIS = Settings.DAILY_GOAL_MINUTES * MINUTE_IN_MILLIS,
             MAX_CONSECUTIVE_MINUTES_IN_MILLIS = Settings.MAX_CONSECUTIVE_MINUTES * MINUTE_IN_MILLIS;
+
+        var computeWeeklyGoalMillis = function() {
+            return (Settings.WEEKLY_GOAL_MINUTES * MINUTE_IN_MILLIS) - (DayOff.count * DAILY_GOAL_MINUTES_IN_MILLIS);
+        };
 
         /* Private Functions */
 
@@ -74,30 +79,35 @@
                         time.shift = false;
                         if (time.in && time.out)
                             time.shift = _diff(time.in, time.out);
+                        else if (time.in)
+                            time.shift = _diff(time.in, new Date());
                     });
                 });
             },
             _computeLaborTime = function(data) {
-                data.totalLabor = 0;
+                data.worked = 0;
                 data.days.forEach(function(day) {
-                    day.labor = 0;
+                    day.worked = 0;
                     day.periods.forEach(function(time) {
-                        if (time.shift)
-                            day.labor += time.shift
+                        if (time.in && time.out)
+                            day.worked += time.shift
                     });
-                    data.totalLabor += day.labor;
+                    data.worked += day.worked;
                 });
             },
             _computeBalanceTime = function(data) {
                 var _now = new Date();
-                data.totalPreviousBalance = 0;
+                data.dailyBalance = 0;
                 data.days.forEach(function(day) {
-                    day.balance = (0 - DAILY_GOAL_MINUTES_IN_MILLIS) + day.labor;
-                    if (day.date.getDayOfMonth() < _now.getDayOfMonth()) {
-                        data.totalPreviousBalance += day.balance;
+                    day.balance = 0;
+                    if (day.periods.length) {
+                        day.balance = (0 - DAILY_GOAL_MINUTES_IN_MILLIS) + day.worked;
+                        if (day.date.getDayOfMonth() < _now.getDayOfMonth()) {
+                            data.dailyBalance += day.balance;
+                        }
                     }
                 });
-                data.totalBalance = (0 - WEEKLY_GOAL_MINUTES_IN_MILLIS) + data.totalLabor;
+                data.weeklyBalance = (0 - computeWeeklyGoalMillis()) + data.worked;
             },
             _computeTimeToLeave = function(data) {
                 data.days.forEach(function(day) {
@@ -105,10 +115,10 @@
                     if (_isToday(day.date) && _periods.length) {
                         var _time = _periods.last();
                         if (_time.out == false) {
-                            if (day.labor <= DAILY_GOAL_MINUTES_IN_MILLIS) {
-                                var pending = _diff(day.labor, DAILY_GOAL_MINUTES_IN_MILLIS);
+                            if (day.worked < DAILY_GOAL_MINUTES_IN_MILLIS) {
+                                var pending = _diff(day.worked, DAILY_GOAL_MINUTES_IN_MILLIS);
                                 _time.leave = new Date(_time.in.getMillis() + pending);
-                                _time.balancedLeave = _time.leave + day.balance;
+                                _time.balancedLeave = new Date(_time.leave.getMillis() - data.dailyBalance);
                             }
                         }
                     }
@@ -118,7 +128,7 @@
         /* Public Functions */
 
         return {
-            transformToDate: function(data) {
+            parse: function(data) {
                 data.days.forEach(function(day) {
                     day.periods.forEach(function(time) {
                         if (time.in)
@@ -130,19 +140,14 @@
                     day.date = _toDate(day.date + " " + FAKE_TIME);
                 });
             },
-            computeTimes: function(data) {
+            compute: function(data) {
                 _computeShiftTime(data);
                 _computeLaborTime(data);
-                _computeTimeToLeave(data);
                 _computeBalanceTime(data);
+                _computeTimeToLeave(data);
             },
-            transformToHuman: function(data) {
-                data.totalLabor = _millisToHuman(data.totalLabor);
-                data.totalPreviousBalance = _millisToHumanWithSign(data.totalPreviousBalance);
-                data.totalBalance = _millisToHumanWithSign(data.totalBalance);
+            toHuman: function(data) {
                 data.days.forEach(function(day) {
-                    day.labor = _millisToHuman(day.labor);
-                    day.balance = _millisToHumanWithSign(day.balance);
                     day.periods.forEach(function(time) {
                         if (time.in)
                             time.in = time.in.getTimeAsString();
@@ -152,11 +157,19 @@
 
                         if (time.shift)
                             time.shift = _millisToHuman(time.shift);
+
+                        if (time.leave)
+                            time.leave = time.leave.getTimeAsString();
+
+                        if (time.balancedLeave)
+                            time.balancedLeave = time.balancedLeave.getTimeAsString();
                     });
+                    day.worked = _millisToHuman(day.worked);
+                    day.balance = _millisToHumanWithSign(day.balance);
                 });
-            },
-            hourToMillis: function(hour) {
-                return hour * HOUR_IN_MILLIS;
+                data.worked = _millisToHuman(data.worked);
+                data.dailyBalance = _millisToHumanWithSign(data.dailyBalance);
+                data.weeklyBalance = _millisToHumanWithSign(data.weeklyBalance);
             },
             zero: ZERO_TIME,
             fake: FAKE_TIME,

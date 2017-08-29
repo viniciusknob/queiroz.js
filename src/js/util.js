@@ -24,6 +24,9 @@
             _number = '0'+_number;
         return _number;
     };
+    Date.prototype.getDateAsKairos = function() {
+        return this.getDate().format(2) + "_" + (this.getMonth()+1).format(2) + "_" + this.getFullYear();
+    };
     Date.prototype.getTimeAsString = function() {
         return this.getHours().format(2) + ':' + this.getMinutes().format(2);
     };
@@ -37,7 +40,7 @@
         this.parentElement.removeChild(this);
     };
     String.prototype.contains = function(str) {
-        return this.search(str) > -1;
+        return this.indexOf(str) > -1;
     };
 
     /* Class Definition */

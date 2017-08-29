@@ -28,7 +28,7 @@ var
     },
 
     Settings = {
-        VERSION: '3.0.5',
+        VERSION: '3.0.6',
         versionRegex: '(?:\\d+\\.){2}\\d+(?:-beta\\.\\d+)?',
         env: {
             DEV: {
@@ -197,14 +197,14 @@ gulp.task('js.docToMin', function() {
 gulp.task('js.concat', function() {
     return gulp.src([
             'src/js/queiroz.js',
-            'src/js/kairos.js',
             'src/js/strings.js',
+            'src/js/util.js',
             'src/js/style.js',
+            'src/js/kairos.js',
+            'src/js/dayoff.js',
             'src/js/snippet.js',
             'src/js/view.js',
             'src/js/time.js',
-            'src/js/util.js',
-            'src/js/dayoff.js',
             'src/js/core.js',
             'src/js/autoexec.js'
         ])

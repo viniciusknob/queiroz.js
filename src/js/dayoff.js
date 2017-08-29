@@ -48,11 +48,21 @@
         /* Public Functions */
 
         return {
+            check: function(data) {
+                var _days = [];
+                data.days.forEach(function(day) {
+                    if (_is(day.date) == false)
+                        _days.push(day);
+                });
+                data.days = _days;
+            },
             is: _is,
             add: _add,
             remove: _remove
         };
     }();
+
+    DayOff.count = 0;
 
     /* Module Definition */
 

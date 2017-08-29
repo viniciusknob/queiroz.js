@@ -7,6 +7,11 @@
 
 (function(document, Queiroz) {
 
+    /* Modules */
+
+    var Settings = Queiroz.settings,
+        Snippet  = Queiroz.module.snippet;
+
     /* Class Definition */
 
     var View = function() {
@@ -54,12 +59,16 @@
                   if (callback)
                     callback();
               });
-            };
+          },
+          _appendTo = function(target, element) {
+              var filledSlotOut = target.parentNode;
+              filledSlotOut.parentNode.insertBefore(element, filledSlotOut.nextSibling);
+          };
 
         /* Public Functions */
 
         return {
-            collectData: function() {
+            read: function() {
                 var
                     data = {},
                     days = [],
@@ -95,6 +104,58 @@
                 });
                 data.days = days;
                 return data;
+            },
+            removeUnusedDays: function(data) {
+                var
+                    targetIndex = 0,
+                    days = data.days;
+                days.forEach(function(day, index) {
+                    if (day.date.getDay() === Settings.INITIAL_WEEKDAY)
+                        targetIndex = index;
+                });
+                data.days = days.slice(targetIndex);
+
+                var eColumns = _getAll(Selector.COLUMN_DAY);
+                eColumns.forEach(function(eDay) {
+                    var remove = true;
+                    data.days.forEach(function(day) {
+                        var eDate = _get(Selector.DATE, eDay).value;
+                        if (day.date.getDateAsKairos() == eDate)
+                            remove = false;
+                    });
+                    if (remove)
+                        eDay.remove();
+                });
+            },
+            showResult: function(data) {
+                var eColumns = _getAll(Selector.COLUMN_DAY);
+                data.days.forEach(function(day) {
+                    eColumns.forEach(function(eDay) {
+                        var eDate = _get(Selector.DATE, eDay).value;
+                        if (day.date.getDateAsKairos() == eDate) {
+                            day.periods.forEach(function(time) {
+                                if (time.out == false) {
+                                    eDay.appendChild(Snippet.laborTimePerShift(time.shift, false));
+                                    eDay.appendChild(Snippet.todayTimeToLeave(time.leave, false));
+                                    eDay.appendChild(Snippet.todayTimeToLeave(time.balancedLeave, true));
+                                } else {
+                                    eDay.appendChild(Snippet.laborTimePerShift(time.shift, true));
+                                }
+                            });
+                            if (day.periods.length) {
+                                eDay.appendChild(Snippet.laborTimePerDay(day.worked));
+                                eDay.appendChild(Snippet.balanceTimePerDay(day.balance));
+                            }
+                        }
+                    });
+                });
+
+                var header = Snippet.header();
+                header.appendChild(Snippet.headerLaborTime(data.worked));
+                header.appendChild(Snippet.headerBalanceTime(data.dailyBalance, false));
+                header.appendChild(Snippet.headerBalanceTime(data.weeklyBalance, true));
+                header.appendChild(Snippet.headerBeta());
+                View.appendToHeader(header);
             },
             isLoaded: function() {
                 return _get(Selector.CHECKPOINT);

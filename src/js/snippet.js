@@ -13,29 +13,28 @@
       Strings = Queiroz.module.strings,
       Style = Queiroz.module.style;
 
-    /* Constants */
-
-    var
-        TagName = {
-            DIV: 'div',
-            P: 'p',
-            SPAN: 'span',
-            STYLE: 'style',
-            STRONG: 'strong',
-            BUTTON: 'button',
-            SMALL: 'small',
-            TABLE: 'table',
-            THEAD: 'thead',
-            TBODY: 'tbody',
-            TH: 'th',
-            TR: 'tr',
-            TD: 'td'
-        };
-
-
     /* Class Definition */
 
     var Snippet = function() {
+
+        /* Constants */
+
+        var
+            TagName = {
+                DIV: 'div',
+                P: 'p',
+                SPAN: 'span',
+                STYLE: 'style',
+                STRONG: 'strong',
+                BUTTON: 'button',
+                SMALL: 'small',
+                TABLE: 'table',
+                THEAD: 'thead',
+                TBODY: 'tbody',
+                TH: 'th',
+                TR: 'tr',
+                TD: 'td'
+            };
 
         var
             _buildTag = function(name, clazz, text) {
@@ -49,15 +48,14 @@
                 }
                 return element;
             },
-            _buildBox = function(helpText, strongValue, strongClass) {
-                var eBox = _buildTag(TagName.DIV, 'qz-box qz-box-inline qz-box-muted qz-text-center');
-                if (helpText) {
-                    var eHelpText = _buildTag(TagName.DIV, 'qz-help-text', helpText);
-                    eBox.appendChild(eHelpText);
-                }
-                var eTime = _buildTag(TagName.STRONG, 'qz-box-content '+strongClass, strongValue);
-                eBox.appendChild(eTime);
-                return eBox;
+            _buildBox = function(opt) {
+                var box = _buildTag(TagName.DIV, 'qz-box qz-box-muted qz-text-center');
+                var helpText = _buildTag(TagName.DIV, 'qz-help-text', Strings(opt.helpText));
+                var humanTime = _buildTag(TagName.STRONG, 'qz-box-content '+opt.contentClass, opt.humanTime);
+                box.appendChild(helpText);
+                box.appendChild(humanTime);
+                if (opt.inlineText) box.className += ' qz-box-inline';
+                return box;
             };
 
         /* Public Functions */
@@ -69,64 +67,65 @@
             header: function() {
                 return _buildTag(TagName.P, 'qz-box-head');
             },
-            headerLaborTime: function(laborTime) {
-                return _buildBox(Strings('labor'), laborTime, 'qz-text-green');
-            },
-            headerBalanceTime: function(balanceTime) {
-                return _buildBox(Strings('balance'), balanceTime, 'qz-text-teal');
-            },
-            headerWeekPendingTime: function(pendingTime) {
-                return _buildBox(Strings('pending'), pendingTime, 'qz-text-primary');
-            },
-            headerExtraTime: function(extraTime) {
-                return _buildBox(Strings('extra'), extraTime, 'qz-text-green');
+            buildToggleForDayOff: function(key) {
+                return _buildTag(TagName.SPAN,'fa fa-toggle-'+key+' qz-toggle');
             },
             headerBeta: function() {
-                var box = _buildBox('New', '', 'fa fa-flask qz-text-golden');
+                var box = _buildBox({
+                    helpText: 'config',
+                    humanTime: '',
+                    contentClass: 'fa fa-flask qz-text-golden',
+                    inlineText: true
+                });
                 box.className += ' qz-box-compact';
                 box.onclick = function() {
                     Queiroz.beta();
                 }
                 return box;
             },
-            buildToggleForDayOff: function(key) {
-                return _buildTag(TagName.SPAN,'fa fa-toggle-'+key+' qz-toggle');
+            headerLaborTime: function(laborTime) {
+                return _buildBox({
+                    helpText: 'labor',
+                    humanTime: laborTime,
+                    contentClass: 'qz-text-green',
+                    inlineText: true
+                });
+            },
+            headerBalanceTime: function(balanceTime, weekly) {
+                return _buildBox({
+                    helpText: (weekly ? (balanceTime.contains('+') ? 'extra' : 'pending') : 'balance'),
+                    humanTime: balanceTime,
+                    contentClass: 'qz-text-' + (weekly ? (balanceTime.contains('+') ? 'green' : 'primary') : 'teal'),
+                    inlineText: true
+                });
             },
             balanceTimePerDay: function(balanceTime) {
-                var helpText = _buildTag(TagName.DIV, 'qz-help-text', Strings('balance'));
-                var time = _buildTag(TagName.STRONG, 'qz-box-content qz-text-teal', balanceTime);
-                var div = _buildTag(TagName.DIV, 'qz-box qz-box-muted');
-                div.appendChild(helpText);
-                div.appendChild(time);
-                return div;
+                return _buildBox({
+                    helpText: 'balance',
+                    humanTime: balanceTime,
+                    contentClass: 'qz-text-teal'
+                });
             },
             laborTimePerDay: function(laborTime) {
-                var helpText = _buildTag(TagName.DIV, 'qz-help-text', Strings('labor'));
-                var time = _buildTag(TagName.STRONG, 'qz-box-content qz-text-green', laborTime);
-                var div = _buildTag(TagName.DIV, 'qz-box qz-box-muted');
-                div.appendChild(helpText);
-                div.appendChild(time);
-                return div;
+                return _buildBox({
+                    helpText: 'labor',
+                    humanTime: laborTime,
+                    contentClass: 'qz-text-green'
+                });
             },
             laborTimePerShift: function(laborTime, finished) {
-                var div = _buildTag(TagName.DIV, 'qz-box qz-box-muted');
-                var time = _buildTag(TagName.STRONG, 'qz-box-content', laborTime);
-                if (!finished) {
-                    var helpText = _buildTag(TagName.DIV, 'qz-help-text', Strings('working'));
-                    div.appendChild(helpText);
-                    time.classList.add('qz-text-golden');
-                }
-                div.appendChild(time);
-                return div;
+                return _buildBox({
+                    helpText: (finished ? 'shift' : 'working'),
+                    humanTime: laborTime,
+                    contentClass: (finished ? '' : 'qz-text-golden')
+                });
             },
             todayTimeToLeave: function(timeToLeave, balanced) {
-                var helpText = balanced ? Strings('exit+') : Strings('exit');
-                var content = _buildTag(TagName.DIV, 'qz-help-text', helpText);
-                var time = _buildTag(TagName.STRONG, 'qz-box-content qz-text-primary', timeToLeave);
-                var div = _buildTag(TagName.DIV, 'qz-box qz-box-muted');
-                div.appendChild(content);
-                div.appendChild(time);
-                return div;
+                return _buildBox({
+                    helpText: 'exit' + (balanced ? '+' : ''),
+                    humanTime: timeToLeave,
+                    contentClass: 'qz-text-primary'
+                });
             }
         };
     }();
