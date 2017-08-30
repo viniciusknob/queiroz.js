@@ -12,7 +12,6 @@
     var
         Settings = Queiroz.settings,
         mod      = Queiroz.module,
-        Kairos   = mod.kairos,
         View     = mod.view,
         Time     = mod.time,
         Util     = mod.util,
