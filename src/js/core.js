@@ -12,11 +12,10 @@
     var
         Settings = Queiroz.settings,
         mod      = Queiroz.module,
-        View     = mod.view,
-        Time     = mod.time,
-        Util     = mod.util,
         Snippet  = mod.snippet,
-        DayOff   = mod.dayoff;
+        View     = mod.view,
+        DayOff   = mod.dayoff,
+        Time     = mod.time;
 
     /* Private Functions */
 

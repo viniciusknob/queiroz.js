@@ -1,13 +1,11 @@
 
 /*!
- * Queiroz.js: util.js
+ * Queiroz.js: polyfill.js
  * JavaScript Extension for Dimep Kairos
  * https://github.com/viniciusknob/queiroz.js
  */
 
-(function(Queiroz) {
-
-    /* Polyfill */
+(function() {
 
     Array.prototype.last = function() {
         return this[this.length-1];
@@ -43,22 +41,4 @@
         return this.indexOf(str) > -1;
     };
 
-    /* Class Definition */
-
-    var Util = function() {
-        return {
-            textFormat: function(pattern, args) {
-                for (var index = 0; index < args.length; index++) {
-                    var regex = new RegExp('\\{' + index + '\\}', 'g');
-                    pattern = pattern.replace(regex, args[index]);
-                }
-                return pattern;
-            }
-        };
-    }();
-
-    /* Module Definition */
-
-    Queiroz.module.util = Util;
-
-})(Queiroz);
+})();

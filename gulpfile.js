@@ -28,7 +28,7 @@ var
     },
 
     Settings = {
-        VERSION: '3.0.8',
+        VERSION: '3.0.9',
         versionRegex: '(?:\\d+\\.){2}\\d+(?:-beta\\.\\d+)?',
         env: {
             DEV: {
@@ -197,8 +197,8 @@ gulp.task('js.docToMin', function() {
 gulp.task('dev.concat', function() {
     return gulp.src([
             'src/js/queiroz.js',
+            'src/js/polyfill.js',
             'src/js/strings.js',
-            'src/js/util.js',
             'src/js/style.js',
             'src/js/dayoff.js',
             'src/js/snippet.js',
@@ -215,8 +215,8 @@ gulp.task('all.concat', function() {
     return gulp.src([
             'src/js/queiroz.js',
             'src/js/analytics.js',
+            'src/js/polyfill.js',
             'src/js/strings.js',
-            'src/js/util.js',
             'src/js/style.js',
             'src/js/dayoff.js',
             'src/js/snippet.js',

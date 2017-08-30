@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.0.8',
+            VERSION = '3.0.9',
             SETTINGS = {"USERSCRIPT_DELAY_MILLIS":1000,"MAX_CONSECUTIVE_MINUTES":360,"WEEKLY_GOAL_MINUTES":2640,"DAILY_GOAL_MINUTES":528,"WORK_DAYS":[1,2,3,4,5],"INITIAL_WEEKDAY":1,"GA_TRACKING_ID":"UA-105390656-1"};
 
         /* Public Functions */
@@ -65,37 +65,12 @@
 
 
 /*!
- * Queiroz.js: strings.js
+ * Queiroz.js: polyfill.js
  * JavaScript Extension for Dimep Kairos
  * https://github.com/viniciusknob/queiroz.js
  */
 
-(function(Queiroz) {
-
-    /* Class Definition */
-
-    var Strings = function(key) {
-        return Strings._[key];
-    };
-
-    Strings._ = {"pending":"Pendente","extra":"Extra","balance":"Saldo","labor":"Efetuado","shift":"Turno","working":"Trabalhando...","exit":"Saída (08:48)","exit+":"Saída + Saldo","config":"Config"};
-
-    /* Module Definition */
-
-    Queiroz.module.strings = Strings;
-
-})(Queiroz);
-
-
-/*!
- * Queiroz.js: util.js
- * JavaScript Extension for Dimep Kairos
- * https://github.com/viniciusknob/queiroz.js
- */
-
-(function(Queiroz) {
-
-    /* Polyfill */
+(function() {
 
     Array.prototype.last = function() {
         return this[this.length-1];
@@ -131,23 +106,28 @@
         return this.indexOf(str) > -1;
     };
 
+})();
+
+
+/*!
+ * Queiroz.js: strings.js
+ * JavaScript Extension for Dimep Kairos
+ * https://github.com/viniciusknob/queiroz.js
+ */
+
+(function(Queiroz) {
+
     /* Class Definition */
 
-    var Util = function() {
-        return {
-            textFormat: function(pattern, args) {
-                for (var index = 0; index < args.length; index++) {
-                    var regex = new RegExp('\\{' + index + '\\}', 'g');
-                    pattern = pattern.replace(regex, args[index]);
-                }
-                return pattern;
-            }
-        };
-    }();
+    var Strings = function(key) {
+        return Strings._[key];
+    };
+
+    Strings._ = {"pending":"Pendente","extra":"Extra","balance":"Saldo","labor":"Efetuado","shift":"Turno","working":"Trabalhando...","exit":"Saída (08:48)","exit+":"Saída + Saldo","config":"Config"};
 
     /* Module Definition */
 
-    Queiroz.module.util = Util;
+    Queiroz.module.strings = Strings;
 
 })(Queiroz);
 
@@ -791,11 +771,10 @@
     var
         Settings = Queiroz.settings,
         mod      = Queiroz.module,
-        View     = mod.view,
-        Time     = mod.time,
-        Util     = mod.util,
         Snippet  = mod.snippet,
-        DayOff   = mod.dayoff;
+        View     = mod.view,
+        DayOff   = mod.dayoff,
+        Time     = mod.time;
 
     /* Private Functions */
 
@@ -870,7 +849,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.0.8</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.0.9</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');
