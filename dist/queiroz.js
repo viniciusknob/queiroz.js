@@ -15,8 +15,8 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.0.6',
-            SETTINGS = {"USERSCRIPT_DELAY_MILLIS":1000,"MAX_CONSECUTIVE_MINUTES":360,"WEEKLY_GOAL_MINUTES":2640,"DAILY_GOAL_MINUTES":528,"WORK_DAYS":[1,2,3,4,5],"INITIAL_WEEKDAY":1};
+            VERSION = '3.0.7',
+            SETTINGS = {"USERSCRIPT_DELAY_MILLIS":1000,"MAX_CONSECUTIVE_MINUTES":360,"WEEKLY_GOAL_MINUTES":2640,"DAILY_GOAL_MINUTES":528,"WORK_DAYS":[1,2,3,4,5],"INITIAL_WEEKDAY":1,"GA_TRACKING_ID":"UA-105390656-1"};
 
         /* Public Functions */
 
@@ -34,6 +34,34 @@
     window.Queiroz = Queiroz;
 
 })(window);
+
+/*!
+ * Queiroz.js: analytics.js
+ * JavaScript Extension for Dimep Kairos
+ * https://github.com/viniciusknob/queiroz.js
+ *
+ * Analytics DevGuide:
+ * https://developers.google.com/analytics/devguides/collection/analyticsjs/
+ */
+
+(function(Queiroz, ga) {
+
+    var
+        Settings = Queiroz.settings,
+        trackerName = 'qzTkr';
+
+    ga('create', Settings.GA_TRACKING_ID, 'auto', trackerName);
+
+    ga(trackerName+'.set', {
+        appName: Queiroz.name,
+        appVersion: Queiroz.version
+    });
+
+    ga(trackerName+'.send', 'screenview', {
+        screenName: document.querySelector('.PageTitle').textContent
+    });
+
+})(Queiroz, ga);
 
 
 /*!
@@ -871,7 +899,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.0.6</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.0.7</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');
