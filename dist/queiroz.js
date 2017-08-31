@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.0.9',
+            VERSION = '3.0.10',
             SETTINGS = {"USERSCRIPT_DELAY_MILLIS":1000,"MAX_CONSECUTIVE_MINUTES":360,"WEEKLY_GOAL_MINUTES":2640,"DAILY_GOAL_MINUTES":528,"WORK_DAYS":[1,2,3,4,5],"INITIAL_WEEKDAY":1,"GA_TRACKING_ID":"UA-105390656-1"};
 
         /* Public Functions */
@@ -123,7 +123,7 @@
         return Strings._[key];
     };
 
-    Strings._ = {"pending":"Pendente","extra":"Extra","balance":"Saldo","labor":"Efetuado","shift":"Turno","working":"Trabalhando...","exit":"Saída (08:48)","exit+":"Saída + Saldo","config":"Config"};
+    Strings._ = {"pending":"Pendente","extra":"Extra","balance":"Saldo","labor":"Efetuado","shift":"Turno","working":"Trabalhando...","exit":"Saída (08:48)","exit+":"Saída + Saldo","config":"Config","goal":"Meta"};
 
     /* Module Definition */
 
@@ -144,7 +144,7 @@
 
     var Style = function() {
         return {
-            CSS: 'html{line-height:1.15;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,footer,header,nav,section{display:block}h1{font-size:2em;margin:.67em 0}figcaption,figure,main{display:block}figure{margin:1em 40px}hr{box-sizing:content-box;height:0;overflow:visible}pre{font-family:monospace,monospace;font-size:1em}a{background-color:transparent;-webkit-text-decoration-skip:objects}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:inherit}b,strong{font-weight:bolder}code,kbd,samp{font-family:monospace,monospace;font-size:1em}dfn{font-style:italic}mark{background-color:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}audio,video{display:inline-block}audio:not([controls]){display:none;height:0}img{border-style:none}svg:not(:root){overflow:hidden}button,input,optgroup,select,textarea{font-family:sans-serif;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button,select{text-transform:none}[type=reset],[type=submit],button,html [type=button]{-webkit-appearance:button}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring,button:-moz-focusring{outline:1px dotted ButtonText}fieldset{padding:.35em .75em .625em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}progress{display:inline-block;vertical-align:baseline}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-cancel-button,[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}details,menu{display:block}summary{display:list-item}canvas{display:inline-block}template{display:none}[hidden]{display:none}#SemanaApontamentos{cursor:default!important}.ContentTable{margin-top:inherit}.FilledSlot,.LastSlot,.emptySlot{height:inherit;padding:5px}.FilledSlot span{margin:inherit!important}.qz-text-center{text-align:center}.qz-text-primary{color:brown}.qz-text-golden{color:#b8860b}.qz-text-green{color:green}.qz-text-teal{color:teal}.qz-box{padding:5px 10px;margin:5px 1px;border:#a9a9a9 1px solid;min-width:60px}.qz-box-compact{min-width:auto}.qz-box-inline{display:inline-block}.qz-box-head{float:right}.qz-box-muted{background-color:#d3d3d3}.qz-box .qz-box-content{vertical-align:middle}.qz-help-text{font-size:10px}.qz-toggle{margin-top:10px}.fa-toggle-on{color:green}.fa-toggle-off{color:grey}.js-show{display:block}.js-hide{display:none}.qz-modal{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1024;background-color:rgba(0,0,0,.5)}.qz-modal-dialog{position:relative;width:900px;margin:30px auto}.qz-modal-content{position:relative;background-color:#fff;background-clip:padding-box;border-radius:5px}.qz-modal-header{padding:10px;border-bottom:1px solid #d3d3d3;font-weight:700;font-size:16px}.qz-modal-close{float:right;cursor:pointer;background:0 0;border:0;padding:0;color:silver}.qz-modal-body{padding:10px}.qz-modal-footer{padding:10px;border-top:1px solid #d3d3d3;text-align:center}'
+            CSS: 'html{line-height:1.15;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,footer,header,nav,section{display:block}h1{font-size:2em;margin:.67em 0}figcaption,figure,main{display:block}figure{margin:1em 40px}hr{box-sizing:content-box;height:0;overflow:visible}pre{font-family:monospace,monospace;font-size:1em}a{background-color:transparent;-webkit-text-decoration-skip:objects}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:inherit}b,strong{font-weight:bolder}code,kbd,samp{font-family:monospace,monospace;font-size:1em}dfn{font-style:italic}mark{background-color:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}audio,video{display:inline-block}audio:not([controls]){display:none;height:0}img{border-style:none}svg:not(:root){overflow:hidden}button,input,optgroup,select,textarea{font-family:sans-serif;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button,select{text-transform:none}[type=reset],[type=submit],button,html [type=button]{-webkit-appearance:button}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring,button:-moz-focusring{outline:1px dotted ButtonText}fieldset{padding:.35em .75em .625em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}progress{display:inline-block;vertical-align:baseline}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-cancel-button,[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}details,menu{display:block}summary{display:list-item}canvas{display:inline-block}template{display:none}[hidden]{display:none}#SemanaApontamentos{cursor:default!important}.ContentTable{margin-top:inherit}.FilledSlot,.LastSlot,.emptySlot{height:inherit;padding:5px}.FilledSlot span{margin:inherit!important}.qz-text-center{text-align:center}.qz-text-primary{color:brown}.qz-text-golden{color:#b8860b}.qz-text-green{color:green}.qz-text-teal{color:teal}.qz-text-black{color:#000}.qz-box{padding:5px 10px;margin:5px 1px;border:#a9a9a9 1px solid;min-width:60px}.qz-box-compact{min-width:auto}.qz-box-inline{display:inline-block}.qz-box-head{float:right}.qz-box-muted{background-color:#d3d3d3}.qz-box .qz-box-content{vertical-align:middle}.qz-help-text{font-size:10px}.qz-toggle{margin-top:10px}.fa-toggle-on{color:green}.fa-toggle-off{color:grey}.js-show{display:block}.js-hide{display:none}.qz-modal{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1024;background-color:rgba(0,0,0,.5)}.qz-modal-dialog{position:relative;width:900px;margin:30px auto}.qz-modal-content{position:relative;background-color:#fff;background-clip:padding-box;border-radius:5px}.qz-modal-header{padding:10px;border-bottom:1px solid #d3d3d3;font-weight:700;font-size:16px}.qz-modal-close{float:right;cursor:pointer;background:0 0;border:0;padding:0;color:silver}.qz-modal-body{padding:10px}.qz-modal-footer{padding:10px;border-top:1px solid #d3d3d3;text-align:center}'
         };
     }();
 
@@ -153,78 +153,6 @@
     Queiroz.module.style = Style;
 
 })(Queiroz);
-
-
-/*!
- * Queiroz.js: dayoff.js
- * JavaScript Extension for Dimep Kairos
- * https://github.com/viniciusknob/queiroz.js
- */
-
-(function(localStorage, Queiroz) {
-
-    /* Class Definition */
-
-    var DayOff = function() {
-
-        var
-            NAME = "dayoff",
-            cache = [];
-
-        /* Private Functions */
-
-        var
-            _buildValue = function(date) {
-                return date.getDate().format(2) + "/" + (date.getMonth()+1).format(2);
-            },
-            _is = function(date) {
-                return cache.contains(_buildValue(date));
-            },
-            _add = function(date) {
-                if (_is(date))
-                    return;
-
-                cache.push(_buildValue(date));
-                localStorage.setItem(NAME, JSON.stringify(cache));
-            },
-            _remove = function(date) {
-                if (_is(date) == false)
-                    return;
-
-                var index = cache.indexOf(_buildValue(date));
-                cache.splice(index, 1);
-                localStorage.setItem(NAME, JSON.stringify(cache));
-            };
-
-        // Initialize cache
-        if (localStorage.hasItem(NAME)) {
-            cache = JSON.parse(localStorage.getItem(NAME));
-        }
-
-        /* Public Functions */
-
-        return {
-            check: function(data) {
-                var _days = [];
-                data.days.forEach(function(day) {
-                    if (_is(day.date) == false)
-                        _days.push(day);
-                });
-                data.days = _days;
-            },
-            is: _is,
-            add: _add,
-            remove: _remove
-        };
-    }();
-
-    DayOff.count = 0;
-
-    /* Module Definition */
-
-    Queiroz.module.dayoff = DayOff;
-
-})(localStorage, Queiroz);
 
 
 /*!
@@ -310,6 +238,14 @@
                     Queiroz.beta();
                 }
                 return box;
+            },
+            headerWeeklyGoal: function(weeklyGoal) {
+                return _buildBox({
+                    helpText: 'goal',
+                    humanTime: weeklyGoal,
+                    contentClass: 'qz-text-black',
+                    inlineText: true
+                });
             },
             headerLaborTime: function(laborTime) {
                 return _buildBox({
@@ -517,6 +453,7 @@
                 });
 
                 var header = Snippet.header();
+                header.appendChild(Snippet.headerWeeklyGoal(data.weeklyGoal));
                 header.appendChild(Snippet.headerLaborTime(data.worked));
                 header.appendChild(Snippet.headerBalanceTime(data.dailyBalance, false));
                 header.appendChild(Snippet.headerBalanceTime(data.weeklyBalance, true));
@@ -567,6 +504,78 @@
 
 })(document, Queiroz);
 
+
+/*!
+ * Queiroz.js: dayoff.js
+ * JavaScript Extension for Dimep Kairos
+ * https://github.com/viniciusknob/queiroz.js
+ */
+
+(function(localStorage, Queiroz) {
+
+    /* Class Definition */
+
+    var DayOff = function() {
+
+        var
+            NAME = "dayoff",
+            cache = [];
+
+        /* Private Functions */
+
+        var
+            _buildValue = function(date) {
+                return date.getDate().format(2) + "/" + (date.getMonth()+1).format(2);
+            },
+            _is = function(date) {
+                return cache.contains(_buildValue(date));
+            },
+            _add = function(date) {
+                if (_is(date))
+                    return;
+
+                cache.push(_buildValue(date));
+                localStorage.setItem(NAME, JSON.stringify(cache));
+            },
+            _remove = function(date) {
+                if (_is(date) == false)
+                    return;
+
+                var index = cache.indexOf(_buildValue(date));
+                cache.splice(index, 1);
+                localStorage.setItem(NAME, JSON.stringify(cache));
+            };
+
+        // Initialize cache
+        if (localStorage.hasItem(NAME)) {
+            cache = JSON.parse(localStorage.getItem(NAME));
+        }
+
+        /* Public Functions */
+
+        return {
+            check: function(data) {
+                var _days = [];
+                data.days.forEach(function(day) {
+                    if (_is(day.date) == false)
+                        _days.push(day);
+                });
+                data.days = _days;
+            },
+            is: _is,
+            add: _add,
+            remove: _remove
+        };
+    }();
+
+    DayOff.count = 0;
+
+    /* Module Definition */
+
+    Queiroz.module.dayoff = DayOff;
+
+})(localStorage, Queiroz);
+
 /*!
  * Queiroz.js: time.js
  * JavaScript Extension for Dimep Kairos
@@ -595,13 +604,12 @@
             DAILY_GOAL_MINUTES_IN_MILLIS = Settings.DAILY_GOAL_MINUTES * MINUTE_IN_MILLIS,
             MAX_CONSECUTIVE_MINUTES_IN_MILLIS = Settings.MAX_CONSECUTIVE_MINUTES * MINUTE_IN_MILLIS;
 
-        var computeWeeklyGoalMillis = function() {
-            return (Settings.WEEKLY_GOAL_MINUTES * MINUTE_IN_MILLIS) - (DayOff.count * DAILY_GOAL_MINUTES_IN_MILLIS);
-        };
-
         /* Private Functions */
 
         var
+            _computeWeeklyGoalMillis = function() {
+                return (Settings.WEEKLY_GOAL_MINUTES * MINUTE_IN_MILLIS) - (DayOff.count * DAILY_GOAL_MINUTES_IN_MILLIS);
+            },
             _diff = function(init, end) {
                 if (init instanceof Date && end instanceof Date) {
                     return end.getMillis() - init.getMillis();
@@ -676,7 +684,7 @@
                         }
                     }
                 });
-                data.weeklyBalance = (0 - computeWeeklyGoalMillis()) + data.worked;
+                data.weeklyBalance = (0 - _computeWeeklyGoalMillis()) + data.worked;
             },
             _computeTimeToLeave = function(data) {
                 data.days.forEach(function(day) {
@@ -736,6 +744,7 @@
                     day.worked = _millisToHuman(day.worked);
                     day.balance = _millisToHumanWithSign(day.balance);
                 });
+                data.weeklyGoal = _millisToHuman(_computeWeeklyGoalMillis());
                 data.worked = _millisToHuman(data.worked);
                 data.dailyBalance = _millisToHumanWithSign(data.dailyBalance);
                 data.weeklyBalance = _millisToHumanWithSign(data.weeklyBalance);
@@ -809,9 +818,12 @@
                 }
             });
         },
-        _init = function() {
+        _prepare = function() {
             View.appendToHead(Snippet.style());
             _buildDayOffOption();
+        },
+        _init = function() {
+            _prepare();
             var data = View.read();
             Time.parse(data);
             View.removeUnusedDays(data);
@@ -849,7 +861,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.0.9</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.0.10</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');

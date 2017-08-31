@@ -26,13 +26,12 @@
             DAILY_GOAL_MINUTES_IN_MILLIS = Settings.DAILY_GOAL_MINUTES * MINUTE_IN_MILLIS,
             MAX_CONSECUTIVE_MINUTES_IN_MILLIS = Settings.MAX_CONSECUTIVE_MINUTES * MINUTE_IN_MILLIS;
 
-        var computeWeeklyGoalMillis = function() {
-            return (Settings.WEEKLY_GOAL_MINUTES * MINUTE_IN_MILLIS) - (DayOff.count * DAILY_GOAL_MINUTES_IN_MILLIS);
-        };
-
         /* Private Functions */
 
         var
+            _computeWeeklyGoalMillis = function() {
+                return (Settings.WEEKLY_GOAL_MINUTES * MINUTE_IN_MILLIS) - (DayOff.count * DAILY_GOAL_MINUTES_IN_MILLIS);
+            },
             _diff = function(init, end) {
                 if (init instanceof Date && end instanceof Date) {
                     return end.getMillis() - init.getMillis();
@@ -107,7 +106,7 @@
                         }
                     }
                 });
-                data.weeklyBalance = (0 - computeWeeklyGoalMillis()) + data.worked;
+                data.weeklyBalance = (0 - _computeWeeklyGoalMillis()) + data.worked;
             },
             _computeTimeToLeave = function(data) {
                 data.days.forEach(function(day) {
@@ -167,6 +166,7 @@
                     day.worked = _millisToHuman(day.worked);
                     day.balance = _millisToHumanWithSign(day.balance);
                 });
+                data.weeklyGoal = _millisToHuman(_computeWeeklyGoalMillis());
                 data.worked = _millisToHuman(data.worked);
                 data.dailyBalance = _millisToHumanWithSign(data.dailyBalance);
                 data.weeklyBalance = _millisToHumanWithSign(data.weeklyBalance);

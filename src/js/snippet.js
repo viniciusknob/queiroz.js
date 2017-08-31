@@ -83,6 +83,14 @@
                 }
                 return box;
             },
+            headerWeeklyGoal: function(weeklyGoal) {
+                return _buildBox({
+                    helpText: 'goal',
+                    humanTime: weeklyGoal,
+                    contentClass: 'qz-text-black',
+                    inlineText: true
+                });
+            },
             headerLaborTime: function(laborTime) {
                 return _buildBox({
                     helpText: 'labor',

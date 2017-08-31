@@ -50,9 +50,12 @@
                 }
             });
         },
-        _init = function() {
+        _prepare = function() {
             View.appendToHead(Snippet.style());
             _buildDayOffOption();
+        },
+        _init = function() {
+            _prepare();
             var data = View.read();
             Time.parse(data);
             View.removeUnusedDays(data);

@@ -28,7 +28,7 @@ var
     },
 
     Settings = {
-        VERSION: '3.0.9',
+        VERSION: '3.0.10',
         versionRegex: '(?:\\d+\\.){2}\\d+(?:-beta\\.\\d+)?',
         env: {
             DEV: {
@@ -200,9 +200,9 @@ gulp.task('dev.concat', function() {
             'src/js/polyfill.js',
             'src/js/strings.js',
             'src/js/style.js',
-            'src/js/dayoff.js',
             'src/js/snippet.js',
             'src/js/view.js',
+            'src/js/dayoff.js',
             'src/js/time.js',
             'src/js/core.js',
             'src/js/autoexec.js'
@@ -218,9 +218,9 @@ gulp.task('all.concat', function() {
             'src/js/polyfill.js',
             'src/js/strings.js',
             'src/js/style.js',
-            'src/js/dayoff.js',
             'src/js/snippet.js',
             'src/js/view.js',
+            'src/js/dayoff.js',
             'src/js/time.js',
             'src/js/core.js',
             'src/js/autoexec.js'
