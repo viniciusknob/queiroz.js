@@ -11,16 +11,21 @@ var
     jsonMinify = require('gulp-jsonminify'),
     runSequence = require('run-sequence');
 
+// Polyfill
+Number.prototype.padStart = function(length) {
+    var _number = ''+this;
+    while(_number.length < length)
+        _number = '0'+_number;
+    return _number;
+};
+
 var
     currentDateTimeToString = function() {
         var
           now = new Date(),
-          normalize = function(number) {
-              return (number < 10 ? '0' + number : number);
-          },
           year = now.getFullYear(),
-          month = normalize(now.getMonth()+1),
-          day = normalize(now.getDate()),
+          month = (now.getMonth()+1).padStart(2),
+          day = (now.getDate()).padStart(2),
           dateString = ''+year+month+day,
           timeString = now.toTimeString().split(' ')[0];
 
@@ -28,7 +33,7 @@ var
     },
 
     Settings = {
-        VERSION: '3.0.10',
+        VERSION: '3.0.11',
         versionRegex: '(?:\\d+\\.){2}\\d+(?:-beta\\.\\d+)?',
         env: {
             DEV: {

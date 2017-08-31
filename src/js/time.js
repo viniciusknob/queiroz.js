@@ -60,7 +60,7 @@
                     diffHour = parseInt(millis / HOUR_IN_MILLIS),
                     diffMin = parseInt((millis / MINUTE_IN_MILLIS) % 60);
 
-                return diffHour.format(2) + ':' + diffMin.format(2);
+                return diffHour.padStart(2) + ':' + diffMin.padStart(2);
             },
             _millisToHumanWithSign = function(millis) {
                 if (millis == 0)

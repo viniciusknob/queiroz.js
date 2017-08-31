@@ -14,19 +14,19 @@
         return this.indexOf(value) > -1;
     };
     Storage.prototype.hasItem = function(name) {
-        return (this.getItem(name) || false);
+        return !!this.getItem(name);
     };
-    Number.prototype.format = function(length) {
+    Number.prototype.padStart = function(length) {
         var _number = ''+this;
         while(_number.length < length)
             _number = '0'+_number;
         return _number;
     };
     Date.prototype.getDateAsKairos = function() {
-        return this.getDate().format(2) + "_" + (this.getMonth()+1).format(2) + "_" + this.getFullYear();
+        return this.getDate().padStart(2) + "_" + (this.getMonth()+1).padStart(2) + "_" + this.getFullYear();
     };
     Date.prototype.getTimeAsString = function() {
-        return this.getHours().format(2) + ':' + this.getMinutes().format(2);
+        return this.getHours().padStart(2) + ':' + this.getMinutes().padStart(2);
     };
     Date.prototype.getDayOfMonth = function() {
         return this.getDate();

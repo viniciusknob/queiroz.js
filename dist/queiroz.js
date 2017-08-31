@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.0.10',
+            VERSION = '3.0.11',
             SETTINGS = {"USERSCRIPT_DELAY_MILLIS":1000,"MAX_CONSECUTIVE_MINUTES":360,"WEEKLY_GOAL_MINUTES":2640,"DAILY_GOAL_MINUTES":528,"WORK_DAYS":[1,2,3,4,5],"INITIAL_WEEKDAY":1,"GA_TRACKING_ID":"UA-105390656-1"};
 
         /* Public Functions */
@@ -79,19 +79,19 @@
         return this.indexOf(value) > -1;
     };
     Storage.prototype.hasItem = function(name) {
-        return (this.getItem(name) || false);
+        return !!this.getItem(name);
     };
-    Number.prototype.format = function(length) {
+    Number.prototype.padStart = function(length) {
         var _number = ''+this;
         while(_number.length < length)
             _number = '0'+_number;
         return _number;
     };
     Date.prototype.getDateAsKairos = function() {
-        return this.getDate().format(2) + "_" + (this.getMonth()+1).format(2) + "_" + this.getFullYear();
+        return this.getDate().padStart(2) + "_" + (this.getMonth()+1).padStart(2) + "_" + this.getFullYear();
     };
     Date.prototype.getTimeAsString = function() {
-        return this.getHours().format(2) + ':' + this.getMinutes().format(2);
+        return this.getHours().padStart(2) + ':' + this.getMinutes().padStart(2);
     };
     Date.prototype.getDayOfMonth = function() {
         return this.getDate();
@@ -525,7 +525,7 @@
 
         var
             _buildValue = function(date) {
-                return date.getDate().format(2) + "/" + (date.getMonth()+1).format(2);
+                return date.getDate().padStart(2) + "/" + (date.getMonth()+1).padStart(2);
             },
             _is = function(date) {
                 return cache.contains(_buildValue(date));
@@ -638,7 +638,7 @@
                     diffHour = parseInt(millis / HOUR_IN_MILLIS),
                     diffMin = parseInt((millis / MINUTE_IN_MILLIS) % 60);
 
-                return diffHour.format(2) + ':' + diffMin.format(2);
+                return diffHour.padStart(2) + ':' + diffMin.padStart(2);
             },
             _millisToHumanWithSign = function(millis) {
                 if (millis == 0)
@@ -861,7 +861,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.0.10</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.0.11</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');
