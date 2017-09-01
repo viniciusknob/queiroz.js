@@ -121,12 +121,18 @@
                     contentClass: 'qz-text-green'
                 });
             },
-            laborTimePerShift: function(laborTime, finished) {
-                return _buildBox({
+            laborTimePerShift: function(laborTime, finished, number) {
+                var box = _buildBox({
                     helpText: (finished ? 'shift' : 'working'),
                     humanTime: laborTime,
                     contentClass: (finished ? '' : 'qz-text-golden')
                 });
+                if (finished) {
+                    var help = box.querySelector('.qz-help-text');
+                    var text = help.textContent.replace('_n_', number);
+                    help.textContent = text;
+                }
+                return box;
             },
             todayTimeToLeave: function(timeToLeave, balanced) {
                 return _buildBox({

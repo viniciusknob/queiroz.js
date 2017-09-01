@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.0.11',
+            VERSION = '3.0.12',
             SETTINGS = {"USERSCRIPT_DELAY_MILLIS":1000,"MAX_CONSECUTIVE_MINUTES":360,"WEEKLY_GOAL_MINUTES":2640,"DAILY_GOAL_MINUTES":528,"WORK_DAYS":[1,2,3,4,5],"INITIAL_WEEKDAY":1,"GA_TRACKING_ID":"UA-105390656-1"};
 
         /* Public Functions */
@@ -123,7 +123,7 @@
         return Strings._[key];
     };
 
-    Strings._ = {"pending":"Pendente","extra":"Extra","balance":"Saldo","labor":"Efetuado","shift":"Turno","working":"Trabalhando...","exit":"Saída (08:48)","exit+":"Saída + Saldo","config":"Config","goal":"Meta"};
+    Strings._ = {"pending":"Pendente","extra":"Extra","balance":"Saldo","labor":"Efetuado","shift":"_n_º Turno","working":"Trabalhando...","exit":"Saída (08:48)","exit+":"Saída + Saldo","config":"Config","goal":"Meta"};
 
     /* Module Definition */
 
@@ -277,12 +277,18 @@
                     contentClass: 'qz-text-green'
                 });
             },
-            laborTimePerShift: function(laborTime, finished) {
-                return _buildBox({
+            laborTimePerShift: function(laborTime, finished, number) {
+                var box = _buildBox({
                     helpText: (finished ? 'shift' : 'working'),
                     humanTime: laborTime,
                     contentClass: (finished ? '' : 'qz-text-golden')
                 });
+                if (finished) {
+                    var help = box.querySelector('.qz-help-text');
+                    var text = help.textContent.replace('_n_', number);
+                    help.textContent = text;
+                }
+                return box;
             },
             todayTimeToLeave: function(timeToLeave, balanced) {
                 return _buildBox({
@@ -435,13 +441,13 @@
                     eColumns.forEach(function(eDay) {
                         var eDate = _get(Selector.DATE, eDay).value;
                         if (day.date.getDateAsKairos() == eDate) {
-                            day.periods.forEach(function(time) {
+                            day.periods.forEach(function(time, index) {
                                 if (time.out == false) {
                                     eDay.appendChild(Snippet.laborTimePerShift(time.shift, false));
                                     eDay.appendChild(Snippet.todayTimeToLeave(time.leave, false));
                                     eDay.appendChild(Snippet.todayTimeToLeave(time.balancedLeave, true));
                                 } else {
-                                    eDay.appendChild(Snippet.laborTimePerShift(time.shift, true));
+                                    eDay.appendChild(Snippet.laborTimePerShift(time.shift, true, (index+1)));
                                 }
                             });
                             if (day.periods.length) {
@@ -861,7 +867,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.0.11</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.0.12</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');

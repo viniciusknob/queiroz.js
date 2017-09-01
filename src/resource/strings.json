@@ -3,7 +3,7 @@
     "extra" : "Extra",
     "balance" : "Saldo",
     "labor" : "Efetuado",
-    "shift" : "Turno",
+    "shift" : "_n_º Turno",
     "working" : "Trabalhando...",
     "exit" : "Saída (08:48)",
     "exit+" : "Saída + Saldo",
