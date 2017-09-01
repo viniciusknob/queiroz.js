@@ -134,18 +134,18 @@
                         var eDate = _get(Selector.DATE, eDay).value;
                         if (day.date.getDateAsKairos() == eDate) {
                             day.periods.forEach(function(time, index) {
-                                if (time.out == false) {
-                                    eDay.appendChild(Snippet.laborTimePerShift(time.shift, false));
-                                    eDay.appendChild(Snippet.todayTimeToLeave(time.leave, false));
-                                    eDay.appendChild(Snippet.todayTimeToLeave(time.balancedLeave, true));
-                                } else {
-                                    eDay.appendChild(Snippet.laborTimePerShift(time.shift, true, (index+1)));
-                                }
+                                eDay.appendChild(Snippet.laborTimePerShift(time.shift, (!!time.out), (index+1)));
                             });
                             if (day.periods.length) {
                                 eDay.appendChild(Snippet.laborTimePerDay(day.worked));
                                 eDay.appendChild(Snippet.balanceTimePerDay(day.balance));
                             }
+                            day.periods.forEach(function(time, index) {
+                                if (time.out == false) {
+                                    eDay.appendChild(Snippet.todayTimeToLeave(time.leave, false));
+                                    eDay.appendChild(Snippet.todayTimeToLeave(time.balancedLeave, true));
+                                }
+                            });
                         }
                     });
                 });
@@ -153,9 +153,8 @@
                 var header = Snippet.header();
                 header.appendChild(Snippet.headerWeeklyGoal(data.weeklyGoal));
                 header.appendChild(Snippet.headerLaborTime(data.worked));
-                header.appendChild(Snippet.headerBalanceTime(data.dailyBalance, false));
                 header.appendChild(Snippet.headerBalanceTime(data.weeklyBalance, true));
-                header.appendChild(Snippet.headerBeta());
+                header.appendChild(Snippet.headerBalanceTime(data.dailyBalance, false));
                 View.appendToHeader(header);
             },
             isLoaded: function() {

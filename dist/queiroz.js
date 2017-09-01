@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.0.12',
+            VERSION = '3.0.13',
             SETTINGS = {"USERSCRIPT_DELAY_MILLIS":1000,"MAX_CONSECUTIVE_MINUTES":360,"WEEKLY_GOAL_MINUTES":2640,"DAILY_GOAL_MINUTES":528,"WORK_DAYS":[1,2,3,4,5],"INITIAL_WEEKDAY":1,"GA_TRACKING_ID":"UA-105390656-1"};
 
         /* Public Functions */
@@ -442,18 +442,18 @@
                         var eDate = _get(Selector.DATE, eDay).value;
                         if (day.date.getDateAsKairos() == eDate) {
                             day.periods.forEach(function(time, index) {
-                                if (time.out == false) {
-                                    eDay.appendChild(Snippet.laborTimePerShift(time.shift, false));
-                                    eDay.appendChild(Snippet.todayTimeToLeave(time.leave, false));
-                                    eDay.appendChild(Snippet.todayTimeToLeave(time.balancedLeave, true));
-                                } else {
-                                    eDay.appendChild(Snippet.laborTimePerShift(time.shift, true, (index+1)));
-                                }
+                                eDay.appendChild(Snippet.laborTimePerShift(time.shift, (!!time.out), (index+1)));
                             });
                             if (day.periods.length) {
                                 eDay.appendChild(Snippet.laborTimePerDay(day.worked));
                                 eDay.appendChild(Snippet.balanceTimePerDay(day.balance));
                             }
+                            day.periods.forEach(function(time, index) {
+                                if (time.out == false) {
+                                    eDay.appendChild(Snippet.todayTimeToLeave(time.leave, false));
+                                    eDay.appendChild(Snippet.todayTimeToLeave(time.balancedLeave, true));
+                                }
+                            });
                         }
                     });
                 });
@@ -461,9 +461,8 @@
                 var header = Snippet.header();
                 header.appendChild(Snippet.headerWeeklyGoal(data.weeklyGoal));
                 header.appendChild(Snippet.headerLaborTime(data.worked));
-                header.appendChild(Snippet.headerBalanceTime(data.dailyBalance, false));
                 header.appendChild(Snippet.headerBalanceTime(data.weeklyBalance, true));
-                header.appendChild(Snippet.headerBeta());
+                header.appendChild(Snippet.headerBalanceTime(data.dailyBalance, false));
                 View.appendToHeader(header);
             },
             isLoaded: function() {
@@ -867,7 +866,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.0.12</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.0.13</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');
