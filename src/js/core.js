@@ -10,12 +10,13 @@
     /* Modules */
 
     var
-        Settings = Queiroz.settings,
-        mod      = Queiroz.module,
-        Snippet  = mod.snippet,
-        View     = mod.view,
-        DayOff   = mod.dayoff,
-        Time     = mod.time;
+        Settings  = Queiroz.settings,
+        mod       = Queiroz.module,
+        KeepAlive = mod.keepalive,
+        Snippet   = mod.snippet,
+        View      = mod.view,
+        DayOff    = mod.dayoff,
+        Time      = mod.time;
 
     /* Private Functions */
 
@@ -63,6 +64,7 @@
             Time.compute(data);
             Time.toHuman(data);
             View.showResult(data);
+            KeepAlive.init();
         },
         _initWithDelay = function() {
             var interval = setInterval(function() {
@@ -70,7 +72,7 @@
                     clearInterval(interval);
                     _init();
                 }
-            }, Settings.USERSCRIPT_DELAY_MILLIS);
+            }, Settings.USERSCRIPT_DELAY);
         };
 
     /* Public Functions */

@@ -33,7 +33,7 @@ var
     },
 
     Settings = {
-        VERSION: '3.0.13',
+        VERSION: '3.0.14',
         versionRegex: '(?:\\d+\\.){2}\\d+(?:-beta\\.\\d+)?',
         env: {
             DEV: {
@@ -203,6 +203,7 @@ gulp.task('dev.concat', function() {
     return gulp.src([
             'src/js/queiroz.js',
             'src/js/polyfill.js',
+            'src/js/keepalive.js',
             'src/js/strings.js',
             'src/js/style.js',
             'src/js/snippet.js',
@@ -221,6 +222,7 @@ gulp.task('all.concat', function() {
             'src/js/queiroz.js',
             'src/js/analytics.js',
             'src/js/polyfill.js',
+            'src/js/keepalive.js',
             'src/js/strings.js',
             'src/js/style.js',
             'src/js/snippet.js',

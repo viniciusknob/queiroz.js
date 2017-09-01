@@ -18,7 +18,7 @@
             VERSION = '__version__',
             SETTINGS = __settings__;
 
-        /* Public Functions */
+        /* Public API */
 
         return {
           name: NAME,

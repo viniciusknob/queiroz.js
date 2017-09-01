@@ -15,10 +15,10 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.0.13',
-            SETTINGS = {"USERSCRIPT_DELAY_MILLIS":1000,"MAX_CONSECUTIVE_MINUTES":360,"WEEKLY_GOAL_MINUTES":2640,"DAILY_GOAL_MINUTES":528,"WORK_DAYS":[1,2,3,4,5],"INITIAL_WEEKDAY":1,"GA_TRACKING_ID":"UA-105390656-1"};
+            VERSION = '3.0.14',
+            SETTINGS = {"USERSCRIPT_DELAY":1000,"MAX_CONSECUTIVE_MINUTES":360,"WEEKLY_GOAL_MINUTES":2640,"DAILY_GOAL_MINUTES":528,"WORK_DAYS":[1,2,3,4,5],"INITIAL_WEEKDAY":1,"GA_TRACKING_ID":"UA-105390656-1","KEEP_ALIVE":60000};
 
-        /* Public Functions */
+        /* Public API */
 
         return {
           name: NAME,
@@ -107,6 +107,42 @@
     };
 
 })();
+
+/*!
+ * Queiroz.js: keepalive.js
+ * JavaScript Extension for Dimep Kairos
+ * https://github.com/viniciusknob/queiroz.js
+ */
+
+(function(setTimeout, clearTimeout, Queiroz) {
+
+    /* Modules */
+
+    var Settings = Queiroz.settings;
+
+    /* Class Definition */
+
+    var KeepAlive = function() {
+
+        var _timeOut;
+
+        /* Public Functions */
+
+        return {
+            init: function() {
+                if (_timeOut)
+                    clearTimeout(_timeOut);
+
+                _timeOut = setTimeout(Queiroz.reload, Settings.KEEP_ALIVE);
+            }
+        };
+    }();
+
+    /* Module Definition */
+
+    Queiroz.module.keepalive = KeepAlive;
+
+})(setTimeout, clearTimeout, Queiroz);
 
 
 /*!
@@ -783,12 +819,13 @@
     /* Modules */
 
     var
-        Settings = Queiroz.settings,
-        mod      = Queiroz.module,
-        Snippet  = mod.snippet,
-        View     = mod.view,
-        DayOff   = mod.dayoff,
-        Time     = mod.time;
+        Settings  = Queiroz.settings,
+        mod       = Queiroz.module,
+        KeepAlive = mod.keepalive,
+        Snippet   = mod.snippet,
+        View      = mod.view,
+        DayOff    = mod.dayoff,
+        Time      = mod.time;
 
     /* Private Functions */
 
@@ -836,6 +873,7 @@
             Time.compute(data);
             Time.toHuman(data);
             View.showResult(data);
+            KeepAlive.init();
         },
         _initWithDelay = function() {
             var interval = setInterval(function() {
@@ -843,7 +881,7 @@
                     clearInterval(interval);
                     _init();
                 }
-            }, Settings.USERSCRIPT_DELAY_MILLIS);
+            }, Settings.USERSCRIPT_DELAY);
         };
 
     /* Public Functions */
@@ -866,7 +904,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.0.13</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.0.14</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');
