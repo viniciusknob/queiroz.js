@@ -19,7 +19,7 @@
 
         var
             _buildValue = function(date) {
-                return date.getDate().padStart(2) + "/" + (date.getMonth()+1).padStart(2);
+                return date.getDate().padStart(2) + "/" + date.getFixedMonth().padStart(2);
             },
             _is = function(date) {
                 return cache.contains(_buildValue(date));

@@ -101,7 +101,7 @@
             },
             headerBalanceTime: function(balanceTime, weekly) {
                 return _buildBox({
-                    helpText: (weekly ? (balanceTime.contains('+') ? 'extra' : 'pending') : 'balance'),
+                    helpText: (weekly ? (balanceTime.contains('+') ? 'extra' : 'pending') : 'totalBalance'),
                     humanTime: balanceTime,
                     contentClass: 'qz-text-' + (weekly ? (balanceTime.contains('+') ? 'green' : 'primary') : 'teal'),
                     inlineText: true

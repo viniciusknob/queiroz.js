@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Queiroz.js
-// @version      3.0.14
+// @version      3.0.15
 // @description  JavaScript Extension for Dimep Kairos
 // @author       Vinícius M. Knob <knob.vinicius@gmail.com>
 // @source       https://github.com/viniciusknob/queiroz.js

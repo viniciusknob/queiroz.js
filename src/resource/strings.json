@@ -1,7 +1,8 @@
 {
     "pending" : "Pendente",
     "extra" : "Extra",
-    "balance" : "Saldo",
+    "balance" : "Saldo do dia",
+    "totalBalance" : "Saldo Total",
     "labor" : "Efetuado",
     "shift" : "_n_º Turno",
     "working" : "Trabalhando...",

@@ -18,14 +18,17 @@ Number.prototype.padStart = function(length) {
         _number = '0'+_number;
     return _number;
 };
+Date.prototype.getFixedMonth = function() {
+    return this.getMonth() + 1;
+};
 
 var
     currentDateTimeToString = function() {
         var
           now = new Date(),
           year = now.getFullYear(),
-          month = (now.getMonth()+1).padStart(2),
-          day = (now.getDate()).padStart(2),
+          month = now.getFixedMonth().padStart(2),
+          day = now.getDate().padStart(2),
           dateString = ''+year+month+day,
           timeString = now.toTimeString().split(' ')[0];
 
@@ -33,7 +36,7 @@ var
     },
 
     Settings = {
-        VERSION: '3.0.14',
+        VERSION: '3.0.15',
         versionRegex: '(?:\\d+\\.){2}\\d+(?:-beta\\.\\d+)?',
         env: {
             DEV: {

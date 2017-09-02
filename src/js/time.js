@@ -19,7 +19,6 @@
         /* Constants */
 
         var
-            FAKE_TIME = '12:34',
             ZERO_TIME = '00:00',
             MINUTE_IN_MILLIS = 1000 * 60,
             HOUR_IN_MILLIS = MINUTE_IN_MILLIS * 60,
@@ -38,19 +37,6 @@
                 } else {
                     return end - init;
                 }
-            },
-            _isToday = function(date) {
-                var _now = new Date();
-                return date.getDayOfMonth() === _now.getDayOfMonth() &&
-                       date.getMonth() === _now.getMonth() &&
-                       date.getFullYear() === _now.getFullYear();
-            },
-            _toDate = function(stringDate) { // 14_05_2017 16:08
-                var
-                    dateTime = stringDate.split(' '),
-                    date = dateTime[0].split('_'),
-                    time = dateTime[1].split(':');
-                return new Date(date[2], date[1] - 1, date[0], time[0], time[1]);
             },
             _minuteToMillis = function(minute) {
                 return minute * MINUTE_IN_MILLIS;
@@ -79,7 +65,7 @@
                         if (time.in && time.out)
                             time.shift = _diff(time.in, time.out);
                         else if (time.in)
-                            time.shift = _diff(time.in, new Date());
+                            time.shift = _diff(time.in, Date.now());
                     });
                 });
             },
@@ -95,13 +81,14 @@
                 });
             },
             _computeBalanceTime = function(data) {
-                var _now = new Date();
-                data.dailyBalance = 0;
+                data.dailyBalance = 0; // compilation of all days, except the current day
                 data.days.forEach(function(day) {
-                    day.balance = 0;
+                    day.balance = 0; // balance per day
                     if (day.periods.length) {
                         day.balance = (0 - DAILY_GOAL_MINUTES_IN_MILLIS) + day.worked;
-                        if (day.date.getDayOfMonth() < _now.getDayOfMonth()) {
+                        if (day.date.isToday()) { // if is current day, sum dailyBalance
+                            day.balance += data.dailyBalance;
+                        } else { // otherwise, add to compilation
                             data.dailyBalance += day.balance;
                         }
                     }
@@ -111,7 +98,7 @@
             _computeTimeToLeave = function(data) {
                 data.days.forEach(function(day) {
                     var _periods = day.periods;
-                    if (_isToday(day.date) && _periods.length) {
+                    if (day.date.isToday() && _periods.length) {
                         var _time = _periods.last();
                         if (_time.out == false) {
                             if (day.worked < DAILY_GOAL_MINUTES_IN_MILLIS) {
@@ -131,12 +118,12 @@
                 data.days.forEach(function(day) {
                     day.periods.forEach(function(time) {
                         if (time.in)
-                            time.in = _toDate(day.date + " " + time.in);
+                            time.in = Date.parseKairos(day.date + " " + time.in);
 
                         if (time.out)
-                            time.out = _toDate(day.date + " " + time.out);
+                            time.out = Date.parseKairos(day.date + " " + time.out);
                     });
-                    day.date = _toDate(day.date + " " + FAKE_TIME);
+                    day.date = Date.parseKairos(day.date + " " + ZERO_TIME);
                 });
             },
             compute: function(data) {
@@ -172,10 +159,7 @@
                 data.weeklyBalance = _millisToHumanWithSign(data.weeklyBalance);
             },
             zero: ZERO_TIME,
-            fake: FAKE_TIME,
             diff: _diff,
-            toDate: _toDate,
-            isToday: _isToday,
             minuteToMillis: _minuteToMillis,
             millisToHuman: _millisToHuman,
             millisToHumanWithSign: _millisToHumanWithSign

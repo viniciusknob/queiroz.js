@@ -38,7 +38,7 @@
         },
         _buildDayOffOption = function() {
             View.getAllColumnDay().forEach(function(eDay) {
-                var day = Time.toDate(View.getDateFromTargetAsString(eDay) + " " + Time.fake);
+                var day = Date.parseKairos(View.getDateFromTargetAsString(eDay) + " " + Time.zero);
                 if (Settings.WORK_DAYS.contains(day.getDay())) {
                     var eToggle = _buildToggleForDayOff(day);
                     View.appendToggle(eDay, eToggle);

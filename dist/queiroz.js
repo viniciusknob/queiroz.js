@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.0.14',
+            VERSION = '3.0.15',
             SETTINGS = {"USERSCRIPT_DELAY":1000,"MAX_CONSECUTIVE_MINUTES":360,"WEEKLY_GOAL_MINUTES":2640,"DAILY_GOAL_MINUTES":528,"WORK_DAYS":[1,2,3,4,5],"INITIAL_WEEKDAY":1,"GA_TRACKING_ID":"UA-105390656-1","KEEP_ALIVE":60000};
 
         /* Public API */
@@ -72,23 +72,39 @@
 
 (function() {
 
+    /* Array API */
+
     Array.prototype.last = function() {
         return this[this.length-1];
     };
     Array.prototype.contains = function(value) {
         return this.indexOf(value) > -1;
     };
-    Storage.prototype.hasItem = function(name) {
-        return !!this.getItem(name);
+
+    /* Date API */
+
+    Date.now = function() {
+        return new Date();
+        //return new Date(2017,8,1,14,34); // => for TEST
     };
-    Number.prototype.padStart = function(length) {
-        var _number = ''+this;
-        while(_number.length < length)
-            _number = '0'+_number;
-        return _number;
+    Date.parseKairos = function(string) {
+        var
+            dateTime = string.split(' '),
+            date = dateTime[0].split('_'),
+            time = dateTime[1].split(':');
+        return new Date(date[2], (date[1] - 1), date[0], time[0], time[1]);
+    };
+    Date.prototype.isToday = function() {
+        var _now = Date.now();
+        return this.getDayOfMonth() === _now.getDayOfMonth() &&
+               this.getMonth() === _now.getMonth() &&
+               this.getFullYear() === _now.getFullYear();
+    };
+    Date.prototype.getFixedMonth = function() {
+        return this.getMonth() + 1;
     };
     Date.prototype.getDateAsKairos = function() {
-        return this.getDate().padStart(2) + "_" + (this.getMonth()+1).padStart(2) + "_" + this.getFullYear();
+        return this.getDate().padStart(2) + "_" + this.getFixedMonth().padStart(2) + "_" + this.getFullYear();
     };
     Date.prototype.getTimeAsString = function() {
         return this.getHours().padStart(2) + ':' + this.getMinutes().padStart(2);
@@ -98,6 +114,18 @@
     };
     Date.prototype.getMillis = function() {
         return this.getTime();
+    };
+
+    /* Others */
+
+    Storage.prototype.hasItem = function(name) {
+        return !!this.getItem(name);
+    };
+    Number.prototype.padStart = function(length) {
+        var _number = ''+this;
+        while(_number.length < length)
+            _number = '0'+_number;
+        return _number;
     };
     Element.prototype.remove = function() {
         this.parentElement.removeChild(this);
@@ -159,7 +187,7 @@
         return Strings._[key];
     };
 
-    Strings._ = {"pending":"Pendente","extra":"Extra","balance":"Saldo","labor":"Efetuado","shift":"_n_º Turno","working":"Trabalhando...","exit":"Saída (08:48)","exit+":"Saída + Saldo","config":"Config","goal":"Meta"};
+    Strings._ = {"pending":"Pendente","extra":"Extra","balance":"Saldo do dia","totalBalance":"Saldo Total","labor":"Efetuado","shift":"_n_º Turno","working":"Trabalhando...","exit":"Saída (08:48)","exit+":"Saída + Saldo","config":"Config","goal":"Meta"};
 
     /* Module Definition */
 
@@ -293,7 +321,7 @@
             },
             headerBalanceTime: function(balanceTime, weekly) {
                 return _buildBox({
-                    helpText: (weekly ? (balanceTime.contains('+') ? 'extra' : 'pending') : 'balance'),
+                    helpText: (weekly ? (balanceTime.contains('+') ? 'extra' : 'pending') : 'totalBalance'),
                     humanTime: balanceTime,
                     contentClass: 'qz-text-' + (weekly ? (balanceTime.contains('+') ? 'green' : 'primary') : 'teal'),
                     inlineText: true
@@ -566,7 +594,7 @@
 
         var
             _buildValue = function(date) {
-                return date.getDate().padStart(2) + "/" + (date.getMonth()+1).padStart(2);
+                return date.getDate().padStart(2) + "/" + date.getFixedMonth().padStart(2);
             },
             _is = function(date) {
                 return cache.contains(_buildValue(date));
@@ -638,7 +666,6 @@
         /* Constants */
 
         var
-            FAKE_TIME = '12:34',
             ZERO_TIME = '00:00',
             MINUTE_IN_MILLIS = 1000 * 60,
             HOUR_IN_MILLIS = MINUTE_IN_MILLIS * 60,
@@ -657,19 +684,6 @@
                 } else {
                     return end - init;
                 }
-            },
-            _isToday = function(date) {
-                var _now = new Date();
-                return date.getDayOfMonth() === _now.getDayOfMonth() &&
-                       date.getMonth() === _now.getMonth() &&
-                       date.getFullYear() === _now.getFullYear();
-            },
-            _toDate = function(stringDate) { // 14_05_2017 16:08
-                var
-                    dateTime = stringDate.split(' '),
-                    date = dateTime[0].split('_'),
-                    time = dateTime[1].split(':');
-                return new Date(date[2], date[1] - 1, date[0], time[0], time[1]);
             },
             _minuteToMillis = function(minute) {
                 return minute * MINUTE_IN_MILLIS;
@@ -698,7 +712,7 @@
                         if (time.in && time.out)
                             time.shift = _diff(time.in, time.out);
                         else if (time.in)
-                            time.shift = _diff(time.in, new Date());
+                            time.shift = _diff(time.in, Date.now());
                     });
                 });
             },
@@ -714,13 +728,14 @@
                 });
             },
             _computeBalanceTime = function(data) {
-                var _now = new Date();
-                data.dailyBalance = 0;
+                data.dailyBalance = 0; // compilation of all days, except the current day
                 data.days.forEach(function(day) {
-                    day.balance = 0;
+                    day.balance = 0; // balance per day
                     if (day.periods.length) {
                         day.balance = (0 - DAILY_GOAL_MINUTES_IN_MILLIS) + day.worked;
-                        if (day.date.getDayOfMonth() < _now.getDayOfMonth()) {
+                        if (day.date.isToday()) { // if is current day, sum dailyBalance
+                            day.balance += data.dailyBalance;
+                        } else { // otherwise, add to compilation
                             data.dailyBalance += day.balance;
                         }
                     }
@@ -730,7 +745,7 @@
             _computeTimeToLeave = function(data) {
                 data.days.forEach(function(day) {
                     var _periods = day.periods;
-                    if (_isToday(day.date) && _periods.length) {
+                    if (day.date.isToday() && _periods.length) {
                         var _time = _periods.last();
                         if (_time.out == false) {
                             if (day.worked < DAILY_GOAL_MINUTES_IN_MILLIS) {
@@ -750,12 +765,12 @@
                 data.days.forEach(function(day) {
                     day.periods.forEach(function(time) {
                         if (time.in)
-                            time.in = _toDate(day.date + " " + time.in);
+                            time.in = Date.parseKairos(day.date + " " + time.in);
 
                         if (time.out)
-                            time.out = _toDate(day.date + " " + time.out);
+                            time.out = Date.parseKairos(day.date + " " + time.out);
                     });
-                    day.date = _toDate(day.date + " " + FAKE_TIME);
+                    day.date = Date.parseKairos(day.date + " " + ZERO_TIME);
                 });
             },
             compute: function(data) {
@@ -791,10 +806,7 @@
                 data.weeklyBalance = _millisToHumanWithSign(data.weeklyBalance);
             },
             zero: ZERO_TIME,
-            fake: FAKE_TIME,
             diff: _diff,
-            toDate: _toDate,
-            isToday: _isToday,
             minuteToMillis: _minuteToMillis,
             millisToHuman: _millisToHuman,
             millisToHumanWithSign: _millisToHumanWithSign
@@ -847,7 +859,7 @@
         },
         _buildDayOffOption = function() {
             View.getAllColumnDay().forEach(function(eDay) {
-                var day = Time.toDate(View.getDateFromTargetAsString(eDay) + " " + Time.fake);
+                var day = Date.parseKairos(View.getDateFromTargetAsString(eDay) + " " + Time.zero);
                 if (Settings.WORK_DAYS.contains(day.getDay())) {
                     var eToggle = _buildToggleForDayOff(day);
                     View.appendToggle(eDay, eToggle);
@@ -904,7 +916,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.0.14</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.0.15</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');
