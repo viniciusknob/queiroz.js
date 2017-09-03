@@ -99,19 +99,19 @@
                     inlineText: true
                 });
             },
-            headerBalanceTime: function(balanceTime, weekly) {
+            headerBalanceTime: function(balanceTime) {
                 return _buildBox({
-                    helpText: (weekly ? (balanceTime.contains('+') ? 'extra' : 'pending') : 'totalBalance'),
+                    helpText: (balanceTime.contains('+') ? 'extra' : 'pending'),
                     humanTime: balanceTime,
-                    contentClass: 'qz-text-' + (weekly ? (balanceTime.contains('+') ? 'green' : 'primary') : 'teal'),
+                    contentClass: 'qz-text-' + (balanceTime.contains('+') ? 'green' : 'primary'),
                     inlineText: true
                 });
             },
-            balanceTimePerDay: function(balanceTime) {
+            balanceTimePerDay: function(balanceTime, total) {
                 return _buildBox({
-                    helpText: 'balance',
+                    helpText: (total ? 'totalB' : 'b') + 'alance',
                     humanTime: balanceTime,
-                    contentClass: 'qz-text-teal'
+                    contentClass: 'qz-text-'+ (total ? 'purple' : 'teal')
                 });
             },
             dailyGoal: function(dailyGoal) {

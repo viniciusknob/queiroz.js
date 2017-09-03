@@ -5,19 +5,22 @@
     text-align: center;
 }
 .qz-text-primary {
-    color: brown;
+    color: #a52a2a;
 }
 .qz-text-golden {
-    color: darkgoldenrod;
+    color: #b8860b;
 }
 .qz-text-green {
-    color: green;
+    color: #008000;
 }
 .qz-text-teal {
-    color: teal;
+    color: #008080;
 }
 .qz-text-black {
-    color: black;
+    color: #000000;
+}
+.qz-text-purple {
+    color: #663399;
 }
 .qz-box {
     padding: 5px 10px;

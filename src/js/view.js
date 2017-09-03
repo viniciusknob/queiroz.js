@@ -139,7 +139,10 @@
                                 });
                                 eDay.appendChild(Snippet.dailyGoal(day.goal));
                                 eDay.appendChild(Snippet.laborTimePerDay(day.worked));
-                                eDay.appendChild(Snippet.balanceTimePerDay(day.balance));
+                                eDay.appendChild(Snippet.balanceTimePerDay(day.balance, false));
+                                if (day.date.isToday() == false) {
+                                    eDay.appendChild(Snippet.balanceTimePerDay(day.totalBalance, true));
+                                }
                                 day.periods.forEach(function(time, index) {
                                     if (time.out == false) {
                                         eDay.appendChild(Snippet.todayTimeToLeave(time.leave, false));
@@ -154,8 +157,7 @@
                 var header = Snippet.header();
                 header.appendChild(Snippet.headerWeeklyGoal(data.weeklyGoal));
                 header.appendChild(Snippet.headerLaborTime(data.worked));
-                header.appendChild(Snippet.headerBalanceTime(data.weeklyBalance, true));
-                header.appendChild(Snippet.headerBalanceTime(data.dailyBalance, false));
+                header.appendChild(Snippet.headerBalanceTime(data.weeklyBalance));
                 View.appendToHeader(header);
             },
             isLoaded: function() {

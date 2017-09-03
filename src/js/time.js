@@ -81,16 +81,15 @@
                 });
             },
             _computeBalanceTime = function(data) {
-                data.dailyBalance = 0; // compilation of all days, except the current day
+                var totalBalance = 0; // compilation of all days, except the current day
                 data.days.forEach(function(day) {
                     day.balance = 0; // balance per day
                     if (day.periods.length) {
                         day.balance = (0 - DAILY_GOAL_MINUTES_IN_MILLIS) + day.worked;
-                        if (day.date.isToday()) { // if is current day, sum dailyBalance
-                            day.balance += data.dailyBalance;
-                        } else { // otherwise, add to compilation
-                            data.dailyBalance += day.balance;
+                        if (day.date.isToday() == false) {
+                            totalBalance += day.balance;
                         }
+                        day.totalBalance = totalBalance;
                     }
                 });
                 data.weeklyBalance = (0 - _computeWeeklyGoalMillis()) + data.worked;
@@ -104,7 +103,7 @@
                             if (day.worked < DAILY_GOAL_MINUTES_IN_MILLIS) {
                                 var pending = _diff(day.worked, DAILY_GOAL_MINUTES_IN_MILLIS);
                                 _time.leave = new Date(_time.in.getMillis() + pending);
-                                _time.balancedLeave = new Date(_time.leave.getMillis() - data.dailyBalance);
+                                _time.balancedLeave = new Date(_time.leave.getMillis() - day.totalBalance);
                             }
                         }
                     }
@@ -153,10 +152,10 @@
                     day.goal = _millisToHuman(DAILY_GOAL_MINUTES_IN_MILLIS);
                     day.worked = _millisToHuman(day.worked);
                     day.balance = _millisToHumanWithSign(day.balance);
+                    day.totalBalance = _millisToHumanWithSign(day.totalBalance);
                 });
                 data.weeklyGoal = _millisToHuman(_computeWeeklyGoalMillis());
                 data.worked = _millisToHuman(data.worked);
-                data.dailyBalance = _millisToHumanWithSign(data.dailyBalance);
                 data.weeklyBalance = _millisToHumanWithSign(data.weeklyBalance);
             },
             zero: ZERO_TIME,
