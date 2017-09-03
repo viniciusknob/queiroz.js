@@ -6,8 +6,9 @@
     "labor" : "Efetuado",
     "shift" : "_n_º Turno",
     "working" : "Trabalhando...",
-    "exit" : "Saída (08:48)",
+    "exit" : "Saída (Meta)",
     "exit+" : "Saída + Saldo",
     "config" : "Config",
-    "goal" : "Meta"
+    "weeklyGoal" : "Meta Semanal",
+    "dailyGoal" : "Meta do dia"
 }

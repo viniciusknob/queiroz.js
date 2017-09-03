@@ -1,4 +1,4 @@
-# Queiroz.js 3.0.17
+# Queiroz.js 3.0.18
 JavaScript Extension for Dimep Kairos
 
 ### Autor
@@ -27,24 +27,24 @@ O único objetivo dessa extensão é calcular e apresentar dados facilitando a t
 
 OBS: Todos os cálculos são efetuados a partir da primeira Segunda-feira, isso é necessário para não bagunçar o resultado final, e também por que o script se limita, até o momento, ao que está sendo apresentado na view.
 
-###### DayOff
+##### DayOff
 No topo de cada coluna existe um "botão", semelhante a um checkbox. Esse recurso foi criado para possibilitar o On/Off de um dia, ou mais, simulando o funcionamento de um feriado e fazendo com que a extensão não considere em seus cálculos os dias que estiverem "desligados".
 
 ### Termos e Nomeclaturas
 
-###### Turno
+##### Turno
 A diferença entre Entrada e Saída.
 
-###### Saldo
+##### Saldo
 Existem 2 tipos de saldo que são apresentados:
 * Saldo do dia: Meta diária - Tempo de trabalho;
 * Saldo Total: Soma de todos os saldos da semana.
 
 OBS: O saldo do dia, no dia atual, sempre apresentará a meta diária + o saldo total, por esse motivo, na maioria das vezes será apresentado um valor negativo e alto no início do dia que irá diminuíndo ao longo do mesmo.
 
-###### Previsão de Saída
+##### Previsão de Saída
 Existem 2 tipos de previsão de saída que são apresentados:
-* Saída (08:48): baseada na meta diária. Esse campo apresentará exatamente a hora de saída caso o usuário deseje completar a meta diária.
+* Saída (Meta): baseada na meta diária. Esse campo apresentará exatamente a hora de saída caso o usuário deseje completar a meta diária.
 * Saída + Saldo: baseada na meta diária + saldo total. Esse campo mostrará a hora de saída corrigida.
 
 ### Contribuindo

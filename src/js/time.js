@@ -150,6 +150,7 @@
                         if (time.balancedLeave)
                             time.balancedLeave = time.balancedLeave.getTimeAsString();
                     });
+                    day.goal = _millisToHuman(DAILY_GOAL_MINUTES_IN_MILLIS);
                     day.worked = _millisToHuman(day.worked);
                     day.balance = _millisToHumanWithSign(day.balance);
                 });

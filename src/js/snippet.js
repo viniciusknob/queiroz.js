@@ -85,7 +85,7 @@
             },
             headerWeeklyGoal: function(weeklyGoal) {
                 return _buildBox({
-                    helpText: 'goal',
+                    helpText: 'weeklyGoal',
                     humanTime: weeklyGoal,
                     contentClass: 'qz-text-black',
                     inlineText: true
@@ -112,6 +112,13 @@
                     helpText: 'balance',
                     humanTime: balanceTime,
                     contentClass: 'qz-text-teal'
+                });
+            },
+            dailyGoal: function(dailyGoal) {
+                return _buildBox({
+                    helpText: 'dailyGoal',
+                    humanTime: dailyGoal,
+                    contentClass: 'qz-text-black'
                 });
             },
             laborTimePerDay: function(laborTime) {

@@ -133,19 +133,20 @@
                     eColumns.forEach(function(eDay) {
                         var eDate = _get(Selector.DATE, eDay).value;
                         if (day.date.getDateAsKairos() == eDate) {
-                            day.periods.forEach(function(time, index) {
-                                eDay.appendChild(Snippet.laborTimePerShift(time.shift, (!!time.out), (index+1)));
-                            });
                             if (day.periods.length) {
+                                day.periods.forEach(function(time, index) {
+                                    eDay.appendChild(Snippet.laborTimePerShift(time.shift, (!!time.out), (index+1)));
+                                });
+                                eDay.appendChild(Snippet.dailyGoal(day.goal));
                                 eDay.appendChild(Snippet.laborTimePerDay(day.worked));
                                 eDay.appendChild(Snippet.balanceTimePerDay(day.balance));
+                                day.periods.forEach(function(time, index) {
+                                    if (time.out == false) {
+                                        eDay.appendChild(Snippet.todayTimeToLeave(time.leave, false));
+                                        eDay.appendChild(Snippet.todayTimeToLeave(time.balancedLeave, true));
+                                    }
+                                });
                             }
-                            day.periods.forEach(function(time, index) {
-                                if (time.out == false) {
-                                    eDay.appendChild(Snippet.todayTimeToLeave(time.leave, false));
-                                    eDay.appendChild(Snippet.todayTimeToLeave(time.balancedLeave, true));
-                                }
-                            });
                         }
                     });
                 });
