@@ -135,7 +135,8 @@
                         if (day.date.getDateAsKairos() == eDate) {
                             if (day.periods.length) {
                                 day.periods.forEach(function(time, index) {
-                                    eDay.appendChild(Snippet.laborTimePerShift(time.shift, (!!time.out), (index+1)));
+                                    if (!!time.out || (time.out == false && day.date.isToday()))
+                                        eDay.appendChild(Snippet.laborTimePerShift(time.shift, (!!time.out), (index+1)));
                                 });
                                 eDay.appendChild(Snippet.dailyGoal(day.goal));
                                 eDay.appendChild(Snippet.laborTimePerDay(day.worked));
@@ -144,7 +145,7 @@
                                     eDay.appendChild(Snippet.balanceTimePerDay(day.totalBalance, true));
                                 }
                                 day.periods.forEach(function(time, index) {
-                                    if (time.out == false) {
+                                    if (time.out == false && day.date.isToday()) {
                                         eDay.appendChild(Snippet.todayTimeToLeave(time.leave, false));
                                         eDay.appendChild(Snippet.todayTimeToLeave(time.balancedLeave, true));
                                     }

@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.0.19',
+            VERSION = '3.0.20',
             SETTINGS = {"USERSCRIPT_DELAY":1000,"MAX_CONSECUTIVE_MINUTES":360,"WEEKLY_GOAL_MINUTES":2640,"DAILY_GOAL_MINUTES":528,"WORK_DAYS":[1,2,3,4,5],"INITIAL_WEEKDAY":1,"GA_TRACKING_ID":"UA-105390656-1","KEEP_ALIVE":60000};
 
         /* Public API */
@@ -514,7 +514,8 @@
                         if (day.date.getDateAsKairos() == eDate) {
                             if (day.periods.length) {
                                 day.periods.forEach(function(time, index) {
-                                    eDay.appendChild(Snippet.laborTimePerShift(time.shift, (!!time.out), (index+1)));
+                                    if (!!time.out || (time.out == false && day.date.isToday()))
+                                        eDay.appendChild(Snippet.laborTimePerShift(time.shift, (!!time.out), (index+1)));
                                 });
                                 eDay.appendChild(Snippet.dailyGoal(day.goal));
                                 eDay.appendChild(Snippet.laborTimePerDay(day.worked));
@@ -523,7 +524,7 @@
                                     eDay.appendChild(Snippet.balanceTimePerDay(day.totalBalance, true));
                                 }
                                 day.periods.forEach(function(time, index) {
-                                    if (time.out == false) {
+                                    if (time.out == false && day.date.isToday()) {
                                         eDay.appendChild(Snippet.todayTimeToLeave(time.leave, false));
                                         eDay.appendChild(Snippet.todayTimeToLeave(time.balancedLeave, true));
                                     }
@@ -926,7 +927,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.0.19</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.0.20</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');
