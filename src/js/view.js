@@ -162,7 +162,7 @@
                 View.appendToHeader(header);
             },
             isLoaded: function() {
-                return _get(Selector.CHECKPOINT);
+                return _get(Selector.COLUMN_DAY);
             },
             getAllColumnDay: function() {
                 return _getAll(Selector.COLUMN_DAY);
