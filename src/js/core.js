@@ -51,15 +51,12 @@
                 }
             });
         },
-        _prepare = function() {
-            View.appendToHead(Snippet.style());
-            _buildDayOffOption();
-        },
         _init = function() {
-            _prepare();
+            View.appendToHead(Snippet.style());
             var data = View.read();
             Time.parse(data);
             View.removeUnusedDays(data);
+            _buildDayOffOption();
             DayOff.check(data);
             Time.compute(data);
             Time.toHuman(data);
