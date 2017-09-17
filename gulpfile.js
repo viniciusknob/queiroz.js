@@ -36,7 +36,7 @@ var
     },
 
     Settings = {
-        VERSION: '3.0.22',
+        VERSION: '3.1.22',
         versionRegex: '(?:\\d+\\.){2}\\d+(?:-beta\\.\\d+)?',
         env: {
             DEV: {
@@ -210,9 +210,10 @@ gulp.task('dev.concat', function() {
             'src/js/strings.js',
             'src/js/style.js',
             'src/js/snippet.js',
-            'src/js/view.js',
             'src/js/dayoff.js',
             'src/js/time.js',
+            'src/js/timeon.js',
+            'src/js/view.js',
             'src/js/core.js',
             'src/js/autoexec.js'
         ])
@@ -229,9 +230,10 @@ gulp.task('all.concat', function() {
             'src/js/strings.js',
             'src/js/style.js',
             'src/js/snippet.js',
-            'src/js/view.js',
             'src/js/dayoff.js',
             'src/js/time.js',
+            'src/js/timeon.js',
+            'src/js/view.js',
             'src/js/core.js',
             'src/js/autoexec.js'
         ])

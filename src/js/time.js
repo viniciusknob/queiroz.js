@@ -38,6 +38,9 @@
                     return end - init;
                 }
             },
+            _hourToMillis = function(hour) {
+                return hour * HOUR_IN_MILLIS;
+            },
             _minuteToMillis = function(minute) {
                 return minute * MINUTE_IN_MILLIS;
             },
@@ -58,6 +61,14 @@
                 if (millis < 0)
                     return '-' + _millisToHuman(millis * -1);
             },
+            _humanToMillis = function(humanTime) {
+                var
+                    time = humanTime.split(':'),
+                    hour = parseInt(time[0]),
+                    min = parseInt(time[1]);
+
+                return (_hourToMillis(hour) + _minuteToMillis(min));
+            },
             _computeShiftTime = function(data) {
                 data.days.forEach(function(day) {
                     day.periods.forEach(function(time) {
@@ -73,6 +84,7 @@
                 data.worked = 0;
                 data.days.forEach(function(day) {
                     day.worked = 0;
+                    day.worked += day.timeOn;
                     day.periods.forEach(function(time) {
                         if (time.in && time.out)
                             day.worked += time.shift
@@ -153,6 +165,8 @@
                     day.worked = _millisToHuman(day.worked);
                     day.balance = _millisToHumanWithSign(day.balance);
                     day.totalBalance = _millisToHumanWithSign(day.totalBalance);
+                    if (day.timeOn)
+                        day.timeOn = _millisToHuman(day.timeOn);
                 });
                 data.weeklyGoal = _millisToHuman(_computeWeeklyGoalMillis());
                 data.worked = _millisToHuman(data.worked);
@@ -162,7 +176,8 @@
             diff: _diff,
             minuteToMillis: _minuteToMillis,
             millisToHuman: _millisToHuman,
-            millisToHumanWithSign: _millisToHumanWithSign
+            millisToHumanWithSign: _millisToHumanWithSign,
+            humanToMillis: _humanToMillis
         };
     }();
 

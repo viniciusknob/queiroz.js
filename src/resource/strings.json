@@ -10,5 +10,6 @@
     "exit+" : "Saída + Saldo",
     "config" : "Config",
     "weeklyGoal" : "Meta Semanal",
-    "dailyGoal" : "Meta do dia"
+    "dailyGoal" : "Meta do dia",
+    "timeOn" : "Falta Abonada"
 }

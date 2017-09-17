@@ -21,6 +21,7 @@
 
         var
             TagName = {
+                BR: 'br',
                 DIV: 'div',
                 P: 'p',
                 SPAN: 'span',
@@ -55,6 +56,72 @@
                 box.appendChild(helpText);
                 box.appendChild(humanTime);
                 if (opt.inlineText) box.className += ' qz-box-inline';
+                return box;
+            },
+            _buildEditableTimeOnBox = function(TimeOn) {
+                var box = _buildTag(TagName.DIV, 'qz-box qz-box-muted qz-text-center js-has-timeon');
+                var helpText = _buildTag(TagName.DIV, 'qz-help-text', Strings('timeOn'));
+                var upHour = _buildTag(TagName.SPAN,'qz-fa fa fa-chevron-up');
+                var upMin = _buildTag(TagName.SPAN,'qz-fa fa fa-chevron-up');
+                var eTime = _buildTag(TagName.STRONG, 'qz-box-content js-self-timeon', '00:00');
+                var downHour = _buildTag(TagName.SPAN,'qz-fa fa fa-chevron-down');
+                var downMin = _buildTag(TagName.SPAN,'qz-fa fa fa-chevron-down');
+                var cancel = _buildTag(TagName.SPAN,'qz-fa qz-fa-sw fa fa-times');
+                var save = _buildTag(TagName.SPAN,'qz-fa qz-fa-se qz-text-green fa fa-floppy-o');
+
+                upHour.onclick = function() {
+                    var eTime = this.parentElement.querySelector('.js-self-timeon');
+                    var time = eTime.textContent.split(':');
+                    var hour = parseInt(time[0]);
+                    if (hour == 23) hour = 0;
+                    else hour+=1;
+                    eTime.textContent = hour.padStart(2) + ':' + time[1];
+                };
+                downHour.onclick = function() {
+                    var eTime = this.parentElement.querySelector('.js-self-timeon');
+                    var time = eTime.textContent.split(':');
+                    var hour = parseInt(time[0]);
+                    if (hour == 0) hour = 23;
+                    else hour-=1;
+                    eTime.textContent = hour.padStart(2) + ':' + time[1];
+                };
+                upMin.onclick = function() {
+                    var eTime = this.parentElement.querySelector('.js-self-timeon');
+                    var time = eTime.textContent.split(':');
+                    var min = parseInt(time[1]);
+                    if (min == 59) min = 0;
+                    else min+=1;
+                    eTime.textContent = time[0] + ':' + min.padStart(2);
+                };
+                downMin.onclick = function() {
+                    var eTime = this.parentElement.querySelector('.js-self-timeon');
+                    var time = eTime.textContent.split(':');
+                    var min = parseInt(time[1]);
+                    if (min == 0) min = 59;
+                    else min-=1;
+                    eTime.textContent = time[0] + ':' + min.padStart(2);
+                };
+                cancel.onclick = function() {
+                    this.parentElement.remove();
+                };
+                save.onclick = function() {
+                    var eDay = this.parentElement.parentElement;
+                    var eDate = eDay.querySelector('[id^=hiddenDiaApont]').value;
+                    var eTime = eDay.querySelector('.js-self-timeon').textContent;
+                    if (TimeOn.add(eDate, eTime))
+                        Queiroz.reload();
+                };
+
+                box.appendChild(helpText);
+                box.appendChild(upHour);
+                box.appendChild(upMin);
+                box.appendChild(_buildTag(TagName.BR));
+                box.appendChild(eTime);
+                box.appendChild(_buildTag(TagName.BR));
+                box.appendChild(downHour);
+                box.appendChild(downMin);
+                box.appendChild(cancel);
+                box.appendChild(save);
                 return box;
             };
 
@@ -121,12 +188,22 @@
                     contentClass: 'qz-text-black'
                 });
             },
-            laborTimePerDay: function(laborTime) {
-                return _buildBox({
+            laborTimePerDay: function(laborTime, TimeOn) {
+                var box = _buildBox({
                     helpText: 'labor',
                     humanTime: laborTime,
                     contentClass: 'qz-text-green'
                 });
+                var addTimeOn = _buildTag(TagName.SPAN,'qz-fa qz-fa-sw fa fa-puzzle-piece');
+                addTimeOn.onclick = function() {
+                    var eDay = this.parentElement.parentElement;
+                    if (eDay.querySelector('.js-has-timeon'))
+                        return;
+
+                    eDay.appendChild(_buildEditableTimeOnBox(TimeOn));
+                };
+                box.appendChild(addTimeOn);
+                return box;
             },
             laborTimePerShift: function(laborTime, finished, number) {
                 var box = _buildBox({
@@ -147,6 +224,22 @@
                     humanTime: timeToLeave,
                     contentClass: 'qz-text-primary'
                 });
+            },
+            buildTimeOnBox: function(TimeOn, humanTime) {
+                var box = _buildBox({
+                    helpText: 'timeOn',
+                    humanTime: humanTime,
+                    contentClass: 'qz-text-orange'
+                });
+                var remove = _buildTag(TagName.SPAN,'qz-fa qz-fa-sw fa fa-times');
+                remove.onclick = function() {
+                    var eDay = this.parentElement.parentElement;
+                    var eDate = eDay.querySelector('[id^=hiddenDiaApont]').value;
+                    TimeOn.remove(eDate);
+                    Queiroz.reload();
+                };
+                box.appendChild(remove);
+                return box;
             }
         };
     }();

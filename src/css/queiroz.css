@@ -4,7 +4,7 @@
 .qz-text-center {
     text-align: center;
 }
-.qz-text-primary {
+.qz-text-primary { /* change primary for brown */
     color: #a52a2a;
 }
 .qz-text-golden {
@@ -21,6 +21,9 @@
 }
 .qz-text-purple {
     color: #663399;
+}
+.qz-text-orange {
+    color: #e27300;
 }
 .qz-box {
     padding: 5px 10px;
@@ -46,6 +49,20 @@
 .qz-help-text {
     font-size: 10px;
 }
+.qz-fa {
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+.qz-fa-se {
+    float: right;
+    margin: 4px -8px 0px -8px;
+}
+.qz-fa-sw {
+    float: left;
+    margin: 4px -10px 0px -8px;
+}
 
 /* Queiroz.js DayOff */
 
@@ -67,6 +84,12 @@
 
 .js-hide {
     display: none;
+}
+
+/* Queiroz.js TimeOn */
+
+.fa-chevron-up, .fa-chevron-down {
+    margin: 0 2.5px;
 }
 
 /* Queiroz.js Modal */

@@ -16,7 +16,8 @@
         Snippet   = mod.snippet,
         View      = mod.view,
         DayOff    = mod.dayoff,
-        Time      = mod.time;
+        Time      = mod.time,
+        TimeOn    = mod.timeon;
 
     /* Private Functions */
 
@@ -58,9 +59,10 @@
             View.removeUnusedDays(data);
             _buildDayOffOption();
             DayOff.check(data);
+            TimeOn.check(data);
             Time.compute(data);
             Time.toHuman(data);
-            View.showResult(data);
+            View.render(data);
             KeepAlive.init();
         },
         _initWithDelay = function() {

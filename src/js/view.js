@@ -9,8 +9,11 @@
 
     /* Modules */
 
-    var Settings = Queiroz.settings,
-        Snippet  = Queiroz.module.snippet;
+    var
+        Settings = Queiroz.settings,
+        mod      = Queiroz.module,
+        Snippet  = mod.snippet,
+        TimeOn   = mod.timeon;
 
     /* Class Definition */
 
@@ -127,7 +130,7 @@
                         eDay.remove();
                 });
             },
-            showResult: function(data) {
+            render: function(data) {
                 var eColumns = _getAll(Selector.COLUMN_DAY);
                 data.days.forEach(function(day) {
                     eColumns.forEach(function(eDay) {
@@ -138,8 +141,11 @@
                                     if (!!time.out || (time.out == false && day.date.isToday()))
                                         eDay.appendChild(Snippet.laborTimePerShift(time.shift, (!!time.out), (index+1)));
                                 });
+                                if (day.timeOn) {
+                                    eDay.appendChild(TimeOn.buildBox(day.timeOn));
+                                }
                                 eDay.appendChild(Snippet.dailyGoal(day.goal));
-                                eDay.appendChild(Snippet.laborTimePerDay(day.worked));
+                                eDay.appendChild(Snippet.laborTimePerDay(day.worked, TimeOn));
                                 eDay.appendChild(Snippet.balanceTimePerDay(day.balance, false));
                                 if (day.date.isToday() == false) {
                                     eDay.appendChild(Snippet.balanceTimePerDay(day.totalBalance, true));

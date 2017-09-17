@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.0.22',
+            VERSION = '3.1.22',
             SETTINGS = {"USERSCRIPT_DELAY":1000,"MAX_CONSECUTIVE_MINUTES":360,"WEEKLY_GOAL_MINUTES":2640,"DAILY_GOAL_MINUTES":528,"WORK_DAYS":[1,2,3,4,5],"INITIAL_WEEKDAY":1,"GA_TRACKING_ID":"UA-105390656-1","KEEP_ALIVE":60000};
 
         /* Public API */
@@ -187,7 +187,7 @@
         return Strings._[key];
     };
 
-    Strings._ = {"pending":"Pendente","extra":"Extra","balance":"Saldo do dia","totalBalance":"Saldo Total","labor":"Efetuado","shift":"_n_º Turno","working":"Trabalhando...","exit":"Saída (Meta)","exit+":"Saída + Saldo","config":"Config","weeklyGoal":"Meta Semanal","dailyGoal":"Meta do dia"};
+    Strings._ = {"pending":"Pendente","extra":"Extra","balance":"Saldo do dia","totalBalance":"Saldo Total","labor":"Efetuado","shift":"_n_º Turno","working":"Trabalhando...","exit":"Saída (Meta)","exit+":"Saída + Saldo","config":"Config","weeklyGoal":"Meta Semanal","dailyGoal":"Meta do dia","timeOn":"Falta Abonada"};
 
     /* Module Definition */
 
@@ -208,7 +208,7 @@
 
     var Style = function() {
         return {
-            CSS: 'html{line-height:1.15;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,footer,header,nav,section{display:block}h1{font-size:2em;margin:.67em 0}figcaption,figure,main{display:block}figure{margin:1em 40px}hr{box-sizing:content-box;height:0;overflow:visible}pre{font-family:monospace,monospace;font-size:1em}a{background-color:transparent;-webkit-text-decoration-skip:objects}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:inherit}b,strong{font-weight:bolder}code,kbd,samp{font-family:monospace,monospace;font-size:1em}dfn{font-style:italic}mark{background-color:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}audio,video{display:inline-block}audio:not([controls]){display:none;height:0}img{border-style:none}svg:not(:root){overflow:hidden}button,input,optgroup,select,textarea{font-family:sans-serif;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button,select{text-transform:none}[type=reset],[type=submit],button,html [type=button]{-webkit-appearance:button}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring,button:-moz-focusring{outline:1px dotted ButtonText}fieldset{padding:.35em .75em .625em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}progress{display:inline-block;vertical-align:baseline}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-cancel-button,[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}details,menu{display:block}summary{display:list-item}canvas{display:inline-block}template{display:none}[hidden]{display:none}#SemanaApontamentos{cursor:default!important}.ContentTable{margin-top:inherit}.FilledSlot,.LastSlot,.emptySlot{height:inherit;padding:5px}.FilledSlot span{margin:inherit!important}.qz-text-center{text-align:center}.qz-text-primary{color:brown}.qz-text-golden{color:#b8860b}.qz-text-green{color:green}.qz-text-teal{color:teal}.qz-text-black{color:#000}.qz-text-purple{color:#639}.qz-box{padding:5px 10px;margin:5px 1px;border:#a9a9a9 1px solid;min-width:60px}.qz-box-compact{min-width:auto}.qz-box-inline{display:inline-block}.qz-box-head{float:right}.qz-box-muted{background-color:#d3d3d3}.qz-box .qz-box-content{vertical-align:middle}.qz-help-text{font-size:10px}.qz-toggle{margin-top:10px}.fa-toggle-on{color:green}.fa-toggle-off{color:grey}.js-show{display:block}.js-hide{display:none}.qz-modal{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1024;background-color:rgba(0,0,0,.5)}.qz-modal-dialog{position:relative;width:900px;margin:30px auto}.qz-modal-content{position:relative;background-color:#fff;background-clip:padding-box;border-radius:5px}.qz-modal-header{padding:10px;border-bottom:1px solid #d3d3d3;font-weight:700;font-size:16px}.qz-modal-close{float:right;cursor:pointer;background:0 0;border:0;padding:0;color:silver}.qz-modal-body{padding:10px}.qz-modal-footer{padding:10px;border-top:1px solid #d3d3d3;text-align:center}'
+            CSS: 'html{line-height:1.15;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,footer,header,nav,section{display:block}h1{font-size:2em;margin:.67em 0}figcaption,figure,main{display:block}figure{margin:1em 40px}hr{box-sizing:content-box;height:0;overflow:visible}pre{font-family:monospace,monospace;font-size:1em}a{background-color:transparent;-webkit-text-decoration-skip:objects}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:inherit}b,strong{font-weight:bolder}code,kbd,samp{font-family:monospace,monospace;font-size:1em}dfn{font-style:italic}mark{background-color:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}audio,video{display:inline-block}audio:not([controls]){display:none;height:0}img{border-style:none}svg:not(:root){overflow:hidden}button,input,optgroup,select,textarea{font-family:sans-serif;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button,select{text-transform:none}[type=reset],[type=submit],button,html [type=button]{-webkit-appearance:button}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring,button:-moz-focusring{outline:1px dotted ButtonText}fieldset{padding:.35em .75em .625em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}progress{display:inline-block;vertical-align:baseline}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-cancel-button,[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}details,menu{display:block}summary{display:list-item}canvas{display:inline-block}template{display:none}[hidden]{display:none}#SemanaApontamentos{cursor:default!important}.ContentTable{margin-top:inherit}.FilledSlot,.LastSlot,.emptySlot{height:inherit;padding:5px}.FilledSlot span{margin:inherit!important}.qz-text-center{text-align:center}.qz-text-primary{color:brown}.qz-text-golden{color:#b8860b}.qz-text-green{color:green}.qz-text-teal{color:teal}.qz-text-black{color:#000}.qz-text-purple{color:#639}.qz-text-orange{color:#e27300}.qz-box{padding:5px 10px;margin:5px 1px;border:#a9a9a9 1px solid;min-width:60px}.qz-box-compact{min-width:auto}.qz-box-inline{display:inline-block}.qz-box-head{float:right}.qz-box-muted{background-color:#d3d3d3}.qz-box .qz-box-content{vertical-align:middle}.qz-help-text{font-size:10px}.qz-fa{-moz-user-select:-moz-none;-khtml-user-select:none;-webkit-user-select:none;user-select:none}.qz-fa-se{float:right;margin:4px -8px 0 -8px}.qz-fa-sw{float:left;margin:4px -10px 0 -8px}.qz-toggle{margin-top:10px}.fa-toggle-on{color:green}.fa-toggle-off{color:grey}.js-show{display:block}.js-hide{display:none}.fa-chevron-down,.fa-chevron-up{margin:0 2.5px}.qz-modal{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1024;background-color:rgba(0,0,0,.5)}.qz-modal-dialog{position:relative;width:900px;margin:30px auto}.qz-modal-content{position:relative;background-color:#fff;background-clip:padding-box;border-radius:5px}.qz-modal-header{padding:10px;border-bottom:1px solid #d3d3d3;font-weight:700;font-size:16px}.qz-modal-close{float:right;cursor:pointer;background:0 0;border:0;padding:0;color:silver}.qz-modal-body{padding:10px}.qz-modal-footer{padding:10px;border-top:1px solid #d3d3d3;text-align:center}'
         };
     }();
 
@@ -241,6 +241,7 @@
 
         var
             TagName = {
+                BR: 'br',
                 DIV: 'div',
                 P: 'p',
                 SPAN: 'span',
@@ -275,6 +276,72 @@
                 box.appendChild(helpText);
                 box.appendChild(humanTime);
                 if (opt.inlineText) box.className += ' qz-box-inline';
+                return box;
+            },
+            _buildEditableTimeOnBox = function(TimeOn) {
+                var box = _buildTag(TagName.DIV, 'qz-box qz-box-muted qz-text-center js-has-timeon');
+                var helpText = _buildTag(TagName.DIV, 'qz-help-text', Strings('timeOn'));
+                var upHour = _buildTag(TagName.SPAN,'qz-fa fa fa-chevron-up');
+                var upMin = _buildTag(TagName.SPAN,'qz-fa fa fa-chevron-up');
+                var eTime = _buildTag(TagName.STRONG, 'qz-box-content js-self-timeon', '00:00');
+                var downHour = _buildTag(TagName.SPAN,'qz-fa fa fa-chevron-down');
+                var downMin = _buildTag(TagName.SPAN,'qz-fa fa fa-chevron-down');
+                var cancel = _buildTag(TagName.SPAN,'qz-fa qz-fa-sw fa fa-times');
+                var save = _buildTag(TagName.SPAN,'qz-fa qz-fa-se qz-text-green fa fa-floppy-o');
+
+                upHour.onclick = function() {
+                    var eTime = this.parentElement.querySelector('.js-self-timeon');
+                    var time = eTime.textContent.split(':');
+                    var hour = parseInt(time[0]);
+                    if (hour == 23) hour = 0;
+                    else hour+=1;
+                    eTime.textContent = hour.padStart(2) + ':' + time[1];
+                };
+                downHour.onclick = function() {
+                    var eTime = this.parentElement.querySelector('.js-self-timeon');
+                    var time = eTime.textContent.split(':');
+                    var hour = parseInt(time[0]);
+                    if (hour == 0) hour = 23;
+                    else hour-=1;
+                    eTime.textContent = hour.padStart(2) + ':' + time[1];
+                };
+                upMin.onclick = function() {
+                    var eTime = this.parentElement.querySelector('.js-self-timeon');
+                    var time = eTime.textContent.split(':');
+                    var min = parseInt(time[1]);
+                    if (min == 59) min = 0;
+                    else min+=1;
+                    eTime.textContent = time[0] + ':' + min.padStart(2);
+                };
+                downMin.onclick = function() {
+                    var eTime = this.parentElement.querySelector('.js-self-timeon');
+                    var time = eTime.textContent.split(':');
+                    var min = parseInt(time[1]);
+                    if (min == 0) min = 59;
+                    else min-=1;
+                    eTime.textContent = time[0] + ':' + min.padStart(2);
+                };
+                cancel.onclick = function() {
+                    this.parentElement.remove();
+                };
+                save.onclick = function() {
+                    var eDay = this.parentElement.parentElement;
+                    var eDate = eDay.querySelector('[id^=hiddenDiaApont]').value;
+                    var eTime = eDay.querySelector('.js-self-timeon').textContent;
+                    if (TimeOn.add(eDate, eTime))
+                        Queiroz.reload();
+                };
+
+                box.appendChild(helpText);
+                box.appendChild(upHour);
+                box.appendChild(upMin);
+                box.appendChild(_buildTag(TagName.BR));
+                box.appendChild(eTime);
+                box.appendChild(_buildTag(TagName.BR));
+                box.appendChild(downHour);
+                box.appendChild(downMin);
+                box.appendChild(cancel);
+                box.appendChild(save);
                 return box;
             };
 
@@ -341,12 +408,22 @@
                     contentClass: 'qz-text-black'
                 });
             },
-            laborTimePerDay: function(laborTime) {
-                return _buildBox({
+            laborTimePerDay: function(laborTime, TimeOn) {
+                var box = _buildBox({
                     helpText: 'labor',
                     humanTime: laborTime,
                     contentClass: 'qz-text-green'
                 });
+                var addTimeOn = _buildTag(TagName.SPAN,'qz-fa qz-fa-sw fa fa-puzzle-piece');
+                addTimeOn.onclick = function() {
+                    var eDay = this.parentElement.parentElement;
+                    if (eDay.querySelector('.js-has-timeon'))
+                        return;
+
+                    eDay.appendChild(_buildEditableTimeOnBox(TimeOn));
+                };
+                box.appendChild(addTimeOn);
+                return box;
             },
             laborTimePerShift: function(laborTime, finished, number) {
                 var box = _buildBox({
@@ -367,6 +444,22 @@
                     humanTime: timeToLeave,
                     contentClass: 'qz-text-primary'
                 });
+            },
+            buildTimeOnBox: function(TimeOn, humanTime) {
+                var box = _buildBox({
+                    helpText: 'timeOn',
+                    humanTime: humanTime,
+                    contentClass: 'qz-text-orange'
+                });
+                var remove = _buildTag(TagName.SPAN,'qz-fa qz-fa-sw fa fa-times');
+                remove.onclick = function() {
+                    var eDay = this.parentElement.parentElement;
+                    var eDate = eDay.querySelector('[id^=hiddenDiaApont]').value;
+                    TimeOn.remove(eDate);
+                    Queiroz.reload();
+                };
+                box.appendChild(remove);
+                return box;
             }
         };
     }();
@@ -379,6 +472,359 @@
 
 
 /*!
+ * Queiroz.js: dayoff.js
+ * JavaScript Extension for Dimep Kairos
+ * https://github.com/viniciusknob/queiroz.js
+ */
+
+(function(localStorage, Queiroz) {
+
+    /* Class Definition */
+
+    var DayOff = function() {
+
+        var
+            NAME = "dayoff",
+            cache = [];
+
+        /* Private Functions */
+
+        var
+            _buildValue = function(date) {
+                return date.getDate().padStart(2) + "/" + date.getFixedMonth().padStart(2);
+            },
+            _is = function(date) {
+                return cache.contains(_buildValue(date));
+            },
+            _add = function(date) {
+                if (_is(date))
+                    return;
+
+                cache.push(_buildValue(date));
+                localStorage.setItem(NAME, JSON.stringify(cache));
+            },
+            _remove = function(date) {
+                if (_is(date) == false)
+                    return;
+
+                var index = cache.indexOf(_buildValue(date));
+                cache.splice(index, 1);
+                localStorage.setItem(NAME, JSON.stringify(cache));
+            };
+
+        // Initialize cache
+        if (localStorage.hasItem(NAME)) {
+            cache = JSON.parse(localStorage.getItem(NAME));
+        }
+
+        /* Public Functions */
+
+        return {
+            check: function(data) {
+                var _days = [];
+                data.days.forEach(function(day) {
+                    if (_is(day.date) == false)
+                        _days.push(day);
+                });
+                data.days = _days;
+            },
+            is: _is,
+            add: _add,
+            remove: _remove
+        };
+    }();
+
+    DayOff.count = 0;
+
+    /* Module Definition */
+
+    Queiroz.module.dayoff = DayOff;
+
+})(localStorage, Queiroz);
+
+/*!
+ * Queiroz.js: time.js
+ * JavaScript Extension for Dimep Kairos
+ * https://github.com/viniciusknob/queiroz.js
+ */
+
+(function(Queiroz) {
+
+    /* Modules */
+
+    var
+        Settings = Queiroz.settings,
+        DayOff   = Queiroz.module.dayoff;
+
+    /* Class Definition */
+
+    var Time = function() {
+
+        /* Constants */
+
+        var
+            ZERO_TIME = '00:00',
+            MINUTE_IN_MILLIS = 1000 * 60,
+            HOUR_IN_MILLIS = MINUTE_IN_MILLIS * 60,
+            DAILY_GOAL_MINUTES_IN_MILLIS = Settings.DAILY_GOAL_MINUTES * MINUTE_IN_MILLIS,
+            MAX_CONSECUTIVE_MINUTES_IN_MILLIS = Settings.MAX_CONSECUTIVE_MINUTES * MINUTE_IN_MILLIS;
+
+        /* Private Functions */
+
+        var
+            _computeWeeklyGoalMillis = function() {
+                return (Settings.WEEKLY_GOAL_MINUTES * MINUTE_IN_MILLIS) - (DayOff.count * DAILY_GOAL_MINUTES_IN_MILLIS);
+            },
+            _diff = function(init, end) {
+                if (init instanceof Date && end instanceof Date) {
+                    return end.getMillis() - init.getMillis();
+                } else {
+                    return end - init;
+                }
+            },
+            _hourToMillis = function(hour) {
+                return hour * HOUR_IN_MILLIS;
+            },
+            _minuteToMillis = function(minute) {
+                return minute * MINUTE_IN_MILLIS;
+            },
+            _millisToHuman = function(millis) {
+                var
+                    diffHour = parseInt(millis / HOUR_IN_MILLIS),
+                    diffMin = parseInt((millis / MINUTE_IN_MILLIS) % 60);
+
+                return diffHour.padStart(2) + ':' + diffMin.padStart(2);
+            },
+            _millisToHumanWithSign = function(millis) {
+                if (millis == 0)
+                    return ZERO_TIME;
+
+                if (millis > 0)
+                    return '+' + _millisToHuman(millis);
+
+                if (millis < 0)
+                    return '-' + _millisToHuman(millis * -1);
+            },
+            _humanToMillis = function(humanTime) {
+                var
+                    time = humanTime.split(':'),
+                    hour = parseInt(time[0]),
+                    min = parseInt(time[1]);
+
+                return (_hourToMillis(hour) + _minuteToMillis(min));
+            },
+            _computeShiftTime = function(data) {
+                data.days.forEach(function(day) {
+                    day.periods.forEach(function(time) {
+                        time.shift = false;
+                        if (time.in && time.out)
+                            time.shift = _diff(time.in, time.out);
+                        else if (time.in)
+                            time.shift = _diff(time.in, Date.now());
+                    });
+                });
+            },
+            _computeLaborTime = function(data) {
+                data.worked = 0;
+                data.days.forEach(function(day) {
+                    day.worked = 0;
+                    day.worked += day.timeOn;
+                    day.periods.forEach(function(time) {
+                        if (time.in && time.out)
+                            day.worked += time.shift
+                    });
+                    data.worked += day.worked;
+                });
+            },
+            _computeBalanceTime = function(data) {
+                var totalBalance = 0; // compilation of all days, except the current day
+                data.days.forEach(function(day) {
+                    day.balance = 0; // balance per day
+                    if (day.periods.length) {
+                        day.balance = (0 - DAILY_GOAL_MINUTES_IN_MILLIS) + day.worked;
+                        if (day.date.isToday() == false) {
+                            totalBalance += day.balance;
+                        }
+                        day.totalBalance = totalBalance;
+                    }
+                });
+                data.weeklyBalance = (0 - _computeWeeklyGoalMillis()) + data.worked;
+            },
+            _computeTimeToLeave = function(data) {
+                data.days.forEach(function(day) {
+                    var _periods = day.periods;
+                    if (day.date.isToday() && _periods.length) {
+                        var _time = _periods.last();
+                        if (_time.out == false) {
+                            if (day.worked < DAILY_GOAL_MINUTES_IN_MILLIS) {
+                                var pending = _diff(day.worked, DAILY_GOAL_MINUTES_IN_MILLIS);
+                                _time.leave = new Date(_time.in.getMillis() + pending);
+                                _time.balancedLeave = new Date(_time.leave.getMillis() - day.totalBalance);
+                            }
+                        }
+                    }
+                });
+            };
+
+        /* Public Functions */
+
+        return {
+            parse: function(data) {
+                data.days.forEach(function(day) {
+                    day.periods.forEach(function(time) {
+                        if (time.in)
+                            time.in = Date.parseKairos(day.date + " " + time.in);
+
+                        if (time.out)
+                            time.out = Date.parseKairos(day.date + " " + time.out);
+                    });
+                    day.date = Date.parseKairos(day.date + " " + ZERO_TIME);
+                });
+            },
+            compute: function(data) {
+                _computeShiftTime(data);
+                _computeLaborTime(data);
+                _computeBalanceTime(data);
+                _computeTimeToLeave(data);
+            },
+            toHuman: function(data) {
+                data.days.forEach(function(day) {
+                    day.periods.forEach(function(time) {
+                        if (time.in)
+                            time.in = time.in.getTimeAsString();
+
+                        if (time.out)
+                            time.out = time.out.getTimeAsString();
+
+                        if (time.shift)
+                            time.shift = _millisToHuman(time.shift);
+
+                        if (time.leave)
+                            time.leave = time.leave.getTimeAsString();
+
+                        if (time.balancedLeave)
+                            time.balancedLeave = time.balancedLeave.getTimeAsString();
+                    });
+                    day.goal = _millisToHuman(DAILY_GOAL_MINUTES_IN_MILLIS);
+                    day.worked = _millisToHuman(day.worked);
+                    day.balance = _millisToHumanWithSign(day.balance);
+                    day.totalBalance = _millisToHumanWithSign(day.totalBalance);
+                    if (day.timeOn)
+                        day.timeOn = _millisToHuman(day.timeOn);
+                });
+                data.weeklyGoal = _millisToHuman(_computeWeeklyGoalMillis());
+                data.worked = _millisToHuman(data.worked);
+                data.weeklyBalance = _millisToHumanWithSign(data.weeklyBalance);
+            },
+            zero: ZERO_TIME,
+            diff: _diff,
+            minuteToMillis: _minuteToMillis,
+            millisToHuman: _millisToHuman,
+            millisToHumanWithSign: _millisToHumanWithSign,
+            humanToMillis: _humanToMillis
+        };
+    }();
+
+    /* Module Definition */
+
+    Queiroz.module.time = Time;
+
+})(Queiroz);
+
+
+/*!
+ * Queiroz.js: timeon.js
+ * JavaScript Extension for Dimep Kairos
+ * https://github.com/viniciusknob/queiroz.js
+ */
+
+(function(localStorage, Queiroz) {
+
+    /* Modules */
+
+    var
+        mod     = Queiroz.module,
+        Snippet = mod.snippet,
+        Time    = mod.time;
+
+    /* Class Definition */
+
+    var TimeOn = function() {
+
+        var
+            NAME = "timeOn",
+            cache = {};
+
+        /* Private Functions */
+
+        var
+            _buildKey = function(date) {
+                return date.getDate().padStart(2) + "/" + date.getFixedMonth().padStart(2);
+            },
+            _has = function(date) {
+                return !!cache[_buildKey(date)];
+            },
+            _get = function(date) {
+                return cache[_buildKey(date)];
+            },
+            _add = function(date, time) {
+                var key = _buildKey(date);
+                if (_has(date) == false)
+                    cache[key] = 0;
+
+                cache[key] += time;
+                localStorage.setItem(NAME, JSON.stringify(cache));
+            },
+            _remove = function(date) {
+                if (_has(date) == false)
+                    return;
+
+                delete cache[_buildKey(date)];
+                localStorage.setItem(NAME, JSON.stringify(cache));
+            };
+
+        // Initialize cache
+        if (localStorage.hasItem(NAME)) {
+            cache = JSON.parse(localStorage.getItem(NAME));
+        }
+
+        /* Public Functions */
+
+        return {
+            buildBox: function(humanTime) {
+                return Snippet.buildTimeOnBox(this, humanTime);
+            },
+            check: function(data) {
+                data.days.forEach(function(day) {
+                    day.timeOn = false;
+                    if (_has(day.date))
+                        day.timeOn = _get(day.date);
+                });
+            },
+            add: function(eDate, eTime) {
+                var time = Time.humanToMillis(eTime);
+                if (!!time == false)
+                    return false;
+
+                var date = Date.parseKairos(eDate + " " + Time.zero);
+                _add(date, time);
+                return true;
+            },
+            remove: function(eDate) {
+                var date = Date.parseKairos(eDate + " " + Time.zero);
+                _remove(date);
+            }
+        };
+    }();
+
+    /* Module Definition */
+
+    Queiroz.module.timeon = TimeOn;
+
+})(localStorage, Queiroz);
+
+
+/*!
  * Queiroz.js: view.js
  * JavaScript Extension for Dimep Kairos
  * https://github.com/viniciusknob/queiroz.js
@@ -388,8 +834,11 @@
 
     /* Modules */
 
-    var Settings = Queiroz.settings,
-        Snippet  = Queiroz.module.snippet;
+    var
+        Settings = Queiroz.settings,
+        mod      = Queiroz.module,
+        Snippet  = mod.snippet,
+        TimeOn   = mod.timeon;
 
     /* Class Definition */
 
@@ -506,7 +955,7 @@
                         eDay.remove();
                 });
             },
-            showResult: function(data) {
+            render: function(data) {
                 var eColumns = _getAll(Selector.COLUMN_DAY);
                 data.days.forEach(function(day) {
                     eColumns.forEach(function(eDay) {
@@ -517,8 +966,11 @@
                                     if (!!time.out || (time.out == false && day.date.isToday()))
                                         eDay.appendChild(Snippet.laborTimePerShift(time.shift, (!!time.out), (index+1)));
                                 });
+                                if (day.timeOn) {
+                                    eDay.appendChild(TimeOn.buildBox(day.timeOn));
+                                }
                                 eDay.appendChild(Snippet.dailyGoal(day.goal));
-                                eDay.appendChild(Snippet.laborTimePerDay(day.worked));
+                                eDay.appendChild(Snippet.laborTimePerDay(day.worked, TimeOn));
                                 eDay.appendChild(Snippet.balanceTimePerDay(day.balance, false));
                                 if (day.date.isToday() == false) {
                                     eDay.appendChild(Snippet.balanceTimePerDay(day.totalBalance, true));
@@ -586,252 +1038,6 @@
 
 
 /*!
- * Queiroz.js: dayoff.js
- * JavaScript Extension for Dimep Kairos
- * https://github.com/viniciusknob/queiroz.js
- */
-
-(function(localStorage, Queiroz) {
-
-    /* Class Definition */
-
-    var DayOff = function() {
-
-        var
-            NAME = "dayoff",
-            cache = [];
-
-        /* Private Functions */
-
-        var
-            _buildValue = function(date) {
-                return date.getDate().padStart(2) + "/" + date.getFixedMonth().padStart(2);
-            },
-            _is = function(date) {
-                return cache.contains(_buildValue(date));
-            },
-            _add = function(date) {
-                if (_is(date))
-                    return;
-
-                cache.push(_buildValue(date));
-                localStorage.setItem(NAME, JSON.stringify(cache));
-            },
-            _remove = function(date) {
-                if (_is(date) == false)
-                    return;
-
-                var index = cache.indexOf(_buildValue(date));
-                cache.splice(index, 1);
-                localStorage.setItem(NAME, JSON.stringify(cache));
-            };
-
-        // Initialize cache
-        if (localStorage.hasItem(NAME)) {
-            cache = JSON.parse(localStorage.getItem(NAME));
-        }
-
-        /* Public Functions */
-
-        return {
-            check: function(data) {
-                var _days = [];
-                data.days.forEach(function(day) {
-                    if (_is(day.date) == false)
-                        _days.push(day);
-                });
-                data.days = _days;
-            },
-            is: _is,
-            add: _add,
-            remove: _remove
-        };
-    }();
-
-    DayOff.count = 0;
-
-    /* Module Definition */
-
-    Queiroz.module.dayoff = DayOff;
-
-})(localStorage, Queiroz);
-
-/*!
- * Queiroz.js: time.js
- * JavaScript Extension for Dimep Kairos
- * https://github.com/viniciusknob/queiroz.js
- */
-
-(function(Queiroz) {
-
-    /* Modules */
-
-    var
-        Settings = Queiroz.settings,
-        DayOff   = Queiroz.module.dayoff;
-
-    /* Class Definition */
-
-    var Time = function() {
-
-        /* Constants */
-
-        var
-            ZERO_TIME = '00:00',
-            MINUTE_IN_MILLIS = 1000 * 60,
-            HOUR_IN_MILLIS = MINUTE_IN_MILLIS * 60,
-            DAILY_GOAL_MINUTES_IN_MILLIS = Settings.DAILY_GOAL_MINUTES * MINUTE_IN_MILLIS,
-            MAX_CONSECUTIVE_MINUTES_IN_MILLIS = Settings.MAX_CONSECUTIVE_MINUTES * MINUTE_IN_MILLIS;
-
-        /* Private Functions */
-
-        var
-            _computeWeeklyGoalMillis = function() {
-                return (Settings.WEEKLY_GOAL_MINUTES * MINUTE_IN_MILLIS) - (DayOff.count * DAILY_GOAL_MINUTES_IN_MILLIS);
-            },
-            _diff = function(init, end) {
-                if (init instanceof Date && end instanceof Date) {
-                    return end.getMillis() - init.getMillis();
-                } else {
-                    return end - init;
-                }
-            },
-            _minuteToMillis = function(minute) {
-                return minute * MINUTE_IN_MILLIS;
-            },
-            _millisToHuman = function(millis) {
-                var
-                    diffHour = parseInt(millis / HOUR_IN_MILLIS),
-                    diffMin = parseInt((millis / MINUTE_IN_MILLIS) % 60);
-
-                return diffHour.padStart(2) + ':' + diffMin.padStart(2);
-            },
-            _millisToHumanWithSign = function(millis) {
-                if (millis == 0)
-                    return ZERO_TIME;
-
-                if (millis > 0)
-                    return '+' + _millisToHuman(millis);
-
-                if (millis < 0)
-                    return '-' + _millisToHuman(millis * -1);
-            },
-            _computeShiftTime = function(data) {
-                data.days.forEach(function(day) {
-                    day.periods.forEach(function(time) {
-                        time.shift = false;
-                        if (time.in && time.out)
-                            time.shift = _diff(time.in, time.out);
-                        else if (time.in)
-                            time.shift = _diff(time.in, Date.now());
-                    });
-                });
-            },
-            _computeLaborTime = function(data) {
-                data.worked = 0;
-                data.days.forEach(function(day) {
-                    day.worked = 0;
-                    day.periods.forEach(function(time) {
-                        if (time.in && time.out)
-                            day.worked += time.shift
-                    });
-                    data.worked += day.worked;
-                });
-            },
-            _computeBalanceTime = function(data) {
-                var totalBalance = 0; // compilation of all days, except the current day
-                data.days.forEach(function(day) {
-                    day.balance = 0; // balance per day
-                    if (day.periods.length) {
-                        day.balance = (0 - DAILY_GOAL_MINUTES_IN_MILLIS) + day.worked;
-                        if (day.date.isToday() == false) {
-                            totalBalance += day.balance;
-                        }
-                        day.totalBalance = totalBalance;
-                    }
-                });
-                data.weeklyBalance = (0 - _computeWeeklyGoalMillis()) + data.worked;
-            },
-            _computeTimeToLeave = function(data) {
-                data.days.forEach(function(day) {
-                    var _periods = day.periods;
-                    if (day.date.isToday() && _periods.length) {
-                        var _time = _periods.last();
-                        if (_time.out == false) {
-                            if (day.worked < DAILY_GOAL_MINUTES_IN_MILLIS) {
-                                var pending = _diff(day.worked, DAILY_GOAL_MINUTES_IN_MILLIS);
-                                _time.leave = new Date(_time.in.getMillis() + pending);
-                                _time.balancedLeave = new Date(_time.leave.getMillis() - day.totalBalance);
-                            }
-                        }
-                    }
-                });
-            };
-
-        /* Public Functions */
-
-        return {
-            parse: function(data) {
-                data.days.forEach(function(day) {
-                    day.periods.forEach(function(time) {
-                        if (time.in)
-                            time.in = Date.parseKairos(day.date + " " + time.in);
-
-                        if (time.out)
-                            time.out = Date.parseKairos(day.date + " " + time.out);
-                    });
-                    day.date = Date.parseKairos(day.date + " " + ZERO_TIME);
-                });
-            },
-            compute: function(data) {
-                _computeShiftTime(data);
-                _computeLaborTime(data);
-                _computeBalanceTime(data);
-                _computeTimeToLeave(data);
-            },
-            toHuman: function(data) {
-                data.days.forEach(function(day) {
-                    day.periods.forEach(function(time) {
-                        if (time.in)
-                            time.in = time.in.getTimeAsString();
-
-                        if (time.out)
-                            time.out = time.out.getTimeAsString();
-
-                        if (time.shift)
-                            time.shift = _millisToHuman(time.shift);
-
-                        if (time.leave)
-                            time.leave = time.leave.getTimeAsString();
-
-                        if (time.balancedLeave)
-                            time.balancedLeave = time.balancedLeave.getTimeAsString();
-                    });
-                    day.goal = _millisToHuman(DAILY_GOAL_MINUTES_IN_MILLIS);
-                    day.worked = _millisToHuman(day.worked);
-                    day.balance = _millisToHumanWithSign(day.balance);
-                    day.totalBalance = _millisToHumanWithSign(day.totalBalance);
-                });
-                data.weeklyGoal = _millisToHuman(_computeWeeklyGoalMillis());
-                data.worked = _millisToHuman(data.worked);
-                data.weeklyBalance = _millisToHumanWithSign(data.weeklyBalance);
-            },
-            zero: ZERO_TIME,
-            diff: _diff,
-            minuteToMillis: _minuteToMillis,
-            millisToHuman: _millisToHuman,
-            millisToHumanWithSign: _millisToHumanWithSign
-        };
-    }();
-
-    /* Module Definition */
-
-    Queiroz.module.time = Time;
-
-})(Queiroz);
-
-
-/*!
  * Queiroz.js: core.js
  * JavaScript Extension for Dimep Kairos
  * https://github.com/viniciusknob/queiroz.js
@@ -848,7 +1054,8 @@
         Snippet   = mod.snippet,
         View      = mod.view,
         DayOff    = mod.dayoff,
-        Time      = mod.time;
+        Time      = mod.time,
+        TimeOn    = mod.timeon;
 
     /* Private Functions */
 
@@ -890,9 +1097,10 @@
             View.removeUnusedDays(data);
             _buildDayOffOption();
             DayOff.check(data);
+            TimeOn.check(data);
             Time.compute(data);
             Time.toHuman(data);
-            View.showResult(data);
+            View.render(data);
             KeepAlive.init();
         },
         _initWithDelay = function() {
@@ -924,7 +1132,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.0.22</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.1.22</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');
