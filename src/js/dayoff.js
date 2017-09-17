@@ -5,14 +5,15 @@
  * https://github.com/viniciusknob/queiroz.js
  */
 
-(function(localStorage, Queiroz) {
+(function(storage, Queiroz) {
 
     /* Class Definition */
 
     var DayOff = function() {
 
         var
-            NAME = "dayoff",
+            OLD_NAME = "dayoff", // version <= 3.1.22
+            NAME = "dayOff", // version >= 3.1.23
             cache = [];
 
         /* Private Functions */
@@ -29,7 +30,7 @@
                     return;
 
                 cache.push(_buildValue(date));
-                localStorage.setItem(NAME, JSON.stringify(cache));
+                storage.setItem(NAME, JSON.stringify(cache));
             },
             _remove = function(date) {
                 if (_is(date) == false)
@@ -37,12 +38,19 @@
 
                 var index = cache.indexOf(_buildValue(date));
                 cache.splice(index, 1);
-                localStorage.setItem(NAME, JSON.stringify(cache));
+                storage.setItem(NAME, JSON.stringify(cache));
             };
 
-        // Initialize cache
-        if (localStorage.hasItem(NAME)) {
-            cache = JSON.parse(localStorage.getItem(NAME));
+        /* Initialize Cache */
+
+        if (storage.hasItem(OLD_NAME)) { // version <= 3.1.22
+            cache = JSON.parse(storage.getItem(OLD_NAME));
+            storage.setItem(NAME, JSON.stringify(cache));
+            storage.removeItem(OLD_NAME);
+        } else {
+            if (storage.hasItem(NAME)) { // version >= 3.1.23
+                cache = JSON.parse(storage.getItem(NAME));
+            }
         }
 
         /* Public Functions */

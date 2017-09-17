@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.1.22',
+            VERSION = '3.1.23',
             SETTINGS = {"USERSCRIPT_DELAY":1000,"MAX_CONSECUTIVE_MINUTES":360,"WEEKLY_GOAL_MINUTES":2640,"DAILY_GOAL_MINUTES":528,"WORK_DAYS":[1,2,3,4,5],"INITIAL_WEEKDAY":1,"GA_TRACKING_ID":"UA-105390656-1","KEEP_ALIVE":60000};
 
         /* Public API */
@@ -477,14 +477,15 @@
  * https://github.com/viniciusknob/queiroz.js
  */
 
-(function(localStorage, Queiroz) {
+(function(storage, Queiroz) {
 
     /* Class Definition */
 
     var DayOff = function() {
 
         var
-            NAME = "dayoff",
+            OLD_NAME = "dayoff", // version <= 3.1.22
+            NAME = "dayOff", // version >= 3.1.23
             cache = [];
 
         /* Private Functions */
@@ -501,7 +502,7 @@
                     return;
 
                 cache.push(_buildValue(date));
-                localStorage.setItem(NAME, JSON.stringify(cache));
+                storage.setItem(NAME, JSON.stringify(cache));
             },
             _remove = function(date) {
                 if (_is(date) == false)
@@ -509,12 +510,19 @@
 
                 var index = cache.indexOf(_buildValue(date));
                 cache.splice(index, 1);
-                localStorage.setItem(NAME, JSON.stringify(cache));
+                storage.setItem(NAME, JSON.stringify(cache));
             };
 
-        // Initialize cache
-        if (localStorage.hasItem(NAME)) {
-            cache = JSON.parse(localStorage.getItem(NAME));
+        /* Initialize Cache */
+
+        if (storage.hasItem(OLD_NAME)) { // version <= 3.1.22
+            cache = JSON.parse(storage.getItem(OLD_NAME));
+            storage.setItem(NAME, JSON.stringify(cache));
+            storage.removeItem(OLD_NAME);
+        } else {
+            if (storage.hasItem(NAME)) { // version >= 3.1.23
+                cache = JSON.parse(storage.getItem(NAME));
+            }
         }
 
         /* Public Functions */
@@ -1132,7 +1140,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.1.22</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.1.23</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');
