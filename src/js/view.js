@@ -137,6 +137,7 @@
                         var eDate = _get(Selector.DATE, eDay).value;
                         if (day.date.getDateAsKairos() == eDate) {
                             if (day.periods.length) {
+                                var isWorkDay = Settings.WORK_DAYS.contains(day.date.getDay());
                                 day.periods.forEach(function(time, index) {
                                     if (!!time.out || (time.out == false && day.date.isToday()))
                                         eDay.appendChild(Snippet.laborTimePerShift(time.shift, (!!time.out), (index+1)));
@@ -144,9 +145,13 @@
                                 if (day.timeOn) {
                                     eDay.appendChild(TimeOn.buildBox(day.timeOn));
                                 }
-                                eDay.appendChild(Snippet.dailyGoal(day.goal));
+                                if (isWorkDay) {
+                                    eDay.appendChild(Snippet.dailyGoal(day.goal));
+                                }
                                 eDay.appendChild(Snippet.laborTimePerDay(day.worked, TimeOn));
-                                eDay.appendChild(Snippet.balanceTimePerDay(day.balance, false));
+                                if (isWorkDay) {
+                                    eDay.appendChild(Snippet.balanceTimePerDay(day.balance, false));
+                                }
                                 if (day.date.isToday() == false) {
                                     eDay.appendChild(Snippet.balanceTimePerDay(day.totalBalance, true));
                                 }

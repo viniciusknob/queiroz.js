@@ -97,7 +97,10 @@
                 data.days.forEach(function(day) {
                     day.balance = 0; // balance per day
                     if (day.periods.length) {
-                        day.balance = (0 - DAILY_GOAL_MINUTES_IN_MILLIS) + day.worked;
+                        if (Settings.WORK_DAYS.contains(day.date.getDay())) {
+                            day.balance = (0 - DAILY_GOAL_MINUTES_IN_MILLIS);
+                        }
+                        day.balance += day.worked;
                         if (day.date.isToday() == false) {
                             totalBalance += day.balance;
                         }

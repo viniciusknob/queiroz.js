@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.1.23',
+            VERSION = '3.1.24',
             SETTINGS = {"USERSCRIPT_DELAY":1000,"MAX_CONSECUTIVE_MINUTES":360,"WEEKLY_GOAL_MINUTES":2640,"DAILY_GOAL_MINUTES":528,"WORK_DAYS":[1,2,3,4,5],"INITIAL_WEEKDAY":1,"GA_TRACKING_ID":"UA-105390656-1","KEEP_ALIVE":60000};
 
         /* Public API */
@@ -649,7 +649,10 @@
                 data.days.forEach(function(day) {
                     day.balance = 0; // balance per day
                     if (day.periods.length) {
-                        day.balance = (0 - DAILY_GOAL_MINUTES_IN_MILLIS) + day.worked;
+                        if (Settings.WORK_DAYS.contains(day.date.getDay())) {
+                            day.balance = (0 - DAILY_GOAL_MINUTES_IN_MILLIS);
+                        }
+                        day.balance += day.worked;
                         if (day.date.isToday() == false) {
                             totalBalance += day.balance;
                         }
@@ -970,6 +973,7 @@
                         var eDate = _get(Selector.DATE, eDay).value;
                         if (day.date.getDateAsKairos() == eDate) {
                             if (day.periods.length) {
+                                var isWorkDay = Settings.WORK_DAYS.contains(day.date.getDay());
                                 day.periods.forEach(function(time, index) {
                                     if (!!time.out || (time.out == false && day.date.isToday()))
                                         eDay.appendChild(Snippet.laborTimePerShift(time.shift, (!!time.out), (index+1)));
@@ -977,9 +981,13 @@
                                 if (day.timeOn) {
                                     eDay.appendChild(TimeOn.buildBox(day.timeOn));
                                 }
-                                eDay.appendChild(Snippet.dailyGoal(day.goal));
+                                if (isWorkDay) {
+                                    eDay.appendChild(Snippet.dailyGoal(day.goal));
+                                }
                                 eDay.appendChild(Snippet.laborTimePerDay(day.worked, TimeOn));
-                                eDay.appendChild(Snippet.balanceTimePerDay(day.balance, false));
+                                if (isWorkDay) {
+                                    eDay.appendChild(Snippet.balanceTimePerDay(day.balance, false));
+                                }
                                 if (day.date.isToday() == false) {
                                     eDay.appendChild(Snippet.balanceTimePerDay(day.totalBalance, true));
                                 }
@@ -1140,7 +1148,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.1.23</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.1.24</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');
