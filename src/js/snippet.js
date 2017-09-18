@@ -218,12 +218,18 @@
                 }
                 return box;
             },
-            todayTimeToLeave: function(timeToLeave, balanced) {
-                return _buildBox({
+            todayTimeToLeave: function(timeToLeave, balanced, basedOn) {
+                var box = _buildBox({
                     helpText: 'exit' + (balanced ? '+' : ''),
                     humanTime: timeToLeave,
                     contentClass: 'qz-text-primary'
                 });
+                if (balanced == false) {
+                    var help = box.querySelector('.qz-help-text');
+                    var text = help.textContent.replace('_s_', basedOn);
+                    help.textContent = text;
+                }
+                return box;
             },
             buildTimeOnBox: function(TimeOn, humanTime) {
                 var box = _buildBox({

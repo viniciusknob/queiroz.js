@@ -23,7 +23,8 @@
             MINUTE_IN_MILLIS = 1000 * 60,
             HOUR_IN_MILLIS = MINUTE_IN_MILLIS * 60,
             DAILY_GOAL_MINUTES_IN_MILLIS = Settings.DAILY_GOAL_MINUTES * MINUTE_IN_MILLIS,
-            MAX_CONSECUTIVE_MINUTES_IN_MILLIS = Settings.MAX_CONSECUTIVE_MINUTES * MINUTE_IN_MILLIS;
+            MAX_CONSECUTIVE_MINUTES_IN_MILLIS = Settings.MAX_CONSECUTIVE_MINUTES * MINUTE_IN_MILLIS,
+            MAX_DAILY_MINUTES_IN_MILLIS = Settings.MAX_DAILY_MINUTES * MINUTE_IN_MILLIS;
 
         /* Private Functions */
 
@@ -97,11 +98,12 @@
                 data.days.forEach(function(day) {
                     day.balance = 0; // balance per day
                     if (day.periods.length) {
-                        if (Settings.WORK_DAYS.contains(day.date.getDay())) {
+                        var isWorkDay = Settings.WORK_DAYS.contains(day.date.getDay());
+                        if (isWorkDay) {
                             day.balance = (0 - DAILY_GOAL_MINUTES_IN_MILLIS);
                         }
                         day.balance += day.worked;
-                        if (day.date.isToday() == false) {
+                        if (day.date.isToday() == false || isWorkDay == false) {
                             totalBalance += day.balance;
                         }
                         day.totalBalance = totalBalance;
@@ -115,10 +117,15 @@
                     if (day.date.isToday() && _periods.length) {
                         var _time = _periods.last();
                         if (_time.out == false) {
+                            _time.leaveMaxConcec = new Date(_time.in.getMillis() + MAX_CONSECUTIVE_MINUTES_IN_MILLIS);
                             if (day.worked < DAILY_GOAL_MINUTES_IN_MILLIS) {
                                 var pending = _diff(day.worked, DAILY_GOAL_MINUTES_IN_MILLIS);
                                 _time.leave = new Date(_time.in.getMillis() + pending);
                                 _time.balancedLeave = new Date(_time.leave.getMillis() - day.totalBalance);
+                            }
+                            if (day.worked < MAX_DAILY_MINUTES_IN_MILLIS) {
+                                var pending = _diff(day.worked, MAX_DAILY_MINUTES_IN_MILLIS);
+                                _time.leaveMaxDaily = new Date(_time.in.getMillis() + pending);
                             }
                         }
                     }
@@ -158,8 +165,14 @@
                         if (time.shift)
                             time.shift = _millisToHuman(time.shift);
 
+                        if (time.leaveMaxConcec)
+                            time.leaveMaxConcec = time.leaveMaxConcec.getTimeAsString();
+
                         if (time.leave)
                             time.leave = time.leave.getTimeAsString();
+
+                        if (time.leaveMaxDaily)
+                            time.leaveMaxDaily = time.leaveMaxDaily.getTimeAsString();
 
                         if (time.balancedLeave)
                             time.balancedLeave = time.balancedLeave.getTimeAsString();
@@ -171,6 +184,8 @@
                     if (day.timeOn)
                         day.timeOn = _millisToHuman(day.timeOn);
                 });
+                data.maxConsecutive = _millisToHuman(MAX_CONSECUTIVE_MINUTES_IN_MILLIS);
+                data.maxDaily = _millisToHuman(MAX_DAILY_MINUTES_IN_MILLIS);
                 data.weeklyGoal = _millisToHuman(_computeWeeklyGoalMillis());
                 data.worked = _millisToHuman(data.worked);
                 data.weeklyBalance = _millisToHumanWithSign(data.weeklyBalance);
