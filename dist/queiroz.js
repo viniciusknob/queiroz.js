@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.1.25',
+            VERSION = '3.1.26',
             SETTINGS = {"USERSCRIPT_DELAY":1000,"MAX_CONSECUTIVE_MINUTES":360,"MAX_DAILY_MINUTES":600,"WEEKLY_GOAL_MINUTES":2640,"DAILY_GOAL_MINUTES":528,"WORK_DAYS":[1,2,3,4,5],"INITIAL_WEEKDAY":1,"GA_TRACKING_ID":"UA-105390656-1","KEEP_ALIVE":60000};
 
         /* Public API */
@@ -161,7 +161,8 @@
                 if (_timeOut)
                     clearTimeout(_timeOut);
 
-                _timeOut = setTimeout(Queiroz.reload, Settings.KEEP_ALIVE);
+                if (Settings.KEEP_ALIVE)
+                    _timeOut = setTimeout(Queiroz.reload, Settings.KEEP_ALIVE);
             }
         };
     }();
@@ -187,7 +188,7 @@
         return Strings._[key];
     };
 
-    Strings._ = {"pending":"Pendente","extra":"Extra","balance":"Saldo do dia","totalBalance":"Saldo Total","labor":"Efetuado","shift":"_n_º Turno","working":"Trabalhando...","exit":"Saída (_s_)","exit+":"Saída + Saldo","config":"Config","weeklyGoal":"Meta Semanal","dailyGoal":"Meta do dia","timeOn":"Falta Abonada"};
+    Strings._ = {"pending":"Pendente","extra":"Extra","balance":"Saldo do dia","totalBalance":"Saldo Total","labor":"Efetuado","shift":"_n_º Turno","working":"Trabalhando...","exit":"Atinge _s_","exit+":"Meta + Saldo","config":"Config","weeklyGoal":"Meta Semanal","dailyGoal":"Meta do dia","timeOn":"Falta Abonada"};
 
     /* Module Definition */
 
@@ -675,13 +676,16 @@
                     if (day.date.isToday() && _periods.length) {
                         var _time = _periods.last();
                         if (_time.out == false) {
-                            _time.leaveMaxConcec = new Date(_time.in.getMillis() + MAX_CONSECUTIVE_MINUTES_IN_MILLIS);
-                            if (day.worked < DAILY_GOAL_MINUTES_IN_MILLIS) {
+                            if (day.worked <= _hourToMillis(4)) { // Values above 4h exceed the max daily limit
+                                _time.leaveMaxConcec = new Date(_time.in.getMillis() + MAX_CONSECUTIVE_MINUTES_IN_MILLIS);
+                            }
+                            var safeTimeLeave = DAILY_GOAL_MINUTES_IN_MILLIS - MAX_CONSECUTIVE_MINUTES_IN_MILLIS; // Values below exceed the max consecutive limit
+                            if (day.worked >= safeTimeLeave && day.worked < DAILY_GOAL_MINUTES_IN_MILLIS) {
                                 var pending = _diff(day.worked, DAILY_GOAL_MINUTES_IN_MILLIS);
                                 _time.leave = new Date(_time.in.getMillis() + pending);
                                 _time.balancedLeave = new Date(_time.leave.getMillis() - day.totalBalance);
                             }
-                            if (day.worked < MAX_DAILY_MINUTES_IN_MILLIS) {
+                            if (day.worked > _hourToMillis(4)) { // Values below 4h confuse decision making
                                 var pending = _diff(day.worked, MAX_DAILY_MINUTES_IN_MILLIS);
                                 _time.leaveMaxDaily = new Date(_time.in.getMillis() + pending);
                             }
@@ -1014,14 +1018,14 @@
                                 }
                                 day.periods.forEach(function(time, index) {
                                     if (time.out == false && day.date.isToday()) {
-                                        eDay.appendChild(Snippet.todayTimeToLeave(time.leaveMaxConcec, false, data.maxConsecutive));
-                                        if (isWorkDay) {
+                                        if (time.leaveMaxConcec)
+                                            eDay.appendChild(Snippet.todayTimeToLeave(time.leaveMaxConcec, false, data.maxConsecutive));
+                                        if (isWorkDay && time.leave)
                                             eDay.appendChild(Snippet.todayTimeToLeave(time.leave, false, day.goal));
-                                        }
-                                        eDay.appendChild(Snippet.todayTimeToLeave(time.leaveMaxDaily, false, data.maxDaily));
-                                        if (isWorkDay) {
+                                        if (time.leaveMaxDaily)
+                                            eDay.appendChild(Snippet.todayTimeToLeave(time.leaveMaxDaily, false, data.maxDaily));
+                                        if (isWorkDay && time.balancedLeave)
                                             eDay.appendChild(Snippet.todayTimeToLeave(time.balancedLeave, true));
-                                        }
                                     }
                                 });
                             }
@@ -1175,7 +1179,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.1.25</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.1.26</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');

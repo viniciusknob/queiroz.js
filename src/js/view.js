@@ -157,14 +157,14 @@
                                 }
                                 day.periods.forEach(function(time, index) {
                                     if (time.out == false && day.date.isToday()) {
-                                        eDay.appendChild(Snippet.todayTimeToLeave(time.leaveMaxConcec, false, data.maxConsecutive));
-                                        if (isWorkDay) {
+                                        if (time.leaveMaxConcec)
+                                            eDay.appendChild(Snippet.todayTimeToLeave(time.leaveMaxConcec, false, data.maxConsecutive));
+                                        if (isWorkDay && time.leave)
                                             eDay.appendChild(Snippet.todayTimeToLeave(time.leave, false, day.goal));
-                                        }
-                                        eDay.appendChild(Snippet.todayTimeToLeave(time.leaveMaxDaily, false, data.maxDaily));
-                                        if (isWorkDay) {
+                                        if (time.leaveMaxDaily)
+                                            eDay.appendChild(Snippet.todayTimeToLeave(time.leaveMaxDaily, false, data.maxDaily));
+                                        if (isWorkDay && time.balancedLeave)
                                             eDay.appendChild(Snippet.todayTimeToLeave(time.balancedLeave, true));
-                                        }
                                     }
                                 });
                             }

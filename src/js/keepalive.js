@@ -23,7 +23,8 @@
                 if (_timeOut)
                     clearTimeout(_timeOut);
 
-                _timeOut = setTimeout(Queiroz.reload, Settings.KEEP_ALIVE);
+                if (Settings.KEEP_ALIVE)
+                    _timeOut = setTimeout(Queiroz.reload, Settings.KEEP_ALIVE);
             }
         };
     }();

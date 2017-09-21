@@ -117,13 +117,16 @@
                     if (day.date.isToday() && _periods.length) {
                         var _time = _periods.last();
                         if (_time.out == false) {
-                            _time.leaveMaxConcec = new Date(_time.in.getMillis() + MAX_CONSECUTIVE_MINUTES_IN_MILLIS);
-                            if (day.worked < DAILY_GOAL_MINUTES_IN_MILLIS) {
+                            if (day.worked <= _hourToMillis(4)) { // Values above 4h exceed the max daily limit
+                                _time.leaveMaxConcec = new Date(_time.in.getMillis() + MAX_CONSECUTIVE_MINUTES_IN_MILLIS);
+                            }
+                            var safeTimeLeave = DAILY_GOAL_MINUTES_IN_MILLIS - MAX_CONSECUTIVE_MINUTES_IN_MILLIS; // Values below exceed the max consecutive limit
+                            if (day.worked >= safeTimeLeave && day.worked < DAILY_GOAL_MINUTES_IN_MILLIS) {
                                 var pending = _diff(day.worked, DAILY_GOAL_MINUTES_IN_MILLIS);
                                 _time.leave = new Date(_time.in.getMillis() + pending);
                                 _time.balancedLeave = new Date(_time.leave.getMillis() - day.totalBalance);
                             }
-                            if (day.worked < MAX_DAILY_MINUTES_IN_MILLIS) {
+                            if (day.worked > _hourToMillis(4)) { // Values below 4h confuse decision making
                                 var pending = _diff(day.worked, MAX_DAILY_MINUTES_IN_MILLIS);
                                 _time.leaveMaxDaily = new Date(_time.in.getMillis() + pending);
                             }
