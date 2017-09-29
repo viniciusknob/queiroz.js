@@ -44,8 +44,7 @@
                     element.className = clazz;
                 }
                 if (text) {
-                    var textNode = document.createTextNode(text);
-                    element.appendChild(textNode);
+                    element.innerHTML = text;
                 }
                 return element;
             },

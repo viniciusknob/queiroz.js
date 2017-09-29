@@ -4,7 +4,7 @@
     "balance" : "Saldo do dia",
     "totalBalance" : "Saldo Total",
     "labor" : "Efetuado",
-    "shift" : "_n_º Turno",
+    "shift" : "_n_&ordm; Turno",
     "working" : "Trabalhando...",
     "exit" : "Atinge _s_",
     "exit+" : "Meta + Saldo",
