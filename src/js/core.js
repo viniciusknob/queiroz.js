@@ -52,12 +52,27 @@
                 }
             });
         },
+        _buildDayOptions = function() {
+            _buildDayOffOption();
+            View.getAllColumnDay().forEach(function(eDay) {
+                var headersDay = View.getHeadersDay(eDay);
+                var target = headersDay[0];
+                headersDay[1].style.display = 'none';
+
+                var options = {weekday:'short', day: '2-digit', month: '2-digit'};
+                var day = Date.parseKairos(View.getDateFromTargetAsString(eDay) + " " + Time.zero);
+                var dateString = day.toLocaleDateString('pt-BR', options);
+
+                target.innerHTML = dateString;
+                target.insertBefore(Snippet.buildDayOptions(TimeOn), target.firstChild);
+            });
+        },
         _init = function() {
             View.appendToHead(Snippet.style());
             var data = View.read();
             Time.parse(data);
             View.removeUnusedDays(data);
-            _buildDayOffOption();
+            _buildDayOptions();
             DayOff.check(data);
             TimeOn.check(data);
             Time.compute(data);

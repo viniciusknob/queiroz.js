@@ -134,7 +134,26 @@
                 return _buildTag(TagName.P, 'qz-box-head');
             },
             buildToggleForDayOff: function(key) {
-                return _buildTag(TagName.SPAN,'fa fa-toggle-'+key+' qz-toggle');
+                return _buildTag(TagName.SPAN, 'fa fa-toggle-'+key+' qz-toggle');
+            },
+            buildDayOptions: function(TimeOn) {
+                var dropdown = _buildTag(TagName.DIV, 'qz-dropdown');
+                var icon = _buildTag(TagName.SPAN, 'fa fa-bars qz-text-teal');
+                var content = _buildTag(TagName.DIV, 'qz-dropdown-content');
+                var addTimeOn = _buildTag(TagName.P, '', '+ Abonar Falta');
+
+                addTimeOn.onclick = function() {
+                    var eDay = this.parentElement.parentElement.parentElement.parentElement;
+                    if (eDay.querySelector('.js-has-timeon'))
+                        return;
+
+                    eDay.appendChild(_buildEditableTimeOnBox(TimeOn));
+                };
+                
+                dropdown.appendChild(icon);
+                dropdown.appendChild(content);
+                content.appendChild(addTimeOn);
+                return dropdown;
             },
             headerBeta: function() {
                 var box = _buildBox({
@@ -188,21 +207,11 @@
                 });
             },
             laborTimePerDay: function(laborTime, TimeOn) {
-                var box = _buildBox({
+                return _buildBox({
                     helpText: 'labor',
                     humanTime: laborTime,
                     contentClass: 'qz-text-green'
                 });
-                var addTimeOn = _buildTag(TagName.SPAN,'qz-fa qz-fa-sw fa fa-puzzle-piece');
-                addTimeOn.onclick = function() {
-                    var eDay = this.parentElement.parentElement;
-                    if (eDay.querySelector('.js-has-timeon'))
-                        return;
-
-                    eDay.appendChild(_buildEditableTimeOnBox(TimeOn));
-                };
-                box.appendChild(addTimeOn);
-                return box;
             },
             laborTimePerShift: function(laborTime, finished, number) {
                 var box = _buildBox({

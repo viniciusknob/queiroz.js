@@ -29,6 +29,7 @@
                 CHECKPOINT: '.FilledSlot span',
                 DATE: '[id^=hiddenDiaApont]',
                 HEADER: '#SemanaApontamentos div',
+                HEADER_DAY: '.weekDayTextSize',
                 TIME_IN: '.TimeIN,.TimeINVisualizacao',
                 FOOTER: 'footer .LabelEmpresa',
                 TOOGLE: '.HfIsFolga',
@@ -195,6 +196,9 @@
             },
             getAllQueirozElements: function() {
                 return _getAll(Selector.QUEIROZ);
+            },
+            getHeadersDay: function(target) {
+                return _getAll(Selector.HEADER_DAY, target);
             },
             appendToHead: function(html) {
                 _append(Selector.HEAD, html);

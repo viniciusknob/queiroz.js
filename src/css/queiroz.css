@@ -92,6 +92,40 @@
     margin: 0 2.5px;
 }
 
+/* Queiroz.js Dropdown */
+
+.qz-dropdown {
+    margin-right: 10px;
+    vertical-align: text-bottom;
+    position: relative;
+    display: inline;
+}
+
+.qz-dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    border: #a9a9a9 1px solid;
+    box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.2);
+    min-width: 100px;
+    padding: 2px;
+    z-index: 1024;
+}
+
+.qz-dropdown:hover .qz-dropdown-content {
+    display: block;
+}
+
+.qz-dropdown-content p {
+    font-weight: normal;
+    padding: 3px;
+    font-size: 11px;
+}
+
+.qz-dropdown-content p:hover {
+    background-color: #f0e68c;
+}
+
 /* Queiroz.js Modal */
 
 .qz-modal {

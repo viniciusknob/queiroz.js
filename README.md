@@ -1,4 +1,4 @@
-# Queiroz.js 3.1.27
+# Queiroz.js 3.1.28
 JavaScript Extension for Dimep Kairos
 
 ### Autor
@@ -31,7 +31,7 @@ OBS: Todos os cálculos são efetuados a partir da primeira Segunda-feira, isso 
 No topo de cada coluna existe um "botão", semelhante a um checkbox. Esse recurso foi criado para possibilitar o On/Off de um dia, ou mais, simulando o funcionamento de um feriado e fazendo com que a extensão não considere em seus cálculos os dias que estiverem "desligados".
 
 ##### TimeOn
-Informe o tempo de uma falta que será abonada pela Empresa. Junto ao box de tempo Efetuado, encontra-se uma peça de quebra-cabeça, clique nela e insira o tempo total que será abonado. Ex.: Após uma consulta médica, o tempo contido no atestado é o tempo que será abonado e pode ser lançado com essa funcionalidade. OBS: Isso não altera o Kairos, serve apenas para fins de cálculos do Queiroz.
+Informe o tempo de uma falta que será abonada pela Empresa. No menu de opções clique em "Abonar Falta" e insira o tempo total que será abonado no box que será apresentado. Ex.: Após uma consulta médica, o tempo contido no atestado é o tempo que será abonado e pode ser lançado com essa funcionalidade. OBS: Isso não altera o Kairos, serve apenas para fins de cálculos do Queiroz.
 
 ### Termos e Nomeclaturas
 

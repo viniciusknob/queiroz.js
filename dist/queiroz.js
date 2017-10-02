@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.1.27',
+            VERSION = '3.1.28',
             SETTINGS = {"USERSCRIPT_DELAY":1000,"MAX_CONSECUTIVE_MINUTES":360,"MAX_DAILY_MINUTES":600,"WEEKLY_GOAL_MINUTES":2640,"DAILY_GOAL_MINUTES":528,"WORK_DAYS":[1,2,3,4,5],"INITIAL_WEEKDAY":1,"GA_TRACKING_ID":"UA-105390656-1","KEEP_ALIVE":60000};
 
         /* Public API */
@@ -209,7 +209,7 @@
 
     var Style = function() {
         return {
-            CSS: 'html{line-height:1.15;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,footer,header,nav,section{display:block}h1{font-size:2em;margin:.67em 0}figcaption,figure,main{display:block}figure{margin:1em 40px}hr{box-sizing:content-box;height:0;overflow:visible}pre{font-family:monospace,monospace;font-size:1em}a{background-color:transparent;-webkit-text-decoration-skip:objects}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:inherit}b,strong{font-weight:bolder}code,kbd,samp{font-family:monospace,monospace;font-size:1em}dfn{font-style:italic}mark{background-color:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}audio,video{display:inline-block}audio:not([controls]){display:none;height:0}img{border-style:none}svg:not(:root){overflow:hidden}button,input,optgroup,select,textarea{font-family:sans-serif;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button,select{text-transform:none}[type=reset],[type=submit],button,html [type=button]{-webkit-appearance:button}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring,button:-moz-focusring{outline:1px dotted ButtonText}fieldset{padding:.35em .75em .625em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}progress{display:inline-block;vertical-align:baseline}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-cancel-button,[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}details,menu{display:block}summary{display:list-item}canvas{display:inline-block}template{display:none}[hidden]{display:none}#SemanaApontamentos{cursor:default!important}.ContentTable{margin-top:inherit}.FilledSlot,.LastSlot,.emptySlot{height:inherit;padding:5px}.FilledSlot span{margin:inherit!important}.qz-text-center{text-align:center}.qz-text-primary{color:brown}.qz-text-golden{color:#b8860b}.qz-text-green{color:green}.qz-text-teal{color:teal}.qz-text-black{color:#000}.qz-text-purple{color:#639}.qz-text-orange{color:#e27300}.qz-box{padding:5px 10px;margin:5px 1px;border:#a9a9a9 1px solid;min-width:60px}.qz-box-compact{min-width:auto}.qz-box-inline{display:inline-block}.qz-box-head{float:right}.qz-box-muted{background-color:#d3d3d3}.qz-box .qz-box-content{vertical-align:middle}.qz-help-text{font-size:10px}.qz-fa{-moz-user-select:-moz-none;-khtml-user-select:none;-webkit-user-select:none;user-select:none}.qz-fa-se{float:right;margin:4px -8px 0 -8px}.qz-fa-sw{float:left;margin:4px -10px 0 -8px}.qz-toggle{margin-top:10px}.fa-toggle-on{color:green}.fa-toggle-off{color:grey}.js-show{display:block}.js-hide{display:none}.fa-chevron-down,.fa-chevron-up{margin:0 2.5px}.qz-modal{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1024;background-color:rgba(0,0,0,.5)}.qz-modal-dialog{position:relative;width:900px;margin:30px auto}.qz-modal-content{position:relative;background-color:#fff;background-clip:padding-box;border-radius:5px}.qz-modal-header{padding:10px;border-bottom:1px solid #d3d3d3;font-weight:700;font-size:16px}.qz-modal-close{float:right;cursor:pointer;background:0 0;border:0;padding:0;color:silver}.qz-modal-body{padding:10px}.qz-modal-footer{padding:10px;border-top:1px solid #d3d3d3;text-align:center}'
+            CSS: 'html{line-height:1.15;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,footer,header,nav,section{display:block}h1{font-size:2em;margin:.67em 0}figcaption,figure,main{display:block}figure{margin:1em 40px}hr{box-sizing:content-box;height:0;overflow:visible}pre{font-family:monospace,monospace;font-size:1em}a{background-color:transparent;-webkit-text-decoration-skip:objects}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:inherit}b,strong{font-weight:bolder}code,kbd,samp{font-family:monospace,monospace;font-size:1em}dfn{font-style:italic}mark{background-color:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}audio,video{display:inline-block}audio:not([controls]){display:none;height:0}img{border-style:none}svg:not(:root){overflow:hidden}button,input,optgroup,select,textarea{font-family:sans-serif;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button,select{text-transform:none}[type=reset],[type=submit],button,html [type=button]{-webkit-appearance:button}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring,button:-moz-focusring{outline:1px dotted ButtonText}fieldset{padding:.35em .75em .625em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}progress{display:inline-block;vertical-align:baseline}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-cancel-button,[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}details,menu{display:block}summary{display:list-item}canvas{display:inline-block}template{display:none}[hidden]{display:none}#SemanaApontamentos{cursor:default!important}.ContentTable{margin-top:inherit}.FilledSlot,.LastSlot,.emptySlot{height:inherit;padding:5px}.FilledSlot span{margin:inherit!important}.qz-text-center{text-align:center}.qz-text-primary{color:brown}.qz-text-golden{color:#b8860b}.qz-text-green{color:green}.qz-text-teal{color:teal}.qz-text-black{color:#000}.qz-text-purple{color:#639}.qz-text-orange{color:#e27300}.qz-box{padding:5px 10px;margin:5px 1px;border:#a9a9a9 1px solid;min-width:60px}.qz-box-compact{min-width:auto}.qz-box-inline{display:inline-block}.qz-box-head{float:right}.qz-box-muted{background-color:#d3d3d3}.qz-box .qz-box-content{vertical-align:middle}.qz-help-text{font-size:10px}.qz-fa{-moz-user-select:-moz-none;-khtml-user-select:none;-webkit-user-select:none;user-select:none}.qz-fa-se{float:right;margin:4px -8px 0 -8px}.qz-fa-sw{float:left;margin:4px -10px 0 -8px}.qz-toggle{margin-top:10px}.fa-toggle-on{color:green}.fa-toggle-off{color:grey}.js-show{display:block}.js-hide{display:none}.fa-chevron-down,.fa-chevron-up{margin:0 2.5px}.qz-dropdown{margin-right:10px;vertical-align:text-bottom;position:relative;display:inline}.qz-dropdown-content{display:none;position:absolute;background-color:#f9f9f9;border:#a9a9a9 1px solid;box-shadow:0 4px 8px 0 rgba(0,0,0,.2);min-width:100px;padding:2px;z-index:1024}.qz-dropdown:hover .qz-dropdown-content{display:block}.qz-dropdown-content p{font-weight:400;padding:3px;font-size:11px}.qz-dropdown-content p:hover{background-color:khaki}.qz-modal{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1024;background-color:rgba(0,0,0,.5)}.qz-modal-dialog{position:relative;width:900px;margin:30px auto}.qz-modal-content{position:relative;background-color:#fff;background-clip:padding-box;border-radius:5px}.qz-modal-header{padding:10px;border-bottom:1px solid #d3d3d3;font-weight:700;font-size:16px}.qz-modal-close{float:right;cursor:pointer;background:0 0;border:0;padding:0;color:silver}.qz-modal-body{padding:10px}.qz-modal-footer{padding:10px;border-top:1px solid #d3d3d3;text-align:center}'
         };
     }();
 
@@ -355,7 +355,26 @@
                 return _buildTag(TagName.P, 'qz-box-head');
             },
             buildToggleForDayOff: function(key) {
-                return _buildTag(TagName.SPAN,'fa fa-toggle-'+key+' qz-toggle');
+                return _buildTag(TagName.SPAN, 'fa fa-toggle-'+key+' qz-toggle');
+            },
+            buildDayOptions: function(TimeOn) {
+                var dropdown = _buildTag(TagName.DIV, 'qz-dropdown');
+                var icon = _buildTag(TagName.SPAN, 'fa fa-bars qz-text-teal');
+                var content = _buildTag(TagName.DIV, 'qz-dropdown-content');
+                var addTimeOn = _buildTag(TagName.P, '', '+ Abonar Falta');
+
+                addTimeOn.onclick = function() {
+                    var eDay = this.parentElement.parentElement.parentElement.parentElement;
+                    if (eDay.querySelector('.js-has-timeon'))
+                        return;
+
+                    eDay.appendChild(_buildEditableTimeOnBox(TimeOn));
+                };
+                
+                dropdown.appendChild(icon);
+                dropdown.appendChild(content);
+                content.appendChild(addTimeOn);
+                return dropdown;
             },
             headerBeta: function() {
                 var box = _buildBox({
@@ -409,21 +428,11 @@
                 });
             },
             laborTimePerDay: function(laborTime, TimeOn) {
-                var box = _buildBox({
+                return _buildBox({
                     helpText: 'labor',
                     humanTime: laborTime,
                     contentClass: 'qz-text-green'
                 });
-                var addTimeOn = _buildTag(TagName.SPAN,'qz-fa qz-fa-sw fa fa-puzzle-piece');
-                addTimeOn.onclick = function() {
-                    var eDay = this.parentElement.parentElement;
-                    if (eDay.querySelector('.js-has-timeon'))
-                        return;
-
-                    eDay.appendChild(_buildEditableTimeOnBox(TimeOn));
-                };
-                box.appendChild(addTimeOn);
-                return box;
             },
             laborTimePerShift: function(laborTime, finished, number) {
                 var box = _buildBox({
@@ -889,6 +898,7 @@
                 CHECKPOINT: '.FilledSlot span',
                 DATE: '[id^=hiddenDiaApont]',
                 HEADER: '#SemanaApontamentos div',
+                HEADER_DAY: '.weekDayTextSize',
                 TIME_IN: '.TimeIN,.TimeINVisualizacao',
                 FOOTER: 'footer .LabelEmpresa',
                 TOOGLE: '.HfIsFolga',
@@ -1056,6 +1066,9 @@
             getAllQueirozElements: function() {
                 return _getAll(Selector.QUEIROZ);
             },
+            getHeadersDay: function(target) {
+                return _getAll(Selector.HEADER_DAY, target);
+            },
             appendToHead: function(html) {
                 _append(Selector.HEAD, html);
             },
@@ -1136,12 +1149,27 @@
                 }
             });
         },
+        _buildDayOptions = function() {
+            _buildDayOffOption();
+            View.getAllColumnDay().forEach(function(eDay) {
+                var headersDay = View.getHeadersDay(eDay);
+                var target = headersDay[0];
+                headersDay[1].style.display = 'none';
+
+                var options = {weekday:'short', day: '2-digit', month: '2-digit'};
+                var day = Date.parseKairos(View.getDateFromTargetAsString(eDay) + " " + Time.zero);
+                var dateString = day.toLocaleDateString('pt-BR', options);
+
+                target.innerHTML = dateString;
+                target.insertBefore(Snippet.buildDayOptions(TimeOn), target.firstChild);
+            });
+        },
         _init = function() {
             View.appendToHead(Snippet.style());
             var data = View.read();
             Time.parse(data);
             View.removeUnusedDays(data);
-            _buildDayOffOption();
+            _buildDayOptions();
             DayOff.check(data);
             TimeOn.check(data);
             Time.compute(data);
@@ -1178,7 +1206,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.1.27</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.1.28</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');
