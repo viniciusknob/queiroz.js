@@ -147,9 +147,12 @@
                     if (eDay.querySelector('.js-has-timeon'))
                         return;
 
-                    eDay.appendChild(_buildEditableTimeOnBox(TimeOn));
+                    window.scrollTo(0, 300);
+                    setTimeout(function() {
+                        eDay.appendChild(_buildEditableTimeOnBox(TimeOn));
+                    }, 250);
                 };
-                
+
                 dropdown.appendChild(icon);
                 dropdown.appendChild(content);
                 content.appendChild(addTimeOn);

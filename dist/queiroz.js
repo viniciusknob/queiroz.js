@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.1.28',
+            VERSION = '3.1.29',
             SETTINGS = {"USERSCRIPT_DELAY":1000,"MAX_CONSECUTIVE_MINUTES":360,"MAX_DAILY_MINUTES":600,"WEEKLY_GOAL_MINUTES":2640,"DAILY_GOAL_MINUTES":528,"WORK_DAYS":[1,2,3,4,5],"INITIAL_WEEKDAY":1,"GA_TRACKING_ID":"UA-105390656-1","KEEP_ALIVE":60000};
 
         /* Public API */
@@ -368,9 +368,12 @@
                     if (eDay.querySelector('.js-has-timeon'))
                         return;
 
-                    eDay.appendChild(_buildEditableTimeOnBox(TimeOn));
+                    window.scrollTo(0, 300);
+                    setTimeout(function() {
+                        eDay.appendChild(_buildEditableTimeOnBox(TimeOn));
+                    }, 250);
                 };
-                
+
                 dropdown.appendChild(icon);
                 dropdown.appendChild(content);
                 content.appendChild(addTimeOn);
@@ -1206,7 +1209,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.1.28</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.1.29</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');
