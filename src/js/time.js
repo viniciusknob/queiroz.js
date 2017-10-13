@@ -42,6 +42,13 @@
             _hourToMillis = function(hour) {
                 return hour * HOUR_IN_MILLIS;
             },
+            _before =  function(init, end) {
+                if (init instanceof Date && end instanceof Date) {
+                    return end.getMillis() > init.getMillis();
+                } else {
+                    return end > init;
+                }
+            },
             _minuteToMillis = function(minute) {
                 return minute * MINUTE_IN_MILLIS;
             },
@@ -74,10 +81,21 @@
                 data.days.forEach(function(day) {
                     day.periods.forEach(function(time) {
                         time.shift = false;
-                        if (time.in && time.out)
-                            time.shift = _diff(time.in, time.out);
-                        else if (time.in)
+                        if (time.in && time.out){
+                            if(_before(time.in, time.out)) {
+                                time.shift = _diff(time.in, time.out);
+                            } else {
+                                var endOfFirstDay = new Date(time.in.getTime());
+                                endOfFirstDay.setHours(23,59,59,999);
+                                var initOfSecondDay = new Date(time.out.getTime());
+                                initOfSecondDay.setHours(00,00,00,000);
+                                var initDiff = _diff(time.in, endOfFirstDay);
+                                var endDiff = _diff(initOfSecondDay, time.out);
+                                time.shift = initDiff + endDiff + 1000;
+                            }
+                        } else if (time.in) {
                             time.shift = _diff(time.in, Date.now());
+                        }
                     });
                 });
             },
