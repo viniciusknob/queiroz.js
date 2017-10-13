@@ -65,6 +65,10 @@
 
                 target.innerHTML = dateString;
                 target.insertBefore(Snippet.buildDayOptions(TimeOn), target.firstChild);
+                target.onmouseover = function() {
+                    var menu = target.querySelector('.qz-dropdown-content');
+                    menu.style.minWidth = target.offsetWidth + 'px';
+                }
             });
         },
         _init = function() {

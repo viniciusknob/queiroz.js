@@ -107,7 +107,6 @@
     background-color: #f9f9f9;
     border: #a9a9a9 1px solid;
     box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.2);
-    min-width: 100px;
     padding: 2px;
     z-index: 1024;
 }
