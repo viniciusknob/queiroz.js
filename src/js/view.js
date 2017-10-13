@@ -137,15 +137,15 @@
                     eColumns.forEach(function(eDay) {
                         var eDate = _get(Selector.DATE, eDay).value;
                         if (day.date.getDateAsKairos() == eDate) {
+                            if (day.timeOn) {
+                                eDay.appendChild(TimeOn.buildBox(day.timeOn));
+                            }
                             if (day.periods.length) {
                                 var isWorkDay = Settings.WORK_DAYS.contains(day.date.getDay());
                                 day.periods.forEach(function(time, index) {
                                     if (!!time.out || (time.out == false && day.date.isToday()))
                                         eDay.appendChild(Snippet.laborTimePerShift(time.shift, (!!time.out), (index+1)));
                                 });
-                                if (day.timeOn) {
-                                    eDay.appendChild(TimeOn.buildBox(day.timeOn));
-                                }
                                 if (isWorkDay) {
                                     eDay.appendChild(Snippet.dailyGoal(day.goal));
                                 }

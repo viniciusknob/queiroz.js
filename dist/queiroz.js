@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.1.32',
+            VERSION = '3.1.33',
             SETTINGS = {"USERSCRIPT_DELAY":1000,"MAX_CONSECUTIVE_MINUTES":360,"MAX_DAILY_MINUTES":600,"WEEKLY_GOAL_MINUTES":2640,"DAILY_GOAL_MINUTES":528,"WORK_DAYS":[1,2,3,4,5],"INITIAL_WEEKDAY":1,"GA_TRACKING_ID":"UA-105390656-1","KEEP_ALIVE":180000};
 
         /* Public API */
@@ -1027,15 +1027,15 @@
                     eColumns.forEach(function(eDay) {
                         var eDate = _get(Selector.DATE, eDay).value;
                         if (day.date.getDateAsKairos() == eDate) {
+                            if (day.timeOn) {
+                                eDay.appendChild(TimeOn.buildBox(day.timeOn));
+                            }
                             if (day.periods.length) {
                                 var isWorkDay = Settings.WORK_DAYS.contains(day.date.getDay());
                                 day.periods.forEach(function(time, index) {
                                     if (!!time.out || (time.out == false && day.date.isToday()))
                                         eDay.appendChild(Snippet.laborTimePerShift(time.shift, (!!time.out), (index+1)));
                                 });
-                                if (day.timeOn) {
-                                    eDay.appendChild(TimeOn.buildBox(day.timeOn));
-                                }
                                 if (isWorkDay) {
                                     eDay.appendChild(Snippet.dailyGoal(day.goal));
                                 }
@@ -1180,12 +1180,14 @@
                 var options = {weekday:'short', day: '2-digit', month: '2-digit'};
                 var day = Date.parseKairos(View.getDateFromTargetAsString(eDay) + " " + Time.zero);
                 var dateString = day.toLocaleDateString('pt-BR', options);
-
                 target.innerHTML = dateString;
-                target.insertBefore(Snippet.buildDayOptions(TimeOn), target.firstChild);
-                target.onmouseover = function() {
-                    var menu = target.querySelector('.qz-dropdown-content');
-                    menu.style.minWidth = target.offsetWidth + 'px';
+
+                if (DayOff.is(day) == false) {
+                    target.insertBefore(Snippet.buildDayOptions(TimeOn), target.firstChild);
+                    target.querySelector('.qz-dropdown').onmouseover = function() {
+                        var menu = target.querySelector('.qz-dropdown-content');
+                        menu.style.minWidth = target.offsetWidth + 'px';
+                    };
                 }
             });
         },
@@ -1194,9 +1196,9 @@
             var data = View.read();
             Time.parse(data);
             View.removeUnusedDays(data);
-            _buildDayOptions();
             DayOff.check(data);
             TimeOn.check(data);
+            _buildDayOptions();
             Time.compute(data);
             Time.toHuman(data);
             View.render(data);
@@ -1231,7 +1233,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.1.32</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.1.33</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');

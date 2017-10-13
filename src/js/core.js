@@ -62,12 +62,14 @@
                 var options = {weekday:'short', day: '2-digit', month: '2-digit'};
                 var day = Date.parseKairos(View.getDateFromTargetAsString(eDay) + " " + Time.zero);
                 var dateString = day.toLocaleDateString('pt-BR', options);
-
                 target.innerHTML = dateString;
-                target.insertBefore(Snippet.buildDayOptions(TimeOn), target.firstChild);
-                target.onmouseover = function() {
-                    var menu = target.querySelector('.qz-dropdown-content');
-                    menu.style.minWidth = target.offsetWidth + 'px';
+
+                if (DayOff.is(day) == false) {
+                    target.insertBefore(Snippet.buildDayOptions(TimeOn), target.firstChild);
+                    target.querySelector('.qz-dropdown').onmouseover = function() {
+                        var menu = target.querySelector('.qz-dropdown-content');
+                        menu.style.minWidth = target.offsetWidth + 'px';
+                    };
                 }
             });
         },
@@ -76,9 +78,9 @@
             var data = View.read();
             Time.parse(data);
             View.removeUnusedDays(data);
-            _buildDayOptions();
             DayOff.check(data);
             TimeOn.check(data);
+            _buildDayOptions();
             Time.compute(data);
             Time.toHuman(data);
             View.render(data);
