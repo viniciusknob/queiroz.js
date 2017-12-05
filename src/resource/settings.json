@@ -7,5 +7,7 @@
     "WORK_DAYS": [1,2,3,4,5],
     "INITIAL_WEEKDAY": 1,
     "GA_TRACKING_ID": "UA-105390656-1",
-    "KEEP_ALIVE": 180000
+    "KEEP_ALIVE": 60000,
+    "NOTICE_RANGE_MINUTES": [15,5,3,1],
+    "NOTICE_ICON": "https://github.com/viniciusknob/queiroz.js/raw/master/src/img/ic_notification.png"
 }

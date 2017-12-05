@@ -1,4 +1,4 @@
-# Queiroz.js 3.1.33
+# Queiroz.js 3.2.33
 JavaScript Extension for Dimep Kairos
 
 ### Autor
@@ -32,6 +32,16 @@ No topo de cada coluna existe um "botão", semelhante a um checkbox. Esse recurs
 
 ##### TimeOn
 Informe o tempo de uma falta que será abonada pela Empresa. No menu de opções clique em "Abonar Falta" e insira o tempo total que será abonado no box que será apresentado. Ex.: Após uma consulta médica, o tempo contido no atestado é o tempo que será abonado e pode ser lançado com essa funcionalidade. OBS: Isso não altera o Kairos, serve apenas para fins de cálculos do Queiroz.
+
+##### Notification
+Ative as notificações para receber na área de trabalho avisos de aproximação dos seguintes horários:
+
+* Tempo máximo de trabalho consecutivo, hoje 6 horas;
+* Tempo máximo de trabalho por dia, hoje 10 horas;
+* Meta Diária, atualmente 8 horas 48 minutos;
+* Meta Semanal, atualmente 44 horas.
+
+OBS: Para receber as notificações é necessário deixar a aba do Kairos aberta na página Ponto ou Pedidos.
 
 ### Termos e Nomeclaturas
 

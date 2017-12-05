@@ -13,7 +13,8 @@
         Settings = Queiroz.settings,
         mod      = Queiroz.module,
         Snippet  = mod.snippet,
-        TimeOn   = mod.timeon;
+        TimeOn   = mod.timeon,
+        Notice   = mod.notice;
 
     /* Class Definition */
 
@@ -177,6 +178,7 @@
                 header.appendChild(Snippet.headerWeeklyGoal(data.weeklyGoal));
                 header.appendChild(Snippet.headerLaborTime(data.worked));
                 header.appendChild(Snippet.headerBalanceTime(data.weeklyBalance));
+                header.appendChild(Snippet.headerNoticeStatus(Notice));
                 View.appendToHeader(header);
             },
             isLoaded: function() {

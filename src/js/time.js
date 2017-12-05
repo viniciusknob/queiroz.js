@@ -52,6 +52,9 @@
             _minuteToMillis = function(minute) {
                 return minute * MINUTE_IN_MILLIS;
             },
+            _millisToMinute = function(millis) {
+                return parseInt(millis / MINUTE_IN_MILLIS);
+            },
             _millisToHuman = function(millis) {
                 var
                     diffHour = parseInt(millis / HOUR_IN_MILLIS),
@@ -100,15 +103,21 @@
                 });
             },
             _computeLaborTime = function(data) {
-                data.worked = 0;
+                data.worked = 0; // in/out OK
+                data.reallyWorked = 0; // in OK, out undefined
                 data.days.forEach(function(day) {
-                    day.worked = 0;
+                    day.worked = 0; // in/out OK
+                    day.reallyWorked = 0; // in OK, out undefined
                     day.worked += day.timeOn;
                     day.periods.forEach(function(time) {
+                        if (time.in && (time.out == false && day.date.isToday()))
+                            day.reallyWorked += time.shift;
                         if (time.in && time.out)
                             day.worked += time.shift
                     });
+                    day.reallyWorked += day.worked;
                     data.worked += day.worked;
+                    data.reallyWorked += day.reallyWorked;
                 });
             },
             _computeBalanceTime = function(data) {
@@ -167,6 +176,7 @@
                     });
                     day.date = Date.parseKairos(day.date + " " + ZERO_TIME);
                 });
+                data.date = Date.now();
             },
             compute: function(data) {
                 _computeShiftTime(data);
@@ -200,6 +210,7 @@
                     });
                     day.goal = _millisToHuman(DAILY_GOAL_MINUTES_IN_MILLIS);
                     day.worked = _millisToHuman(day.worked);
+                    day.reallyWorked = _millisToHuman(day.reallyWorked);
                     day.balance = _millisToHumanWithSign(day.balance);
                     day.totalBalance = _millisToHumanWithSign(day.totalBalance);
                     if (day.timeOn)
@@ -209,11 +220,13 @@
                 data.maxDaily = _millisToHuman(MAX_DAILY_MINUTES_IN_MILLIS);
                 data.weeklyGoal = _millisToHuman(_computeWeeklyGoalMillis());
                 data.worked = _millisToHuman(data.worked);
+                data.reallyWorked = _millisToHuman(data.reallyWorked);
                 data.weeklyBalance = _millisToHumanWithSign(data.weeklyBalance);
             },
             zero: ZERO_TIME,
             diff: _diff,
             minuteToMillis: _minuteToMillis,
+            millisToMinute: _millisToMinute,
             millisToHuman: _millisToHuman,
             millisToHumanWithSign: _millisToHumanWithSign,
             humanToMillis: _humanToMillis

@@ -17,7 +17,8 @@
         View      = mod.view,
         DayOff    = mod.dayoff,
         Time      = mod.time,
-        TimeOn    = mod.timeon;
+        TimeOn    = mod.timeon,
+        Notice    = mod.notice;
 
     /* Private Functions */
 
@@ -82,6 +83,7 @@
             TimeOn.check(data);
             _buildDayOptions();
             Time.compute(data);
+            Notice.check(data);
             Time.toHuman(data);
             View.render(data);
             KeepAlive.init();

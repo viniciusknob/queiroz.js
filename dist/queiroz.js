@@ -15,8 +15,8 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.1.33',
-            SETTINGS = {"USERSCRIPT_DELAY":1000,"MAX_CONSECUTIVE_MINUTES":360,"MAX_DAILY_MINUTES":600,"WEEKLY_GOAL_MINUTES":2640,"DAILY_GOAL_MINUTES":528,"WORK_DAYS":[1,2,3,4,5],"INITIAL_WEEKDAY":1,"GA_TRACKING_ID":"UA-105390656-1","KEEP_ALIVE":180000};
+            VERSION = '3.2.33',
+            SETTINGS = {"USERSCRIPT_DELAY":1000,"MAX_CONSECUTIVE_MINUTES":360,"MAX_DAILY_MINUTES":600,"WEEKLY_GOAL_MINUTES":2640,"DAILY_GOAL_MINUTES":528,"WORK_DAYS":[1,2,3,4,5],"INITIAL_WEEKDAY":1,"GA_TRACKING_ID":"UA-105390656-1","KEEP_ALIVE":60000,"NOTICE_RANGE_MINUTES":[15,5,3,1],"NOTICE_ICON":"https://github.com/viniciusknob/queiroz.js/raw/master/src/img/ic_notification.png"};
 
         /* Public API */
 
@@ -188,7 +188,7 @@
         return Strings._[key];
     };
 
-    Strings._ = {"pending":"Pendente","extra":"Extra","balance":"Saldo do dia","totalBalance":"Saldo Total","labor":"Efetuado","shift":"_n_&ordm; Turno","working":"Trabalhando...","exit":"Atinge _s_","exit+":"Meta + Saldo","config":"Config","weeklyGoal":"Meta Semanal","dailyGoal":"Meta do dia","timeOn":"Falta Abonada"};
+    Strings._ = {"pending":"Pendente","extra":"Extra","balance":"Saldo do dia","totalBalance":"Saldo Total","labor":"Efetuado","shift":"_n_&ordm; Turno","working":"Trabalhando...","exit":"Atinge _s_","exit+":"Meta + Saldo","config":"Config","weeklyGoal":"Meta Semanal","dailyGoal":"Meta do dia","timeOn":"Falta Abonada","notice":"Notificações","noticeMaxConsecutive":"Em _min_min você atingirá 6h de trabalho sem intervalo","noticeDailyGoal":"Em _min_min você completará a Meta Diária de 08h48","noticeMaxDaily":"Em _min_min você atingirá 10h, o máximo permitido por dia","noticeWeeklyGoal":"Em _min_min você completará a Meta Semanal de 44h"};
 
     /* Module Definition */
 
@@ -416,6 +416,19 @@
                     inlineText: true
                 });
             },
+            headerNoticeStatus: function(Notice) {
+                var box = _buildBox({
+                    helpText: 'notice',
+                    humanTime: Notice.isGranted() ? 'ON' : 'OFF',
+                    contentClass: 'qz-text-' + (Notice.isGranted() ? 'green' : 'primary'),
+                    inlineText: true
+                });
+                box.onclick = function() {
+                    if (Notice.isGranted() == false)
+                        Notice.requestPermission();
+                }
+                return box;
+            },
             balanceTimePerDay: function(balanceTime, total) {
                 return _buildBox({
                     helpText: (total ? 'totalB' : 'b') + 'alance',
@@ -622,6 +635,9 @@
             _minuteToMillis = function(minute) {
                 return minute * MINUTE_IN_MILLIS;
             },
+            _millisToMinute = function(millis) {
+                return parseInt(millis / MINUTE_IN_MILLIS);
+            },
             _millisToHuman = function(millis) {
                 var
                     diffHour = parseInt(millis / HOUR_IN_MILLIS),
@@ -670,15 +686,21 @@
                 });
             },
             _computeLaborTime = function(data) {
-                data.worked = 0;
+                data.worked = 0; // in/out OK
+                data.reallyWorked = 0; // in OK, out undefined
                 data.days.forEach(function(day) {
-                    day.worked = 0;
+                    day.worked = 0; // in/out OK
+                    day.reallyWorked = 0; // in OK, out undefined
                     day.worked += day.timeOn;
                     day.periods.forEach(function(time) {
+                        if (time.in && (time.out == false && day.date.isToday()))
+                            day.reallyWorked += time.shift;
                         if (time.in && time.out)
                             day.worked += time.shift
                     });
+                    day.reallyWorked += day.worked;
                     data.worked += day.worked;
+                    data.reallyWorked += day.reallyWorked;
                 });
             },
             _computeBalanceTime = function(data) {
@@ -737,6 +759,7 @@
                     });
                     day.date = Date.parseKairos(day.date + " " + ZERO_TIME);
                 });
+                data.date = Date.now();
             },
             compute: function(data) {
                 _computeShiftTime(data);
@@ -770,6 +793,7 @@
                     });
                     day.goal = _millisToHuman(DAILY_GOAL_MINUTES_IN_MILLIS);
                     day.worked = _millisToHuman(day.worked);
+                    day.reallyWorked = _millisToHuman(day.reallyWorked);
                     day.balance = _millisToHumanWithSign(day.balance);
                     day.totalBalance = _millisToHumanWithSign(day.totalBalance);
                     if (day.timeOn)
@@ -779,11 +803,13 @@
                 data.maxDaily = _millisToHuman(MAX_DAILY_MINUTES_IN_MILLIS);
                 data.weeklyGoal = _millisToHuman(_computeWeeklyGoalMillis());
                 data.worked = _millisToHuman(data.worked);
+                data.reallyWorked = _millisToHuman(data.reallyWorked);
                 data.weeklyBalance = _millisToHumanWithSign(data.weeklyBalance);
             },
             zero: ZERO_TIME,
             diff: _diff,
             minuteToMillis: _minuteToMillis,
+            millisToMinute: _millisToMinute,
             millisToHuman: _millisToHuman,
             millisToHumanWithSign: _millisToHumanWithSign,
             humanToMillis: _humanToMillis
@@ -890,6 +916,124 @@
 
 
 /*!
+ * Queiroz.js: notice.js
+ * JavaScript Extension for Dimep Kairos
+ * https://github.com/viniciusknob/queiroz.js
+ */
+
+(function(Notification, Queiroz) {
+
+    /* Modules */
+
+    var
+        Settings  = Queiroz.settings,
+        mod       = Queiroz.module,
+        Time      = mod.time,
+        Strings   = mod.strings;
+
+    /* Class Definition */
+
+    var Notice = function() {
+
+        /* Constants */
+
+        var NOTICE_RANGE_MINUTES = Settings.NOTICE_RANGE_MINUTES;
+
+        /* Private Functions */
+
+        var
+            _notified = true,
+            _formatMessage = function(message, minute) {
+                return message.replace('_min_', minute);
+            },
+            _notify = function(title, message) {
+                new Notification(title, {
+                    body: message,
+                    icon: Settings.NOTICE_ICON
+                });
+
+                _notified = true;
+            },
+            _checkWeeklyGoal = function(title, data) {
+                if (_notified)
+                    return;
+
+                NOTICE_RANGE_MINUTES.forEach(function(minute) {
+                    if ((Settings.WEEKLY_GOAL_MINUTES - minute) == Time.millisToMinute(data.reallyWorked))
+                        _notify(title, _formatMessage(Strings('noticeWeeklyGoal'), minute));
+                });
+            },
+            _checkDailyGoal = function(title, data) {
+                if (_notified)
+                    return;
+
+                NOTICE_RANGE_MINUTES.forEach(function(minute) {
+                    data.days.forEach(function(day) {
+                        if ((Settings.DAILY_GOAL_MINUTES - minute) == Time.millisToMinute(day.reallyWorked))
+                            _notify(title, _formatMessage(Strings('noticeDailyGoal'), minute));
+                    });
+                });
+            },
+            _checkMaxDaily = function(title, data) {
+                if (_notified)
+                    return;
+
+                NOTICE_RANGE_MINUTES.forEach(function(minute) {
+                    data.days.forEach(function(day) {
+                        if ((Settings.MAX_DAILY_MINUTES - minute) == Time.millisToMinute(day.reallyWorked))
+                            _notify(title, _formatMessage(Strings('noticeMaxDaily'), minute));
+                    });
+                });
+            },
+            _checkMaxConsecutive = function(title, data) {
+                if (_notified)
+                    return;
+
+                NOTICE_RANGE_MINUTES.forEach(function(minute) {
+                    data.days.forEach(function(day) {
+                        day.periods.forEach(function(time, index) {
+                            if (time.out == false && day.date.isToday())
+                                if ((Settings.MAX_CONSECUTIVE_MINUTES - minute) == Time.millisToMinute(time.shift))
+                                    _notify(title, _formatMessage(Strings('noticeMaxConsecutive'), minute));
+                        });
+                    });
+                });
+            };
+
+        /* Public Functions */
+
+        return {
+            check: function(data) {
+                _notified = false;
+
+                var title = Queiroz.name + " - " + data.date.getTimeAsString();
+
+                _checkWeeklyGoal(title, data);
+                _checkDailyGoal(title, data);
+                _checkMaxDaily(title, data);
+                _checkMaxConsecutive(title, data);
+            },
+            isGranted: function() {
+                return Notification && Notification.permission == 'granted';
+            },
+            requestPermission: function() {
+                if (Notification) {
+                    Notification.requestPermission().then(function(status) {
+                        Queiroz.reload();
+                    });
+                }
+            }
+        };
+    }();
+
+    /* Module Definition */
+
+    Queiroz.module.notice = Notice;
+
+})(Notification, Queiroz);
+
+
+/*!
  * Queiroz.js: view.js
  * JavaScript Extension for Dimep Kairos
  * https://github.com/viniciusknob/queiroz.js
@@ -903,7 +1047,8 @@
         Settings = Queiroz.settings,
         mod      = Queiroz.module,
         Snippet  = mod.snippet,
-        TimeOn   = mod.timeon;
+        TimeOn   = mod.timeon,
+        Notice   = mod.notice;
 
     /* Class Definition */
 
@@ -1067,6 +1212,7 @@
                 header.appendChild(Snippet.headerWeeklyGoal(data.weeklyGoal));
                 header.appendChild(Snippet.headerLaborTime(data.worked));
                 header.appendChild(Snippet.headerBalanceTime(data.weeklyBalance));
+                header.appendChild(Snippet.headerNoticeStatus(Notice));
                 View.appendToHeader(header);
             },
             isLoaded: function() {
@@ -1135,7 +1281,8 @@
         View      = mod.view,
         DayOff    = mod.dayoff,
         Time      = mod.time,
-        TimeOn    = mod.timeon;
+        TimeOn    = mod.timeon,
+        Notice    = mod.notice;
 
     /* Private Functions */
 
@@ -1200,6 +1347,7 @@
             TimeOn.check(data);
             _buildDayOptions();
             Time.compute(data);
+            Notice.check(data);
             Time.toHuman(data);
             View.render(data);
             KeepAlive.init();
@@ -1233,7 +1381,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.1.33</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.2.33</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');

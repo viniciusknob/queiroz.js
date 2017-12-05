@@ -195,6 +195,19 @@
                     inlineText: true
                 });
             },
+            headerNoticeStatus: function(Notice) {
+                var box = _buildBox({
+                    helpText: 'notice',
+                    humanTime: Notice.isGranted() ? 'ON' : 'OFF',
+                    contentClass: 'qz-text-' + (Notice.isGranted() ? 'green' : 'primary'),
+                    inlineText: true
+                });
+                box.onclick = function() {
+                    if (Notice.isGranted() == false)
+                        Notice.requestPermission();
+                }
+                return box;
+            },
             balanceTimePerDay: function(balanceTime, total) {
                 return _buildBox({
                     helpText: (total ? 'totalB' : 'b') + 'alance',

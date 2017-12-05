@@ -11,5 +11,10 @@
     "config" : "Config",
     "weeklyGoal" : "Meta Semanal",
     "dailyGoal" : "Meta do dia",
-    "timeOn" : "Falta Abonada"
+    "timeOn" : "Falta Abonada",
+    "notice" : "Notificações",
+    "noticeMaxConsecutive" : "Em _min_min você atingirá 6h de trabalho sem intervalo",
+    "noticeDailyGoal" : "Em _min_min você completará a Meta Diária de 08h48",
+    "noticeMaxDaily" : "Em _min_min você atingirá 10h, o máximo permitido por dia",
+    "noticeWeeklyGoal" : "Em _min_min você completará a Meta Semanal de 44h"
 }
