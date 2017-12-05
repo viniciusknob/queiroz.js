@@ -15,8 +15,8 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.2.34',
-            SETTINGS = {"USERSCRIPT_DELAY":1000,"MAX_CONSECUTIVE_MINUTES":360,"MAX_DAILY_MINUTES":600,"WEEKLY_GOAL_MINUTES":2640,"DAILY_GOAL_MINUTES":528,"WORK_DAYS":[1,2,3,4,5],"INITIAL_WEEKDAY":1,"GA_TRACKING_ID":"UA-105390656-1","KEEP_ALIVE":60000,"NOTICE_RANGE_MINUTES":[15,5,3,1],"NOTICE_ICON":"https://github.com/viniciusknob/queiroz.js/raw/master/src/img/ic_notification.png"};
+            VERSION = '3.2.35',
+            SETTINGS = {"USERSCRIPT_DELAY":1000,"MAX_CONSECUTIVE_MINUTES":360,"MAX_DAILY_MINUTES":600,"WEEKLY_GOAL_MINUTES":2640,"DAILY_GOAL_MINUTES":528,"WORK_DAYS":[1,2,3,4,5],"INITIAL_WEEKDAY":1,"GA_TRACKING_ID":"UA-105390656-1","QZ_KEEPALIVE":60000,"KS_KEEPALIVE":1200000,"NOTICE_RANGE_MINUTES":[15,5,3,1],"NOTICE_ICON":"https://github.com/viniciusknob/queiroz.js/raw/master/src/img/ic_notification.png"};
 
         /* Public API */
 
@@ -62,6 +62,31 @@
     });
 
 })(Queiroz, ga);
+
+
+/*!
+ * Queiroz.js: kairos.js
+ * JavaScript Extension for Dimep Kairos
+ * https://github.com/viniciusknob/queiroz.js
+ */
+
+(function(window, Queiroz) {
+
+    /* Class Definition */
+
+    var Kairos = function() {
+        return {
+            reload: function() {
+                window.location.reload(true);
+            }
+        };
+    }();
+
+    /* Module Definition */
+
+    Queiroz.module.kairos = Kairos;
+
+})(window, Queiroz);
 
 
 /*!
@@ -142,37 +167,57 @@
  * https://github.com/viniciusknob/queiroz.js
  */
 
-(function(setTimeout, clearTimeout, Queiroz) {
+(function(setTimeout, clearTimeout, setInterval, clearInterval, Queiroz) {
 
     /* Modules */
 
-    var Settings = Queiroz.settings;
+    var
+        Settings = Queiroz.settings,
+        Kairos   = Queiroz.module.kairos;
 
     /* Class Definition */
 
     var KeepAlive = function() {
 
-        var _timeOut;
+        var
+            _qzTimeOut = false,
+            _ksTimeOut = false;
 
         /* Private Functions */
 
         var
-            _init = function(enable) {
-                if (_timeOut)
-                    clearTimeout(_timeOut);
+            _clear = function() {
+                if (_qzTimeOut)
+                    clearInterval(_qzTimeOut);
 
-                if (enable && Settings.KEEP_ALIVE)
-                    _timeOut = setTimeout(Queiroz.reload, Settings.KEEP_ALIVE);
+                if (_ksTimeOut)
+                    clearTimeout(_ksTimeOut);
+
+                _qzTimeOut = false;
+                _ksTimeOut = false;
+            },
+            _init = function() {
+                if (_qzTimeOut && _ksTimeOut)
+                    return;
+
+                _clear();
+
+                if (Settings.QZ_KEEPALIVE)
+                    _qzTimeOut = setInterval(Queiroz.reload, Settings.QZ_KEEPALIVE);
+
+                if (Settings.KS_KEEPALIVE)
+                    _ksTimeOut = setTimeout(Kairos.reload, Settings.KS_KEEPALIVE);
             };
 
-        /* Public Functions */
+        /* Private Functions */
 
         return {
-            init: function() {
-                _init(true);
-            },
+            init: _init,
             update: function(observable, args) { // Observer Pattern
-                _init(!args.state);
+                if (args.isActive)
+                    _clear();
+                else
+                    _init();
             }
         };
     }();
@@ -181,7 +226,7 @@
 
     Queiroz.module.keepalive = KeepAlive;
 
-})(setTimeout, clearTimeout, Queiroz);
+})(setTimeout, clearTimeout, setInterval, clearInterval, Queiroz);
 
 
 /*!
@@ -198,7 +243,7 @@
         return Strings._[key];
     };
 
-    Strings._ = {"pending":"Pendente","extra":"Extra","balance":"Saldo do dia","totalBalance":"Saldo Total","labor":"Efetuado","shift":"_n_&ordm; Turno","working":"Trabalhando...","exit":"Atinge _s_","exit+":"Meta + Saldo","config":"Config","weeklyGoal":"Meta Semanal","dailyGoal":"Meta do dia","timeOn":"Falta Abonada","notice":"Notificações","noticeMaxConsecutive":"Em _min_min você atingirá 6h de trabalho sem intervalo","noticeDailyGoal":"Em _min_min você completará a Meta Diária de 08h48","noticeMaxDaily":"Em _min_min você atingirá 10h, o máximo permitido por dia","noticeWeeklyGoal":"Em _min_min você completará a Meta Semanal de 44h"};
+    Strings._ = {"pending":"Pendente","extra":"Extra","balance":"Saldo do dia","totalBalance":"Saldo Total","labor":"Efetuado","shift":"_n_&ordm; Turno","working":"Trabalhando...","exit":"Atinge _s_","exit+":"Meta + Saldo","config":"Config","weeklyGoal":"Meta Semanal","dailyGoal":"Meta do dia","timeOn":"Falta Abonada","notice":"Notificações","noticeMaxConsecutive":"Em _min_min você atingirá 6h de trabalho sem intervalo","noticeDailyGoal":"Em _min_min você completará a Meta Diária de 8h48","noticeMaxDaily":"Em _min_min você atingirá 10h, o máximo permitido por dia","noticeWeeklyGoal":"Em _min_min você completará a Meta Semanal de 44h"};
 
     /* Module Definition */
 
@@ -890,7 +935,7 @@
             },
             _notifyObservers = function(enable) { // Observer Pattern
                 _observers.forEach(function(observer) {
-                    observer.update(TimeOn, {state:enable});
+                    observer.update(TimeOn, { isActive: enable });
                 });
             };
 
@@ -972,16 +1017,22 @@
 
         var
             _notified = true,
-            _formatMessage = function(message, minute) {
-                return message.replace('_min_', minute);
+            _fired = [],
+            _closeFiredOnUnload = function() {
+                _fired.forEach(function(notification) {
+                    notification.close();
+                });
             },
             _notify = function(title, message) {
-                new Notification(title, {
+                _fired.push(new Notification(title, {
                     body: message,
                     icon: Settings.NOTICE_ICON
-                });
+                }));
 
                 _notified = true;
+            },
+            _formatMessage = function(message, minute) {
+                return message.replace('_min_', minute);
             },
             _checkWeeklyGoal = function(title, data) {
                 if (_notified)
@@ -1029,18 +1080,20 @@
                 });
             };
 
+
         /* Public Functions */
 
         return {
+            closeFiredOnUnload: _closeFiredOnUnload,
             check: function(data) {
                 _notified = false;
 
                 var title = Queiroz.name + " - " + data.date.getTimeAsString();
 
+                _checkMaxConsecutive(title, data);
+                _checkMaxDaily(title, data);
                 _checkWeeklyGoal(title, data);
                 _checkDailyGoal(title, data);
-                _checkMaxDaily(title, data);
-                _checkMaxConsecutive(title, data);
             },
             isGranted: function() {
                 return Notification && Notification.permission == 'granted';
@@ -1298,7 +1351,7 @@
  * https://github.com/viniciusknob/queiroz.js
  */
 
-(function(Queiroz) {
+(function(window, Queiroz) {
 
     /* Modules */
 
@@ -1399,6 +1452,7 @@
             _initWithDelay();
         }
         TimeOn.addObserver(KeepAlive);
+        window.addEventListener('unload', Notice.closeFiredOnUnload);
         View.appendToFooter(this.description);
         return this.description;
     };
@@ -1411,7 +1465,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.2.34</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.2.35</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');
@@ -1433,7 +1487,7 @@
         _init();
     };
 
-})(Queiroz);
+})(window, Queiroz);
 
 
 /*!

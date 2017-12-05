@@ -4,37 +4,57 @@
  * https://github.com/viniciusknob/queiroz.js
  */
 
-(function(setTimeout, clearTimeout, Queiroz) {
+(function(setTimeout, clearTimeout, setInterval, clearInterval, Queiroz) {
 
     /* Modules */
 
-    var Settings = Queiroz.settings;
+    var
+        Settings = Queiroz.settings,
+        Kairos   = Queiroz.module.kairos;
 
     /* Class Definition */
 
     var KeepAlive = function() {
 
-        var _timeOut;
+        var
+            _qzTimeOut = false,
+            _ksTimeOut = false;
 
         /* Private Functions */
 
         var
-            _init = function(enable) {
-                if (_timeOut)
-                    clearTimeout(_timeOut);
+            _clear = function() {
+                if (_qzTimeOut)
+                    clearInterval(_qzTimeOut);
 
-                if (enable && Settings.KEEP_ALIVE)
-                    _timeOut = setTimeout(Queiroz.reload, Settings.KEEP_ALIVE);
+                if (_ksTimeOut)
+                    clearTimeout(_ksTimeOut);
+
+                _qzTimeOut = false;
+                _ksTimeOut = false;
+            },
+            _init = function() {
+                if (_qzTimeOut && _ksTimeOut)
+                    return;
+
+                _clear();
+
+                if (Settings.QZ_KEEPALIVE)
+                    _qzTimeOut = setInterval(Queiroz.reload, Settings.QZ_KEEPALIVE);
+
+                if (Settings.KS_KEEPALIVE)
+                    _ksTimeOut = setTimeout(Kairos.reload, Settings.KS_KEEPALIVE);
             };
 
-        /* Public Functions */
+        /* Private Functions */
 
         return {
-            init: function() {
-                _init(true);
-            },
+            init: _init,
             update: function(observable, args) { // Observer Pattern
-                _init(!args.state);
+                if (args.isActive)
+                    _clear();
+                else
+                    _init();
             }
         };
     }();
@@ -43,4 +63,4 @@
 
     Queiroz.module.keepalive = KeepAlive;
 
-})(setTimeout, clearTimeout, Queiroz);
+})(setTimeout, clearTimeout, setInterval, clearInterval, Queiroz);

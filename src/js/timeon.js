@@ -52,7 +52,7 @@
             },
             _notifyObservers = function(enable) { // Observer Pattern
                 _observers.forEach(function(observer) {
-                    observer.update(TimeOn, {state:enable});
+                    observer.update(TimeOn, { isActive: enable });
                 });
             };
 

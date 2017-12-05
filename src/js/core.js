@@ -5,7 +5,7 @@
  * https://github.com/viniciusknob/queiroz.js
  */
 
-(function(Queiroz) {
+(function(window, Queiroz) {
 
     /* Modules */
 
@@ -106,6 +106,7 @@
             _initWithDelay();
         }
         TimeOn.addObserver(KeepAlive);
+        window.addEventListener('unload', Notice.closeFiredOnUnload);
         View.appendToFooter(this.description);
         return this.description;
     };
@@ -140,4 +141,4 @@
         _init();
     };
 
-})(Queiroz);
+})(window, Queiroz);
