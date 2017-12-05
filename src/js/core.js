@@ -99,12 +99,13 @@
 
     /* Public Functions */
 
-    Queiroz.bless = function(lastWeekMode) {
+    Queiroz.bless = function() {
         if (View.isLoaded()) {
             _init();
         } else {
             _initWithDelay();
         }
+        TimeOn.addObserver(KeepAlive);
         View.appendToFooter(this.description);
         return this.description;
     };
@@ -136,7 +137,7 @@
         // reset
         DayOff.count = 0;
 
-        Queiroz.bless();
+        _init();
     };
 
 })(Queiroz);

@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.2.33',
+            VERSION = '3.2.34',
             SETTINGS = {"USERSCRIPT_DELAY":1000,"MAX_CONSECUTIVE_MINUTES":360,"MAX_DAILY_MINUTES":600,"WEEKLY_GOAL_MINUTES":2640,"DAILY_GOAL_MINUTES":528,"WORK_DAYS":[1,2,3,4,5],"INITIAL_WEEKDAY":1,"GA_TRACKING_ID":"UA-105390656-1","KEEP_ALIVE":60000,"NOTICE_RANGE_MINUTES":[15,5,3,1],"NOTICE_ICON":"https://github.com/viniciusknob/queiroz.js/raw/master/src/img/ic_notification.png"};
 
         /* Public API */
@@ -154,15 +154,25 @@
 
         var _timeOut;
 
+        /* Private Functions */
+
+        var
+            _init = function(enable) {
+                if (_timeOut)
+                    clearTimeout(_timeOut);
+
+                if (enable && Settings.KEEP_ALIVE)
+                    _timeOut = setTimeout(Queiroz.reload, Settings.KEEP_ALIVE);
+            };
+
         /* Public Functions */
 
         return {
             init: function() {
-                if (_timeOut)
-                    clearTimeout(_timeOut);
-
-                if (Settings.KEEP_ALIVE)
-                    _timeOut = setTimeout(Queiroz.reload, Settings.KEEP_ALIVE);
+                _init(true);
+            },
+            update: function(observable, args) { // Observer Pattern
+                _init(!args.state);
             }
         };
     }();
@@ -279,6 +289,8 @@
                 return box;
             },
             _buildEditableTimeOnBox = function(TimeOn) {
+                TimeOn.activate();
+
                 var box = _buildTag(TagName.DIV, 'qz-box qz-box-muted qz-text-center js-has-timeon');
                 var helpText = _buildTag(TagName.DIV, 'qz-help-text', Strings('timeOn'));
                 var upHour = _buildTag(TagName.SPAN,'qz-fa fa fa-chevron-up');
@@ -322,9 +334,11 @@
                     eTime.textContent = time[0] + ':' + min.padStart(2);
                 };
                 cancel.onclick = function() {
+                    TimeOn.deactivate();
                     this.parentElement.remove();
                 };
                 save.onclick = function() {
+                    TimeOn.deactivate();
                     var eDay = this.parentElement.parentElement;
                     var eDate = eDay.querySelector('[id^=hiddenDiaApont]').value;
                     var eTime = eDay.querySelector('.js-self-timeon').textContent;
@@ -443,7 +457,7 @@
                     contentClass: 'qz-text-black'
                 });
             },
-            laborTimePerDay: function(laborTime, TimeOn) {
+            laborTimePerDay: function(laborTime) {
                 return _buildBox({
                     helpText: 'labor',
                     humanTime: laborTime,
@@ -844,7 +858,8 @@
 
         var
             NAME = "timeOn",
-            cache = {};
+            cache = {},
+            _observers = [];
 
         /* Private Functions */
 
@@ -872,6 +887,11 @@
 
                 delete cache[_buildKey(date)];
                 localStorage.setItem(NAME, JSON.stringify(cache));
+            },
+            _notifyObservers = function(enable) { // Observer Pattern
+                _observers.forEach(function(observer) {
+                    observer.update(TimeOn, {state:enable});
+                });
             };
 
         // Initialize cache
@@ -904,6 +924,15 @@
             remove: function(eDate) {
                 var date = Date.parseKairos(eDate + " " + Time.zero);
                 _remove(date);
+            },
+            addObserver: function(observer) { // Observer Pattern
+                _observers.push(observer);
+            },
+            activate: function() { // Observer Pattern
+                _notifyObservers(true);
+            },
+            deactivate: function() { // Observer Pattern
+                _notifyObservers(false);
             }
         };
     }();
@@ -1363,12 +1392,13 @@
 
     /* Public Functions */
 
-    Queiroz.bless = function(lastWeekMode) {
+    Queiroz.bless = function() {
         if (View.isLoaded()) {
             _init();
         } else {
             _initWithDelay();
         }
+        TimeOn.addObserver(KeepAlive);
         View.appendToFooter(this.description);
         return this.description;
     };
@@ -1381,7 +1411,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.2.33</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.2.34</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');
@@ -1400,7 +1430,7 @@
         // reset
         DayOff.count = 0;
 
-        Queiroz.bless();
+        _init();
     };
 
 })(Queiroz);

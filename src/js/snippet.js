@@ -58,6 +58,8 @@
                 return box;
             },
             _buildEditableTimeOnBox = function(TimeOn) {
+                TimeOn.activate();
+
                 var box = _buildTag(TagName.DIV, 'qz-box qz-box-muted qz-text-center js-has-timeon');
                 var helpText = _buildTag(TagName.DIV, 'qz-help-text', Strings('timeOn'));
                 var upHour = _buildTag(TagName.SPAN,'qz-fa fa fa-chevron-up');
@@ -101,9 +103,11 @@
                     eTime.textContent = time[0] + ':' + min.padStart(2);
                 };
                 cancel.onclick = function() {
+                    TimeOn.deactivate();
                     this.parentElement.remove();
                 };
                 save.onclick = function() {
+                    TimeOn.deactivate();
                     var eDay = this.parentElement.parentElement;
                     var eDate = eDay.querySelector('[id^=hiddenDiaApont]').value;
                     var eTime = eDay.querySelector('.js-self-timeon').textContent;
@@ -222,7 +226,7 @@
                     contentClass: 'qz-text-black'
                 });
             },
-            laborTimePerDay: function(laborTime, TimeOn) {
+            laborTimePerDay: function(laborTime) {
                 return _buildBox({
                     helpText: 'labor',
                     humanTime: laborTime,

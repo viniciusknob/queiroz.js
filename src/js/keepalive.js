@@ -16,15 +16,25 @@
 
         var _timeOut;
 
+        /* Private Functions */
+
+        var
+            _init = function(enable) {
+                if (_timeOut)
+                    clearTimeout(_timeOut);
+
+                if (enable && Settings.KEEP_ALIVE)
+                    _timeOut = setTimeout(Queiroz.reload, Settings.KEEP_ALIVE);
+            };
+
         /* Public Functions */
 
         return {
             init: function() {
-                if (_timeOut)
-                    clearTimeout(_timeOut);
-
-                if (Settings.KEEP_ALIVE)
-                    _timeOut = setTimeout(Queiroz.reload, Settings.KEEP_ALIVE);
+                _init(true);
+            },
+            update: function(observable, args) { // Observer Pattern
+                _init(!args.state);
             }
         };
     }();

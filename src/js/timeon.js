@@ -20,7 +20,8 @@
 
         var
             NAME = "timeOn",
-            cache = {};
+            cache = {},
+            _observers = [];
 
         /* Private Functions */
 
@@ -48,6 +49,11 @@
 
                 delete cache[_buildKey(date)];
                 localStorage.setItem(NAME, JSON.stringify(cache));
+            },
+            _notifyObservers = function(enable) { // Observer Pattern
+                _observers.forEach(function(observer) {
+                    observer.update(TimeOn, {state:enable});
+                });
             };
 
         // Initialize cache
@@ -80,6 +86,15 @@
             remove: function(eDate) {
                 var date = Date.parseKairos(eDate + " " + Time.zero);
                 _remove(date);
+            },
+            addObserver: function(observer) { // Observer Pattern
+                _observers.push(observer);
+            },
+            activate: function() { // Observer Pattern
+                _notifyObservers(true);
+            },
+            deactivate: function() { // Observer Pattern
+                _notifyObservers(false);
             }
         };
     }();
