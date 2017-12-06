@@ -59,8 +59,9 @@
 
                 NOTICE_RANGE_MINUTES.forEach(function(minute) {
                     data.days.forEach(function(day) {
-                        if ((Settings.DAILY_GOAL_MINUTES - minute) == Time.millisToMinute(day.reallyWorked))
-                            _notify(title, _formatMessage(Strings('noticeDailyGoal'), minute));
+                        if (day.date.isToday())
+                            if ((Settings.DAILY_GOAL_MINUTES - minute) == Time.millisToMinute(day.reallyWorked))
+                                _notify(title, _formatMessage(Strings('noticeDailyGoal'), minute));
                     });
                 });
             },
@@ -70,8 +71,9 @@
 
                 NOTICE_RANGE_MINUTES.forEach(function(minute) {
                     data.days.forEach(function(day) {
-                        if ((Settings.MAX_DAILY_MINUTES - minute) == Time.millisToMinute(day.reallyWorked))
-                            _notify(title, _formatMessage(Strings('noticeMaxDaily'), minute));
+                        if (day.date.isToday())
+                            if ((Settings.MAX_DAILY_MINUTES - minute) == Time.millisToMinute(day.reallyWorked))
+                                _notify(title, _formatMessage(Strings('noticeMaxDaily'), minute));
                     });
                 });
             },
@@ -81,11 +83,13 @@
 
                 NOTICE_RANGE_MINUTES.forEach(function(minute) {
                     data.days.forEach(function(day) {
-                        day.periods.forEach(function(time, index) {
-                            if (time.out == false && day.date.isToday())
-                                if ((Settings.MAX_CONSECUTIVE_MINUTES - minute) == Time.millisToMinute(time.shift))
-                                    _notify(title, _formatMessage(Strings('noticeMaxConsecutive'), minute));
-                        });
+                        if (day.date.isToday()) {
+                            day.periods.forEach(function(time, index) {
+                                if (time.out == false && day.date.isToday())
+                                    if ((Settings.MAX_CONSECUTIVE_MINUTES - minute) == Time.millisToMinute(time.shift))
+                                        _notify(title, _formatMessage(Strings('noticeMaxConsecutive'), minute));
+                            });
+                        }
                     });
                 });
             };
