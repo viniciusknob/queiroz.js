@@ -13,6 +13,7 @@
         Settings  = Queiroz.settings,
         mod       = Queiroz.module,
         KeepAlive = mod.keepalive,
+        MockTime  = mod.mocktime,
         Snippet   = mod.snippet,
         View      = mod.view,
         DayOff    = mod.dayoff,
@@ -66,7 +67,7 @@
                 target.innerHTML = dateString;
 
                 if (DayOff.is(day) == false) {
-                    target.insertBefore(Snippet.buildDayOptions(TimeOn), target.firstChild);
+                    target.insertBefore(Snippet.buildDayOptions(TimeOn, MockTime), target.firstChild);
                     target.querySelector('.qz-dropdown').onmouseover = function() {
                         var menu = target.querySelector('.qz-dropdown-content');
                         menu.style.minWidth = target.offsetWidth + 'px';
@@ -76,6 +77,7 @@
         },
         _init = function() {
             View.appendToHead(Snippet.style());
+            MockTime.injectIfExists();
             var data = View.read();
             Time.parse(data);
             View.removeUnusedDays(data);
@@ -106,6 +108,7 @@
             _initWithDelay();
         }
         TimeOn.addObserver(KeepAlive);
+        MockTime.addObserver(KeepAlive);
         window.addEventListener('unload', Notice.closeFiredOnUnload);
         View.appendToFooter(this.description);
         return this.description;

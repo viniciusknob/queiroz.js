@@ -68,6 +68,46 @@
           _appendTo = function(target, element) {
               var filledSlotOut = target.parentNode;
               filledSlotOut.parentNode.insertBefore(element, filledSlotOut.nextSibling);
+          },
+          _getDisplayedDays = function() {
+              var
+                  days = [],
+                  eColumns = _getAll(Selector.COLUMN_DAY);
+
+              eColumns.forEach(function(eDay) {
+                  days.push(_get(Selector.DATE, eDay).value);
+              });
+
+              return days; // [dd_mm_yyyy,dd_mm_yyyy,...]
+          },
+          _injectTimes = function(MockTime) {
+              var eColumns = _getAll(Selector.COLUMN_DAY);
+
+              eColumns.forEach(function(eDay) {
+                  var eDate = _get(Selector.DATE, eDay).value;
+                  if (MockTime.has(eDate)) {
+                      var
+                          eCheckpoints = _getAll(Selector.CHECKPOINT, eDay),
+                          length = eCheckpoints.length;
+
+                      MockTime.get(eDate).forEach(function(time, index) {
+                          var
+                              pair = (length + (index+1)) % 2 == 0,
+                              direction = pair ? 'OUT' : 'IN', // 1=IN, 2=OUT, 3=IN, 4=OUT...
+                              options = {
+                                  'key': eDate,
+                                  'mockTime': time,
+                                  'direction': direction,
+                                  'remove': MockTime.remove,
+                                  'finally': function() {
+                                      Queiroz.reload();
+                                  }
+                              };
+
+                          eDay.appendChild(Snippet.buildMockTime(options));
+                      });
+                  }
+              });
           };
 
         /* Public Functions */
@@ -218,7 +258,9 @@
             },
             appendToggle: function(target, eToggle) {
                 _get(Selector.TOOGLE, target).parentElement.appendChild(eToggle);
-            }
+            },
+            getDisplayedDays: _getDisplayedDays,
+            injectTimes: _injectTimes
         };
     }();
 

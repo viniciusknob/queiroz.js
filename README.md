@@ -1,4 +1,4 @@
-# Queiroz.js 3.2.36
+# Queiroz.js 3.3.36
 JavaScript Extension for Dimep Kairos
 
 ### Autor
@@ -42,6 +42,13 @@ Ative as notificações para receber na área de trabalho avisos de aproximaçã
 * Meta Semanal, atualmente 44 horas.
 
 OBS: Para receber as notificações é necessário deixar a aba do Kairos aberta na página Ponto ou Pedidos.
+
+##### MockTime
+Kairos ainda não sincronizou os horários? Tudo bem, com o recurso MockTime você pode lançar manualmente o horário e depois, quando a sincronização executar, deletá-lo. Os horários lançados com MockTime não são lançados no Kairos, eles são armazenados no localStorage e sempre que carregar a página eles serão carregados também, até que você os delete.
+
+MockTime também pode ser utilizado para simular lançamentos de horários. Isso quer dizer que, por exemplo, se você está viajando e pretende lançar os horários reais em outro momento, pode utilizar o MockTime para lançar os horários, evitando esquecê-los. 
+
+Queiroz irá considerar todo e qualquer MockTime em seus cálculos, como se fossem horários reais. Para isso, lance os horários em ordem de acontecimento, pois a funcionalidade não ordena os mesmos. Para remover, basta clicar no "x".
 
 ### Termos e Nomeclaturas
 

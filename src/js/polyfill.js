@@ -65,6 +65,12 @@
     Element.prototype.remove = function() {
         this.parentElement.removeChild(this);
     };
+    Element.prototype.data = function(name, value) {
+        if (value)
+            return this.setAttribute(name, value);
+        else
+            return this.getAttribute(name)
+    };
     String.prototype.contains = function(str) {
         return this.indexOf(str) > -1;
     };

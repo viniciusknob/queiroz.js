@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.2.36',
+            VERSION = '3.3.36',
             SETTINGS = {"USERSCRIPT_DELAY":1000,"MAX_CONSECUTIVE_MINUTES":360,"MAX_DAILY_MINUTES":600,"WEEKLY_GOAL_MINUTES":2640,"DAILY_GOAL_MINUTES":528,"WORK_DAYS":[1,2,3,4,5],"INITIAL_WEEKDAY":1,"GA_TRACKING_ID":"UA-105390656-1","QZ_KEEPALIVE":60000,"KS_KEEPALIVE":1200000,"NOTICE_RANGE_MINUTES":[15,5,3,1],"NOTICE_ICON":"https://github.com/viniciusknob/queiroz.js/raw/master/src/img/ic_notification.png"};
 
         /* Public API */
@@ -155,6 +155,12 @@
     Element.prototype.remove = function() {
         this.parentElement.removeChild(this);
     };
+    Element.prototype.data = function(name, value) {
+        if (value)
+            return this.setAttribute(name, value);
+        else
+            return this.getAttribute(name)
+    };
     String.prototype.contains = function(str) {
         return this.indexOf(str) > -1;
     };
@@ -243,7 +249,7 @@
         return Strings._[key];
     };
 
-    Strings._ = {"pending":"Pendente","extra":"Extra","balance":"Saldo do dia","totalBalance":"Saldo Total","labor":"Efetuado","shift":"_n_&ordm; Turno","working":"Trabalhando...","exit":"Atinge _s_","exit+":"Meta + Saldo","config":"Config","weeklyGoal":"Meta Semanal","dailyGoal":"Meta do dia","timeOn":"Falta Abonada","notice":"Notificações","noticeMaxConsecutive":"Em _min_min você atingirá 6h de trabalho sem intervalo","noticeDailyGoal":"Em _min_min você completará a Meta Diária de 8h48","noticeMaxDaily":"Em _min_min você atingirá 10h, o máximo permitido por dia","noticeWeeklyGoal":"Em _min_min você completará a Meta Semanal de 44h"};
+    Strings._ = {"pending":"Pendente","extra":"Extra","balance":"Saldo do dia","totalBalance":"Saldo Total","labor":"Efetuado","shift":"_n_&ordm; Turno","working":"Trabalhando...","exit":"Atinge _s_","exit+":"Meta + Saldo","config":"Config","weeklyGoal":"Meta Semanal","dailyGoal":"Meta do dia","timeOn":"Falta Abonada","mockTime":"Mock Time","notice":"Notificações","noticeMaxConsecutive":"Em _min_min você atingirá 6h de trabalho sem intervalo","noticeDailyGoal":"Em _min_min você completará a Meta Diária de 8h48","noticeMaxDaily":"Em _min_min você atingirá 10h, o máximo permitido por dia","noticeWeeklyGoal":"Em _min_min você completará a Meta Semanal de 44h"};
 
     /* Module Definition */
 
@@ -264,7 +270,7 @@
 
     var Style = function() {
         return {
-            CSS: 'html{line-height:1.15;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,footer,header,nav,section{display:block}h1{font-size:2em;margin:.67em 0}figcaption,figure,main{display:block}figure{margin:1em 40px}hr{box-sizing:content-box;height:0;overflow:visible}pre{font-family:monospace,monospace;font-size:1em}a{background-color:transparent;-webkit-text-decoration-skip:objects}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:inherit}b,strong{font-weight:bolder}code,kbd,samp{font-family:monospace,monospace;font-size:1em}dfn{font-style:italic}mark{background-color:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}audio,video{display:inline-block}audio:not([controls]){display:none;height:0}img{border-style:none}svg:not(:root){overflow:hidden}button,input,optgroup,select,textarea{font-family:sans-serif;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button,select{text-transform:none}[type=reset],[type=submit],button,html [type=button]{-webkit-appearance:button}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring,button:-moz-focusring{outline:1px dotted ButtonText}fieldset{padding:.35em .75em .625em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}progress{display:inline-block;vertical-align:baseline}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-cancel-button,[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}details,menu{display:block}summary{display:list-item}canvas{display:inline-block}template{display:none}[hidden]{display:none}#SemanaApontamentos{cursor:default!important}.ContentTable{margin-top:inherit}.FilledSlot,.LastSlot,.emptySlot{height:inherit;padding:5px}.FilledSlot span{margin:inherit!important}.qz-text-center{text-align:center}.qz-text-primary{color:brown}.qz-text-golden{color:#b8860b}.qz-text-green{color:green}.qz-text-teal{color:teal}.qz-text-black{color:#000}.qz-text-purple{color:#639}.qz-text-orange{color:#e27300}.qz-box{padding:5px 10px;margin:5px 1px;border:#a9a9a9 1px solid;min-width:60px}.qz-box-compact{min-width:auto}.qz-box-inline{display:inline-block}.qz-box-head{float:right}.qz-box-muted{background-color:#d3d3d3}.qz-box .qz-box-content{vertical-align:middle}.qz-help-text{font-size:10px}.qz-fa{-moz-user-select:-moz-none;-khtml-user-select:none;-webkit-user-select:none;user-select:none}.qz-fa-se{float:right;margin:4px -8px 0 -8px}.qz-fa-sw{float:left;margin:4px -10px 0 -8px}.qz-toggle{margin-top:10px}.fa-toggle-on{color:green}.fa-toggle-off{color:grey}.js-show{display:block}.js-hide{display:none}.fa-chevron-down,.fa-chevron-up{margin:0 2.5px}.qz-dropdown{margin-right:10px;vertical-align:text-bottom;position:relative;display:inline}.qz-dropdown-content{display:none;position:absolute;background-color:#f9f9f9;border:#a9a9a9 1px solid;box-shadow:0 4px 8px 0 rgba(0,0,0,.2);padding:2px;z-index:1024}.qz-dropdown:hover .qz-dropdown-content{display:block}.qz-dropdown-content p{font-weight:400;padding:3px;font-size:11px}.qz-dropdown-content p:hover{background-color:khaki}.qz-modal{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1024;background-color:rgba(0,0,0,.5)}.qz-modal-dialog{position:relative;width:900px;margin:30px auto}.qz-modal-content{position:relative;background-color:#fff;background-clip:padding-box;border-radius:5px}.qz-modal-header{padding:10px;border-bottom:1px solid #d3d3d3;font-weight:700;font-size:16px}.qz-modal-close{float:right;cursor:pointer;background:0 0;border:0;padding:0;color:silver}.qz-modal-body{padding:10px}.qz-modal-footer{padding:10px;border-top:1px solid #d3d3d3;text-align:center}'
+            CSS: 'html{line-height:1.15;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,footer,header,nav,section{display:block}h1{font-size:2em;margin:.67em 0}figcaption,figure,main{display:block}figure{margin:1em 40px}hr{box-sizing:content-box;height:0;overflow:visible}pre{font-family:monospace,monospace;font-size:1em}a{background-color:transparent;-webkit-text-decoration-skip:objects}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:inherit}b,strong{font-weight:bolder}code,kbd,samp{font-family:monospace,monospace;font-size:1em}dfn{font-style:italic}mark{background-color:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}audio,video{display:inline-block}audio:not([controls]){display:none;height:0}img{border-style:none}svg:not(:root){overflow:hidden}button,input,optgroup,select,textarea{font-family:sans-serif;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button,select{text-transform:none}[type=reset],[type=submit],button,html [type=button]{-webkit-appearance:button}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring,button:-moz-focusring{outline:1px dotted ButtonText}fieldset{padding:.35em .75em .625em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}progress{display:inline-block;vertical-align:baseline}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-cancel-button,[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}details,menu{display:block}summary{display:list-item}canvas{display:inline-block}template{display:none}[hidden]{display:none}#SemanaApontamentos{cursor:default!important}.ContentTable{margin-top:inherit}.FilledSlot,.LastSlot,.emptySlot{height:inherit;padding:5px}.FilledSlot span{margin:inherit!important}.qz-text-center{text-align:center}.qz-text-left{text-align:left}.qz-text-primary{color:brown}.qz-text-golden{color:#b8860b}.qz-text-green{color:green}.qz-text-teal{color:teal}.qz-text-black{color:#000}.qz-text-purple{color:#639}.qz-text-orange{color:#e27300}.qz-box{padding:5px 10px;margin:5px 1px;border:#a9a9a9 1px solid;min-width:60px}.qz-box-compact{min-width:auto}.qz-box-inline{display:inline-block}.qz-box-head{float:right}.qz-box-muted{background-color:#d3d3d3}.qz-box .qz-box-content{vertical-align:middle}.qz-help-text{font-size:10px}.qz-fa{-moz-user-select:-moz-none;-khtml-user-select:none;-webkit-user-select:none;user-select:none}.qz-fa-se{float:right;margin:4px -8px 0 -8px}.qz-fa-sw{float:left;margin:4px -10px 0 -8px}.qz-toggle{margin-top:10px}.fa-toggle-on{color:green}.fa-toggle-off{color:grey}.js-show{display:block}.js-hide{display:none}.fa-chevron-down,.fa-chevron-up{margin:0 2.5px}.qz-dropdown{margin-right:10px;vertical-align:text-bottom;position:relative;display:inline}.qz-dropdown-content{display:none;position:absolute;background-color:#f9f9f9;border:#a9a9a9 1px solid;box-shadow:0 4px 8px 0 rgba(0,0,0,.2);padding:2px;z-index:1024}.qz-dropdown:hover .qz-dropdown-content{display:block}.qz-dropdown-content p{font-weight:400;padding:5px;font-size:11px}.qz-dropdown-content p:hover{background-color:khaki}.qz-modal{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1024;background-color:rgba(0,0,0,.5)}.qz-modal-dialog{position:relative;width:900px;margin:30px auto}.qz-modal-content{position:relative;background-color:#fff;background-clip:padding-box;border-radius:5px}.qz-modal-header{padding:10px;border-bottom:1px solid #d3d3d3;font-weight:700;font-size:16px}.qz-modal-close{float:right;cursor:pointer;background:0 0;border:0;padding:0;color:silver}.qz-modal-body{padding:10px}.qz-modal-footer{padding:10px;border-top:1px solid #d3d3d3;text-align:center}'
         };
     }();
 
@@ -333,21 +339,21 @@
                 if (opt.inlineText) box.className += ' qz-box-inline';
                 return box;
             },
-            _buildEditableTimeOnBox = function(TimeOn) {
-                TimeOn.activate();
+            _buildEditableTimeOnBox = function(options) {
+                options.init();
 
-                var box = _buildTag(TagName.DIV, 'qz-box qz-box-muted qz-text-center js-has-timeon');
-                var helpText = _buildTag(TagName.DIV, 'qz-help-text', Strings('timeOn'));
+                var box = _buildTag(TagName.DIV, 'qz-box qz-box-muted qz-text-center js-has-edit-box');
+                var helpText = _buildTag(TagName.DIV, 'qz-help-text', options.helpText);
                 var upHour = _buildTag(TagName.SPAN,'qz-fa fa fa-chevron-up');
                 var upMin = _buildTag(TagName.SPAN,'qz-fa fa fa-chevron-up');
-                var eTime = _buildTag(TagName.STRONG, 'qz-box-content js-self-timeon', '00:00');
+                var eTime = _buildTag(TagName.STRONG, 'qz-box-content js-time-edit-box', '00:00');
                 var downHour = _buildTag(TagName.SPAN,'qz-fa fa fa-chevron-down');
                 var downMin = _buildTag(TagName.SPAN,'qz-fa fa fa-chevron-down');
                 var cancel = _buildTag(TagName.SPAN,'qz-fa qz-fa-sw fa fa-times');
                 var save = _buildTag(TagName.SPAN,'qz-fa qz-fa-se qz-text-green fa fa-floppy-o');
 
                 upHour.onclick = function() {
-                    var eTime = this.parentElement.querySelector('.js-self-timeon');
+                    var eTime = this.parentElement.querySelector('.js-time-edit-box');
                     var time = eTime.textContent.split(':');
                     var hour = parseInt(time[0]);
                     if (hour == 23) hour = 0;
@@ -355,7 +361,7 @@
                     eTime.textContent = hour.padStart(2) + ':' + time[1];
                 };
                 downHour.onclick = function() {
-                    var eTime = this.parentElement.querySelector('.js-self-timeon');
+                    var eTime = this.parentElement.querySelector('.js-time-edit-box');
                     var time = eTime.textContent.split(':');
                     var hour = parseInt(time[0]);
                     if (hour == 0) hour = 23;
@@ -363,7 +369,7 @@
                     eTime.textContent = hour.padStart(2) + ':' + time[1];
                 };
                 upMin.onclick = function() {
-                    var eTime = this.parentElement.querySelector('.js-self-timeon');
+                    var eTime = this.parentElement.querySelector('.js-time-edit-box');
                     var time = eTime.textContent.split(':');
                     var min = parseInt(time[1]);
                     if (min == 59) min = 0;
@@ -371,7 +377,7 @@
                     eTime.textContent = time[0] + ':' + min.padStart(2);
                 };
                 downMin.onclick = function() {
-                    var eTime = this.parentElement.querySelector('.js-self-timeon');
+                    var eTime = this.parentElement.querySelector('.js-time-edit-box');
                     var time = eTime.textContent.split(':');
                     var min = parseInt(time[1]);
                     if (min == 0) min = 59;
@@ -379,16 +385,15 @@
                     eTime.textContent = time[0] + ':' + min.padStart(2);
                 };
                 cancel.onclick = function() {
-                    TimeOn.deactivate();
+                    options.finally();
                     this.parentElement.remove();
                 };
                 save.onclick = function() {
-                    TimeOn.deactivate();
+                    options.finally();
                     var eDay = this.parentElement.parentElement;
                     var eDate = eDay.querySelector('[id^=hiddenDiaApont]').value;
-                    var eTime = eDay.querySelector('.js-self-timeon').textContent;
-                    if (TimeOn.add(eDate, eTime))
-                        Queiroz.reload();
+                    var eTime = eDay.querySelector('.js-time-edit-box').textContent;
+                    options.save(eDate, eTime);
                 };
 
                 box.appendChild(helpText);
@@ -402,6 +407,29 @@
                 box.appendChild(cancel);
                 box.appendChild(save);
                 return box;
+            },
+            _buildMockTime = function(options) {
+                var
+                    div = _buildTag(TagName.DIV, 'FilledSlot qz-text-primary'),
+                    spanTime = _buildTag(TagName.SPAN, 'Time'+options.direction, options.mockTime),
+                    spanRemove = _buildTag(TagName.SPAN,'qz-fa qz-fa-se fa fa-times');
+
+                div.data('data-key', options.key);
+                div.data('data-mocktime', options.mockTime);
+
+                spanRemove.onclick = function() {
+                    var
+                        e = this.parentElement,
+                        eDate = e.data('data-key'),
+                        mockTime = e.data('data-mocktime');
+
+                    options.remove(eDate, mockTime);
+                    options.finally();
+                };
+
+                div.appendChild(spanTime);
+                div.appendChild(spanRemove);
+                return div;
             };
 
         /* Public Functions */
@@ -416,26 +444,57 @@
             buildToggleForDayOff: function(key) {
                 return _buildTag(TagName.SPAN, 'fa fa-toggle-'+key+' qz-toggle');
             },
-            buildDayOptions: function(TimeOn) {
+            buildDayOptions: function(TimeOn, MockTime) {
                 var dropdown = _buildTag(TagName.DIV, 'qz-dropdown');
                 var icon = _buildTag(TagName.SPAN, 'fa fa-bars qz-text-teal');
                 var content = _buildTag(TagName.DIV, 'qz-dropdown-content');
-                var addTimeOn = _buildTag(TagName.P, '', '+ Abonar Falta');
+                var addTimeOn = _buildTag(TagName.P, 'qz-text-left', ':: Abonar Falta');
+                var addMockTime = _buildTag(TagName.P, 'qz-text-left', ':: Mock Time');
 
                 addTimeOn.onclick = function() {
                     var eDay = this.parentElement.parentElement.parentElement.parentElement;
-                    if (eDay.querySelector('.js-has-timeon'))
+                    if (eDay.querySelector('.js-has-edit-box'))
                         return;
 
                     window.scrollTo(0, 300);
                     setTimeout(function() {
-                        eDay.appendChild(_buildEditableTimeOnBox(TimeOn));
+                        var options = {
+                            'helpText': Strings('timeOn'),
+                            'init': TimeOn.activate,
+                            'finally': TimeOn.deactivate,
+                            'save': function(eDate, eTime) {
+                                if (TimeOn.add(eDate, eTime))
+                                    Queiroz.reload();
+                            }
+                        };
+                        eDay.appendChild(_buildEditableTimeOnBox(options));
+                    }, 250);
+                };
+
+                addMockTime.onclick = function() {
+                    var eDay = this.parentElement.parentElement.parentElement.parentElement;
+                    if (eDay.querySelector('.js-has-edit-box'))
+                        return;
+
+                    window.scrollTo(0, 300);
+                    setTimeout(function() {
+                        var options = {
+                            'helpText': Strings('mockTime'),
+                            'init': MockTime.activate,
+                            'finally': MockTime.deactivate,
+                            'save': function(eDate, eTime) {
+                                if (MockTime.add(eDate, eTime))
+                                    Queiroz.reload();
+                            }
+                        };
+                        eDay.appendChild(_buildEditableTimeOnBox(options));
                     }, 250);
                 };
 
                 dropdown.appendChild(icon);
                 dropdown.appendChild(content);
                 content.appendChild(addTimeOn);
+                content.appendChild(addMockTime);
                 return dropdown;
             },
             headerBeta: function() {
@@ -550,7 +609,8 @@
                 };
                 box.appendChild(remove);
                 return box;
-            }
+            },
+            buildMockTime: _buildMockTime
         };
     }();
 
@@ -1188,6 +1248,46 @@
           _appendTo = function(target, element) {
               var filledSlotOut = target.parentNode;
               filledSlotOut.parentNode.insertBefore(element, filledSlotOut.nextSibling);
+          },
+          _getDisplayedDays = function() {
+              var
+                  days = [],
+                  eColumns = _getAll(Selector.COLUMN_DAY);
+
+              eColumns.forEach(function(eDay) {
+                  days.push(_get(Selector.DATE, eDay).value);
+              });
+
+              return days; // [dd_mm_yyyy,dd_mm_yyyy,...]
+          },
+          _injectTimes = function(MockTime) {
+              var eColumns = _getAll(Selector.COLUMN_DAY);
+
+              eColumns.forEach(function(eDay) {
+                  var eDate = _get(Selector.DATE, eDay).value;
+                  if (MockTime.has(eDate)) {
+                      var
+                          eCheckpoints = _getAll(Selector.CHECKPOINT, eDay),
+                          length = eCheckpoints.length;
+
+                      MockTime.get(eDate).forEach(function(time, index) {
+                          var
+                              pair = (length + (index+1)) % 2 == 0,
+                              direction = pair ? 'OUT' : 'IN', // 1=IN, 2=OUT, 3=IN, 4=OUT...
+                              options = {
+                                  'key': eDate,
+                                  'mockTime': time,
+                                  'direction': direction,
+                                  'remove': MockTime.remove,
+                                  'finally': function() {
+                                      Queiroz.reload();
+                                  }
+                              };
+
+                          eDay.appendChild(Snippet.buildMockTime(options));
+                      });
+                  }
+              });
           };
 
         /* Public Functions */
@@ -1338,7 +1438,9 @@
             },
             appendToggle: function(target, eToggle) {
                 _get(Selector.TOOGLE, target).parentElement.appendChild(eToggle);
-            }
+            },
+            getDisplayedDays: _getDisplayedDays,
+            injectTimes: _injectTimes
         };
     }();
 
@@ -1347,6 +1449,161 @@
     Queiroz.module.view = View;
 
 })(document, Queiroz);
+
+
+/*!
+ * Queiroz.js: mocktime.js
+ * JavaScript Extension for Dimep Kairos
+ * https://github.com/viniciusknob/queiroz.js
+ */
+
+(function(localStorage, Queiroz) {
+
+    /* Dependencies */
+
+    var
+        mod  = Queiroz.module,
+        Time = mod.time,
+        View = mod.view;
+
+    /* Class Definition */
+
+    var MockTime = function() {
+
+        /* Variables and Constants */
+
+        var
+            NAME = "mockTime",
+            cache = {},
+            _observers = [];
+
+        /* Private Functions */
+
+        var
+            _persistCache = function() {
+                localStorage.setItem(NAME, JSON.stringify(cache));
+            },
+            _buildKey = function(date) {
+                return date.getDate().padStart(2) + "/" + date.getFixedMonth().padStart(2);
+            },
+            _get = function(date) {
+                if (typeof date === 'string')
+                    date = Date.parseKairos(date + " " + Time.zero);
+
+                return cache[_buildKey(date)];
+            },
+            _has = function(date, mockTime) {
+                if (!!date == false)
+                    return false;
+
+                if (typeof date === 'string')
+                    date = Date.parseKairos(date + " " + Time.zero);
+
+                var cachedDate = cache[_buildKey(date)];
+                if (!!cachedDate == false)
+                    return false;
+
+                if (date && mockTime) {
+                    var
+                        found = false;
+                        timeArr = _get(date);
+
+                    timeArr.forEach(function(time) {
+                        if (mockTime == time)
+                            found = true;
+                    });
+
+                    return found;
+                } else {
+                    return !!cachedDate;
+                }
+                return false;
+            },
+            _inject = function() {
+                View.injectTimes(MockTime);
+            },
+            _add = function(eDate, eTime) {
+                var
+                    date = Date.parseKairos(eDate + " " + Time.zero),
+                    key = _buildKey(date);
+
+                if (_has(date) == false)
+                    cache[key] = [];
+                else if (_has(date, eTime))
+                    return true;
+
+                cache[key].push(eTime);
+
+                _persistCache();
+
+                return true;
+            },
+            _remove = function(date, mockTime) {
+                if (typeof date === 'string')
+                    date = Date.parseKairos(date + " " + Time.zero);
+
+                if (_has(date, mockTime) == false)
+                    return;
+
+                var key = _buildKey(date);
+                if (_get(date).length == 1) {
+                    delete cache[key];
+                } else {
+                    var
+                        newTimeArr = [],
+                        timeArr = _get(date);
+
+                    timeArr.forEach(function(time) {
+                        if (mockTime != time)
+                            newTimeArr.push(time);
+                    });
+
+                    cache[key] = newTimeArr;
+                }
+
+                _persistCache();
+            },
+            _addObserver = function(observer) { // Observer Pattern
+                _observers.push(observer);
+            },
+            _notifyObservers = function(enable) { // Observer Pattern
+                _observers.forEach(function(observer) {
+                    observer.update(MockTime, { isActive: enable });
+                });
+            },
+            _activate = function() { // Observer Pattern
+                _notifyObservers(true);
+            },
+            _deactivate = function() { // Observer Pattern
+                _notifyObservers(false);
+            };
+
+
+        // Initialize cache
+        if (localStorage.hasItem(NAME)) {
+            cache = JSON.parse(localStorage.getItem(NAME));
+        }
+
+        /* Public Functions */
+
+        return {
+            injectIfExists: _inject,
+            has: _has,
+            get: _get,
+            add: _add,
+            remove: _remove,
+            addObserver: _addObserver,
+            activate: _activate,
+            deactivate: _deactivate
+        };
+
+    }();
+
+    /* Module Definition */
+
+    Queiroz.module.mocktime = MockTime;
+
+})(localStorage, Queiroz);
 
 
 /*!
@@ -1363,6 +1620,7 @@
         Settings  = Queiroz.settings,
         mod       = Queiroz.module,
         KeepAlive = mod.keepalive,
+        MockTime  = mod.mocktime,
         Snippet   = mod.snippet,
         View      = mod.view,
         DayOff    = mod.dayoff,
@@ -1416,7 +1674,7 @@
                 target.innerHTML = dateString;
 
                 if (DayOff.is(day) == false) {
-                    target.insertBefore(Snippet.buildDayOptions(TimeOn), target.firstChild);
+                    target.insertBefore(Snippet.buildDayOptions(TimeOn, MockTime), target.firstChild);
                     target.querySelector('.qz-dropdown').onmouseover = function() {
                         var menu = target.querySelector('.qz-dropdown-content');
                         menu.style.minWidth = target.offsetWidth + 'px';
@@ -1426,6 +1684,7 @@
         },
         _init = function() {
             View.appendToHead(Snippet.style());
+            MockTime.injectIfExists();
             var data = View.read();
             Time.parse(data);
             View.removeUnusedDays(data);
@@ -1456,6 +1715,7 @@
             _initWithDelay();
         }
         TimeOn.addObserver(KeepAlive);
+        MockTime.addObserver(KeepAlive);
         window.addEventListener('unload', Notice.closeFiredOnUnload);
         View.appendToFooter(this.description);
         return this.description;
@@ -1469,7 +1729,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.2.36</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.3.36</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');

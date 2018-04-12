@@ -12,6 +12,7 @@
     "weeklyGoal" : "Meta Semanal",
     "dailyGoal" : "Meta do dia",
     "timeOn" : "Falta Abonada",
+    "mockTime" : "Mock Time",
     "notice" : "Notificações",
     "noticeMaxConsecutive" : "Em _min_min você atingirá 6h de trabalho sem intervalo",
     "noticeDailyGoal" : "Em _min_min você completará a Meta Diária de 8h48",

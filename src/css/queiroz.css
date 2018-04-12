@@ -4,6 +4,9 @@
 .qz-text-center {
     text-align: center;
 }
+.qz-text-left {
+    text-align: left;
+}
 .qz-text-primary { /* change primary for brown */
     color: #a52a2a;
 }
@@ -117,7 +120,7 @@
 
 .qz-dropdown-content p {
     font-weight: normal;
-    padding: 3px;
+    padding: 5px;
     font-size: 11px;
 }
 

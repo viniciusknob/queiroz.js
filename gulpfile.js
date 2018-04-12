@@ -36,7 +36,7 @@ var
     },
 
     Settings = {
-        VERSION: '3.2.36',
+        VERSION: '3.3.36',
         versionRegex: '(?:\\d+\\.){2}\\d+(?:-beta\\.\\d+)?',
         env: {
             DEV: {
@@ -216,6 +216,7 @@ gulp.task('dev.concat', function() {
             'src/js/timeon.js',
             'src/js/notice.js',
             'src/js/view.js',
+            'src/js/mocktime.js',
             'src/js/core.js',
             'src/js/autoexec.js'
         ])
@@ -238,6 +239,7 @@ gulp.task('all.concat', function() {
             'src/js/timeon.js',
             'src/js/notice.js',
             'src/js/view.js',
+            'src/js/mocktime.js',
             'src/js/core.js',
             'src/js/autoexec.js'
         ])

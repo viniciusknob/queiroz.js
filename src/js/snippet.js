@@ -57,21 +57,21 @@
                 if (opt.inlineText) box.className += ' qz-box-inline';
                 return box;
             },
-            _buildEditableTimeOnBox = function(TimeOn) {
-                TimeOn.activate();
+            _buildEditableTimeOnBox = function(options) {
+                options.init();
 
-                var box = _buildTag(TagName.DIV, 'qz-box qz-box-muted qz-text-center js-has-timeon');
-                var helpText = _buildTag(TagName.DIV, 'qz-help-text', Strings('timeOn'));
+                var box = _buildTag(TagName.DIV, 'qz-box qz-box-muted qz-text-center js-has-edit-box');
+                var helpText = _buildTag(TagName.DIV, 'qz-help-text', options.helpText);
                 var upHour = _buildTag(TagName.SPAN,'qz-fa fa fa-chevron-up');
                 var upMin = _buildTag(TagName.SPAN,'qz-fa fa fa-chevron-up');
-                var eTime = _buildTag(TagName.STRONG, 'qz-box-content js-self-timeon', '00:00');
+                var eTime = _buildTag(TagName.STRONG, 'qz-box-content js-time-edit-box', '00:00');
                 var downHour = _buildTag(TagName.SPAN,'qz-fa fa fa-chevron-down');
                 var downMin = _buildTag(TagName.SPAN,'qz-fa fa fa-chevron-down');
                 var cancel = _buildTag(TagName.SPAN,'qz-fa qz-fa-sw fa fa-times');
                 var save = _buildTag(TagName.SPAN,'qz-fa qz-fa-se qz-text-green fa fa-floppy-o');
 
                 upHour.onclick = function() {
-                    var eTime = this.parentElement.querySelector('.js-self-timeon');
+                    var eTime = this.parentElement.querySelector('.js-time-edit-box');
                     var time = eTime.textContent.split(':');
                     var hour = parseInt(time[0]);
                     if (hour == 23) hour = 0;
@@ -79,7 +79,7 @@
                     eTime.textContent = hour.padStart(2) + ':' + time[1];
                 };
                 downHour.onclick = function() {
-                    var eTime = this.parentElement.querySelector('.js-self-timeon');
+                    var eTime = this.parentElement.querySelector('.js-time-edit-box');
                     var time = eTime.textContent.split(':');
                     var hour = parseInt(time[0]);
                     if (hour == 0) hour = 23;
@@ -87,7 +87,7 @@
                     eTime.textContent = hour.padStart(2) + ':' + time[1];
                 };
                 upMin.onclick = function() {
-                    var eTime = this.parentElement.querySelector('.js-self-timeon');
+                    var eTime = this.parentElement.querySelector('.js-time-edit-box');
                     var time = eTime.textContent.split(':');
                     var min = parseInt(time[1]);
                     if (min == 59) min = 0;
@@ -95,7 +95,7 @@
                     eTime.textContent = time[0] + ':' + min.padStart(2);
                 };
                 downMin.onclick = function() {
-                    var eTime = this.parentElement.querySelector('.js-self-timeon');
+                    var eTime = this.parentElement.querySelector('.js-time-edit-box');
                     var time = eTime.textContent.split(':');
                     var min = parseInt(time[1]);
                     if (min == 0) min = 59;
@@ -103,16 +103,15 @@
                     eTime.textContent = time[0] + ':' + min.padStart(2);
                 };
                 cancel.onclick = function() {
-                    TimeOn.deactivate();
+                    options.finally();
                     this.parentElement.remove();
                 };
                 save.onclick = function() {
-                    TimeOn.deactivate();
+                    options.finally();
                     var eDay = this.parentElement.parentElement;
                     var eDate = eDay.querySelector('[id^=hiddenDiaApont]').value;
-                    var eTime = eDay.querySelector('.js-self-timeon').textContent;
-                    if (TimeOn.add(eDate, eTime))
-                        Queiroz.reload();
+                    var eTime = eDay.querySelector('.js-time-edit-box').textContent;
+                    options.save(eDate, eTime);
                 };
 
                 box.appendChild(helpText);
@@ -126,6 +125,29 @@
                 box.appendChild(cancel);
                 box.appendChild(save);
                 return box;
+            },
+            _buildMockTime = function(options) {
+                var
+                    div = _buildTag(TagName.DIV, 'FilledSlot qz-text-primary'),
+                    spanTime = _buildTag(TagName.SPAN, 'Time'+options.direction, options.mockTime),
+                    spanRemove = _buildTag(TagName.SPAN,'qz-fa qz-fa-se fa fa-times');
+
+                div.data('data-key', options.key);
+                div.data('data-mocktime', options.mockTime);
+
+                spanRemove.onclick = function() {
+                    var
+                        e = this.parentElement,
+                        eDate = e.data('data-key'),
+                        mockTime = e.data('data-mocktime');
+
+                    options.remove(eDate, mockTime);
+                    options.finally();
+                };
+
+                div.appendChild(spanTime);
+                div.appendChild(spanRemove);
+                return div;
             };
 
         /* Public Functions */
@@ -140,26 +162,57 @@
             buildToggleForDayOff: function(key) {
                 return _buildTag(TagName.SPAN, 'fa fa-toggle-'+key+' qz-toggle');
             },
-            buildDayOptions: function(TimeOn) {
+            buildDayOptions: function(TimeOn, MockTime) {
                 var dropdown = _buildTag(TagName.DIV, 'qz-dropdown');
                 var icon = _buildTag(TagName.SPAN, 'fa fa-bars qz-text-teal');
                 var content = _buildTag(TagName.DIV, 'qz-dropdown-content');
-                var addTimeOn = _buildTag(TagName.P, '', '+ Abonar Falta');
+                var addTimeOn = _buildTag(TagName.P, 'qz-text-left', ':: Abonar Falta');
+                var addMockTime = _buildTag(TagName.P, 'qz-text-left', ':: Mock Time');
 
                 addTimeOn.onclick = function() {
                     var eDay = this.parentElement.parentElement.parentElement.parentElement;
-                    if (eDay.querySelector('.js-has-timeon'))
+                    if (eDay.querySelector('.js-has-edit-box'))
                         return;
 
                     window.scrollTo(0, 300);
                     setTimeout(function() {
-                        eDay.appendChild(_buildEditableTimeOnBox(TimeOn));
+                        var options = {
+                            'helpText': Strings('timeOn'),
+                            'init': TimeOn.activate,
+                            'finally': TimeOn.deactivate,
+                            'save': function(eDate, eTime) {
+                                if (TimeOn.add(eDate, eTime))
+                                    Queiroz.reload();
+                            }
+                        };
+                        eDay.appendChild(_buildEditableTimeOnBox(options));
+                    }, 250);
+                };
+
+                addMockTime.onclick = function() {
+                    var eDay = this.parentElement.parentElement.parentElement.parentElement;
+                    if (eDay.querySelector('.js-has-edit-box'))
+                        return;
+
+                    window.scrollTo(0, 300);
+                    setTimeout(function() {
+                        var options = {
+                            'helpText': Strings('mockTime'),
+                            'init': MockTime.activate,
+                            'finally': MockTime.deactivate,
+                            'save': function(eDate, eTime) {
+                                if (MockTime.add(eDate, eTime))
+                                    Queiroz.reload();
+                            }
+                        };
+                        eDay.appendChild(_buildEditableTimeOnBox(options));
                     }, 250);
                 };
 
                 dropdown.appendChild(icon);
                 dropdown.appendChild(content);
                 content.appendChild(addTimeOn);
+                content.appendChild(addMockTime);
                 return dropdown;
             },
             headerBeta: function() {
@@ -274,7 +327,8 @@
                 };
                 box.appendChild(remove);
                 return box;
-            }
+            },
+            buildMockTime: _buildMockTime
         };
     }();
 
