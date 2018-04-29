@@ -9,8 +9,9 @@
     /* Modules */
 
     var
-        Settings = Queiroz.settings,
-        Kairos   = Queiroz.module.kairos;
+        mod      = Queiroz.module,
+        Settings = mod.settings,
+        Kairos   = mod.kairos;
 
     /* Class Definition */
 

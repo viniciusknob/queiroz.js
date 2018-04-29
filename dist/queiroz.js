@@ -15,8 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.3.36',
-            SETTINGS = {"USERSCRIPT_DELAY":1000,"MAX_CONSECUTIVE_MINUTES":360,"MAX_DAILY_MINUTES":600,"WEEKLY_GOAL_MINUTES":2640,"DAILY_GOAL_MINUTES":528,"WORK_DAYS":[1,2,3,4,5],"INITIAL_WEEKDAY":1,"GA_TRACKING_ID":"UA-105390656-1","QZ_KEEPALIVE":60000,"KS_KEEPALIVE":1200000,"NOTICE_RANGE_MINUTES":[15,5,3,1],"NOTICE_ICON":"https://github.com/viniciusknob/queiroz.js/raw/master/src/img/ic_notification.png"};
+            VERSION = '3.4.36';
 
         /* Public API */
 
@@ -24,8 +23,7 @@
           name: NAME,
           version: VERSION,
           description: NAME + ' ' + VERSION,
-          module: {},
-          settings: SETTINGS
+          module: {}
         };
     }();
 
@@ -34,59 +32,6 @@
     window.Queiroz = Queiroz;
 
 })(window);
-
-/*!
- * Queiroz.js: analytics.js
- * JavaScript Extension for Dimep Kairos
- * https://github.com/viniciusknob/queiroz.js
- *
- * Analytics DevGuide:
- * https://developers.google.com/analytics/devguides/collection/analyticsjs/
- */
-
-(function(Queiroz, ga) {
-
-    var
-        Settings = Queiroz.settings,
-        trackerName = 'qzTkr';
-
-    ga('create', Settings.GA_TRACKING_ID, 'auto', trackerName);
-
-    ga(trackerName+'.set', {
-        appName: Queiroz.name,
-        appVersion: Queiroz.version
-    });
-
-    ga(trackerName+'.send', 'screenview', {
-        screenName: document.querySelector('.PageTitle').textContent
-    });
-
-})(Queiroz, ga);
-
-
-/*!
- * Queiroz.js: kairos.js
- * JavaScript Extension for Dimep Kairos
- * https://github.com/viniciusknob/queiroz.js
- */
-
-(function(window, Queiroz) {
-
-    /* Class Definition */
-
-    var Kairos = function() {
-        return {
-            reload: function() {
-                window.location.reload(true);
-            }
-        };
-    }();
-
-    /* Module Definition */
-
-    Queiroz.module.kairos = Kairos;
-
-})(window, Queiroz);
 
 
 /*!
@@ -167,6 +112,117 @@
 
 })();
 
+
+/*!
+ * Queiroz.js
+ * JavaScript Extension for Dimep Kairos
+ * https://github.com/viniciusknob/queiroz.js
+ */
+
+(function(localStorage, Queiroz) {
+
+    /* Class Definition */
+
+    var Settings = function() {
+
+        /* Variables and Constants */
+
+        var
+            NAME = 'settings',
+            DEFAULT = {"_static_":{"userscriptDelay":1000,"maxConsecutiveMinutes":360,"maxDailyMinutes":600,"weeklyGoalMinutes":2640,"dailyGoalMinutes":528,"workDays":[1,2,3,4,5],"initialWeekday":1,"gaTrackingId":"UA-105390656-1","qzKeepalive":60000,"ksKeepalive":1200000,"noticeRangeMinutes":[15,5,3,1],"notice_icon":"https://github.com/viniciusknob/queiroz.js/raw/master/src/img/ic_notification.png"},"_mutable_":{}},
+            cache = {};
+
+        /* Private Functions */
+
+        var
+            _persistCache = function() {
+                localStorage.setItem(NAME, JSON.stringify(cache));
+            };
+
+
+        // Initialize cache
+        if (localStorage.hasItem(NAME)) {
+            cache = JSON.parse(localStorage.getItem(NAME));
+        }
+
+        /* Public API */
+
+        return {
+            USERSCRIPT_DELAY: DEFAULT._static_.userscriptDelay,
+            MAX_CONSECUTIVE_MINUTES: DEFAULT._static_.maxConsecutiveMinutes,
+            MAX_DAILY_MINUTES: DEFAULT._static_.maxDailyMinutes,
+            WEEKLY_GOAL_MINUTES: DEFAULT._static_.weeklyGoalMinutes,
+            DAILY_GOAL_MINUTES: DEFAULT._static_.dailyGoalMinutes,
+            WORK_DAYS: DEFAULT._static_.workDays,
+            INITIAL_WEEKDAY: DEFAULT._static_.initialWeekday,
+            GA_TRACKING_ID: DEFAULT._static_.gaTrackingId,
+            QZ_KEEPALIVE: DEFAULT._static_.qzKeepalive,
+            KS_KEEPALIVE: DEFAULT._static_.ksKeepalive,
+            NOTICE_RANGE_MINUTES: DEFAULT._static_.noticeRangeMinutes,
+            NOTICE_ICON: DEFAULT._static_.notice_icon
+        };
+
+    }();
+
+    /* Module Definition */
+
+    Queiroz.module.settings = Settings;
+
+})(localStorage, Queiroz);
+
+/*!
+ * Queiroz.js: analytics.js
+ * JavaScript Extension for Dimep Kairos
+ * https://github.com/viniciusknob/queiroz.js
+ *
+ * Analytics DevGuide:
+ * https://developers.google.com/analytics/devguides/collection/analyticsjs/
+ */
+
+(function(Queiroz, ga) {
+
+    var
+        Settings = Queiroz.module.settings,
+        trackerName = 'qzTkr';
+
+    ga('create', Settings.GA_TRACKING_ID, 'auto', trackerName);
+
+    ga(trackerName+'.set', {
+        appName: Queiroz.name,
+        appVersion: Queiroz.version
+    });
+
+    ga(trackerName+'.send', 'screenview', {
+        screenName: document.querySelector('.PageTitle').textContent
+    });
+
+})(Queiroz, ga);
+
+
+/*!
+ * Queiroz.js: kairos.js
+ * JavaScript Extension for Dimep Kairos
+ * https://github.com/viniciusknob/queiroz.js
+ */
+
+(function(window, Queiroz) {
+
+    /* Class Definition */
+
+    var Kairos = function() {
+        return {
+            reload: function() {
+                window.location.reload(true);
+            }
+        };
+    }();
+
+    /* Module Definition */
+
+    Queiroz.module.kairos = Kairos;
+
+})(window, Queiroz);
+
 /*!
  * Queiroz.js: keepalive.js
  * JavaScript Extension for Dimep Kairos
@@ -178,8 +234,9 @@
     /* Modules */
 
     var
-        Settings = Queiroz.settings,
-        Kairos   = Queiroz.module.kairos;
+        mod      = Queiroz.module,
+        Settings = mod.settings,
+        Kairos   = mod.kairos;
 
     /* Class Definition */
 
@@ -711,8 +768,9 @@
     /* Modules */
 
     var
-        Settings = Queiroz.settings,
-        DayOff   = Queiroz.module.dayoff;
+        mod      = Queiroz.module,
+        Settings = mod.settings,
+        DayOff   = mod.dayoff;
 
     /* Class Definition */
 
@@ -1060,8 +1118,8 @@
     /* Modules */
 
     var
-        Settings  = Queiroz.settings,
         mod       = Queiroz.module,
+        Settings  = mod.settings,
         Time      = mod.time,
         Strings   = mod.strings;
 
@@ -1190,8 +1248,8 @@
     /* Modules */
 
     var
-        Settings = Queiroz.settings,
         mod      = Queiroz.module,
+        Settings = mod.settings,
         Snippet  = mod.snippet,
         TimeOn   = mod.timeon,
         Notice   = mod.notice;
@@ -1617,8 +1675,8 @@
     /* Modules */
 
     var
-        Settings  = Queiroz.settings,
         mod       = Queiroz.module,
+        Settings  = mod.settings,
         KeepAlive = mod.keepalive,
         MockTime  = mod.mocktime,
         Snippet   = mod.snippet,
@@ -1729,7 +1787,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.3.36</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.4.36</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');

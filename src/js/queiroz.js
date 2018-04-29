@@ -15,8 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '__version__',
-            SETTINGS = __settings__;
+            VERSION = '__version__';
 
         /* Public API */
 
@@ -24,8 +23,7 @@
           name: NAME,
           version: VERSION,
           description: NAME + ' ' + VERSION,
-          module: {},
-          settings: SETTINGS
+          module: {}
         };
     }();
 

@@ -10,7 +10,7 @@
 (function(Queiroz, ga) {
 
     var
-        Settings = Queiroz.settings,
+        Settings = Queiroz.module.settings,
         trackerName = 'qzTkr';
 
     ga('create', Settings.GA_TRACKING_ID, 'auto', trackerName);

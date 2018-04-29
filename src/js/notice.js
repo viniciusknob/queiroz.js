@@ -10,8 +10,8 @@
     /* Modules */
 
     var
-        Settings  = Queiroz.settings,
         mod       = Queiroz.module,
+        Settings  = mod.settings,
         Time      = mod.time,
         Strings   = mod.strings;
 

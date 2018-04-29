@@ -10,8 +10,8 @@
     /* Modules */
 
     var
-        Settings = Queiroz.settings,
         mod      = Queiroz.module,
+        Settings = mod.settings,
         Snippet  = mod.snippet,
         TimeOn   = mod.timeon,
         Notice   = mod.notice;

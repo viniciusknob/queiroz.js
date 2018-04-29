@@ -36,7 +36,7 @@ var
     },
 
     Settings = {
-        VERSION: '3.3.36',
+        VERSION: '3.4.36',
         versionRegex: '(?:\\d+\\.){2}\\d+(?:-beta\\.\\d+)?',
         env: {
             DEV: {
@@ -205,8 +205,9 @@ gulp.task('js.docToMin', function() {
 gulp.task('dev.concat', function() {
     return gulp.src([
             'src/js/queiroz.js',
-            'src/js/kairos.js',
             'src/js/polyfill.js',
+            'src/js/settings.js',
+            'src/js/kairos.js',
             'src/js/keepalive.js',
             'src/js/strings.js',
             'src/js/style.js',
@@ -227,9 +228,10 @@ gulp.task('dev.concat', function() {
 gulp.task('all.concat', function() {
     return gulp.src([
             'src/js/queiroz.js',
+            'src/js/polyfill.js',
+            'src/js/settings.js',
             'src/js/analytics.js',
             'src/js/kairos.js',
-            'src/js/polyfill.js',
             'src/js/keepalive.js',
             'src/js/strings.js',
             'src/js/style.js',

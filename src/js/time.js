@@ -9,8 +9,9 @@
     /* Modules */
 
     var
-        Settings = Queiroz.settings,
-        DayOff   = Queiroz.module.dayoff;
+        mod      = Queiroz.module,
+        Settings = mod.settings,
+        DayOff   = mod.dayoff;
 
     /* Class Definition */
 

@@ -10,8 +10,8 @@
     /* Modules */
 
     var
-        Settings  = Queiroz.settings,
         mod       = Queiroz.module,
+        Settings  = mod.settings,
         KeepAlive = mod.keepalive,
         MockTime  = mod.mocktime,
         Snippet   = mod.snippet,
