@@ -26,6 +26,7 @@
             TagName = {
                 BR: 'br',
                 DIV: 'div',
+                A: 'a',
                 P: 'p',
                 SPAN: 'span',
                 STYLE: 'style',
@@ -168,6 +169,18 @@
                 hideLastWeekDays.appendChild(enable);
                 menu.appendChild(hideLastWeekDays);
                 // end hideLastWeekDays
+
+                // about
+                var about = _buildTag(TagName.P, 'qz-text-left');
+                var linkGitHub = _buildTag(TagName.A, 'qz-menu-item-anchor', Strings('menuItemAbout'));
+                linkGitHub.href = 'https://github.com/viniciusknob/queiroz.js';
+                linkGitHub.target = '_blank';
+                about.onclick = function() {
+                    linkGitHub.click();
+                };
+                about.appendChild(linkGitHub);
+                menu.appendChild(about);
+                // end about
 
                 box.appendChild(menu);
                 return box;

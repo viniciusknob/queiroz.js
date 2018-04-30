@@ -132,6 +132,10 @@
     float: right;
     margin: -1px;
 }
+.qz-menu-item-anchor {
+    color: inherit;
+    cursor: inherit;
+}
 .qz-column-menu {
     margin-right: 10px;
     vertical-align: text-bottom;
