@@ -16,6 +16,9 @@
         var
             NAME = 'settings',
             DEFAULT = __settings__,
+            KEY = {
+                hideLastWeekDays: 'hideLastWeekDays'
+            },
             cache = {};
 
         /* Private Functions */
@@ -23,6 +26,19 @@
         var
             _persistCache = function() {
                 localStorage.setItem(NAME, JSON.stringify(cache));
+            },
+            _hideLastWeekDays = function(enable) {
+                if (typeof enable === 'boolean') {
+                    cache[KEY.hideLastWeekDays] = enable;
+                    _persistCache();
+                    return;
+                }
+
+                var value = cache[KEY.hideLastWeekDays];
+                if (typeof value === 'boolean')
+                    return cache[KEY.hideLastWeekDays];
+
+                return DEFAULT._mutable_.hideLastWeekDays;
             };
 
 
@@ -45,7 +61,8 @@
             QZ_KEEPALIVE: DEFAULT._static_.qzKeepalive,
             KS_KEEPALIVE: DEFAULT._static_.ksKeepalive,
             NOTICE_RANGE_MINUTES: DEFAULT._static_.noticeRangeMinutes,
-            NOTICE_ICON: DEFAULT._static_.notice_icon
+            NOTICE_ICON: DEFAULT._static_.notice_icon,
+            hideLastWeekDays: _hideLastWeekDays
         };
 
     }();

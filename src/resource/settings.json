@@ -14,6 +14,6 @@
         "notice_icon": "https://github.com/viniciusknob/queiroz.js/raw/master/src/img/ic_notification.png"
     },
     "_mutable_": {
-        
+        "hideLastWeekDays": true
     }
 }

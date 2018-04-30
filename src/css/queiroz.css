@@ -43,6 +43,11 @@
 .qz-box-head {
     float: right;
 }
+.qz-box-icon {
+    min-width: auto;
+    font-size: 25px;
+    border: initial;
+}
 .qz-box-muted {
     background-color: lightgray;
 }
@@ -84,7 +89,6 @@
 .js-show {
     display: block;
 }
-
 .js-hide {
     display: none;
 }
@@ -98,12 +102,8 @@
 /* Queiroz.js Dropdown */
 
 .qz-dropdown {
-    margin-right: 10px;
-    vertical-align: text-bottom;
     position: relative;
-    display: inline;
 }
-
 .qz-dropdown-content {
     display: none;
     position: absolute;
@@ -113,19 +113,29 @@
     padding: 2px;
     z-index: 1024;
 }
-
 .qz-dropdown:hover .qz-dropdown-content {
     display: block;
 }
-
 .qz-dropdown-content p {
     font-weight: normal;
     padding: 5px;
     font-size: 11px;
 }
-
 .qz-dropdown-content p:hover {
     background-color: #f0e68c;
+}
+.qz-menu {
+    min-width: 200px;
+    left: -160px;
+}
+.qz-menu-item-icon {
+    float: right;
+    margin: -1px;
+}
+.qz-column-menu {
+    margin-right: 10px;
+    vertical-align: text-bottom;
+    display: inline;
 }
 
 /* Queiroz.js Modal */

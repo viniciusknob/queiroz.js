@@ -150,16 +150,7 @@
                 data.days = days;
                 return data;
             },
-            removeUnusedDays: function(data) {
-                var
-                    targetIndex = 0,
-                    days = data.days;
-                days.forEach(function(day, index) {
-                    if (day.date.getDay() === Settings.INITIAL_WEEKDAY)
-                        targetIndex = index;
-                });
-                data.days = days.slice(targetIndex);
-
+            hideLastWeekDays: function(data) {
                 var eColumns = _getAll(Selector.COLUMN_DAY);
                 eColumns.forEach(function(eDay) {
                     var remove = true;
@@ -219,6 +210,7 @@
                 header.appendChild(Snippet.headerLaborTime(data.worked));
                 header.appendChild(Snippet.headerBalanceTime(data.weeklyBalance));
                 header.appendChild(Snippet.headerNoticeStatus(Notice));
+                header.appendChild(Snippet.buildHeaderMenuBox());
                 View.appendToHeader(header);
             },
             isLoaded: function() {

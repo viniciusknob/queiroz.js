@@ -39,10 +39,24 @@
             };
             return eToggle;
         },
-        _buildDayOffOption = function() {
+        _dataContains = function(data, eDay) {
+            var eDate = View.getDateFromTargetAsString(eDay);
+            var found = false;
+            data.days.forEach(function(day) {
+                if (day.date.getDateAsKairos() == eDate)
+                    found = true;
+            });
+            return found;
+        },
+        _buildDayOffOption = function(data) {
+            var active = false;
             View.getAllColumnDay().forEach(function(eDay) {
                 var day = Date.parseKairos(View.getDateFromTargetAsString(eDay) + " " + Time.zero);
-                if (Settings.WORK_DAYS.contains(day.getDay())) {
+
+                if (day.getDay() === Settings.INITIAL_WEEKDAY)
+                    active = true;
+
+                if (active && Settings.WORK_DAYS.contains(day.getDay())) {
                     var eToggle = _buildToggleForDayOff(day);
                     View.appendToggle(eDay, eToggle);
 
@@ -54,8 +68,8 @@
                 }
             });
         },
-        _buildDayOptions = function() {
-            _buildDayOffOption();
+        _buildDayOptions = function(data) {
+            _buildDayOffOption(data);
             View.getAllColumnDay().forEach(function(eDay) {
                 var headersDay = View.getHeadersDay(eDay);
                 var target = headersDay[0];
@@ -66,7 +80,7 @@
                 var dateString = day.toLocaleDateString('pt-BR', options);
                 target.innerHTML = dateString;
 
-                if (DayOff.is(day) == false) {
+                if (DayOff.is(day) == false && _dataContains(data, eDay)) {
                     target.insertBefore(Snippet.buildDayOptions(TimeOn, MockTime), target.firstChild);
                     target.querySelector('.qz-dropdown').onmouseover = function() {
                         var menu = target.querySelector('.qz-dropdown-content');
@@ -75,15 +89,29 @@
                 }
             });
         },
+        _removeDaysBeforeInicialWeekday = function(data) {
+            var
+                targetIndex = 0,
+                days = data.days;
+            days.forEach(function(day, index) {
+                if (day.date.getDay() === Settings.INITIAL_WEEKDAY)
+                    targetIndex = index;
+            });
+            data.days = days.slice(targetIndex);
+        },
         _init = function() {
             View.appendToHead(Snippet.style());
             MockTime.injectIfExists();
             var data = View.read();
             Time.parse(data);
-            View.removeUnusedDays(data);
+            _removeDaysBeforeInicialWeekday(data);
+
+            if (Settings.hideLastWeekDays())
+                View.hideLastWeekDays(data);
+
             DayOff.check(data);
             TimeOn.check(data);
-            _buildDayOptions();
+            _buildDayOptions(data);
             Time.compute(data);
             Notice.check(data);
             Time.toHuman(data);

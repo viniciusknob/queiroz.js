@@ -17,5 +17,7 @@
     "noticeMaxConsecutive" : "Em _min_min você atingirá 6h de trabalho sem intervalo",
     "noticeDailyGoal" : "Em _min_min você completará a Meta Diária de 8h48",
     "noticeMaxDaily" : "Em _min_min você atingirá 10h, o máximo permitido por dia",
-    "noticeWeeklyGoal" : "Em _min_min você completará a Meta Semanal de 44h"
+    "noticeWeeklyGoal" : "Em _min_min você completará a Meta Semanal de 44h",
+    "menuIcon" : "&#9776;",
+    "menuItemHideLastWeekDays" : "Ocultar dias da semana anterior"
 }

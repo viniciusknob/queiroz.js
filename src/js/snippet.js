@@ -10,8 +10,11 @@
     /* Modules */
 
     var
-      Strings = Queiroz.module.strings,
-      Style = Queiroz.module.style;
+        mod      = Queiroz.module,
+        Settings = mod.settings,
+        Kairos   = mod.kairos,
+        Strings  = mod.strings,
+        Style    = mod.style;
 
     /* Class Definition */
 
@@ -57,7 +60,7 @@
                 if (opt.inlineText) box.className += ' qz-box-inline';
                 return box;
             },
-            _buildEditableTimeOnBox = function(options) {
+            _buildEditableBox = function(options) {
                 options.init();
 
                 var box = _buildTag(TagName.DIV, 'qz-box qz-box-muted qz-text-center js-has-edit-box');
@@ -148,6 +151,26 @@
                 div.appendChild(spanTime);
                 div.appendChild(spanRemove);
                 return div;
+            },
+            _buildHeaderMenuBox = function() {
+                var box = _buildTag(TagName.DIV, 'qz-box qz-box-icon qz-box-inline qz-dropdown', Strings('menuIcon'));
+                var menu = _buildTag(TagName.DIV, 'qz-dropdown-content qz-menu');
+
+                // hideLastWeekDays
+                var hideLastWeekDays = _buildTag(TagName.P, 'qz-text-left', Strings('menuItemHideLastWeekDays'));
+                hideLastWeekDays.onclick = function() {
+                    var state = Settings.hideLastWeekDays();
+                    Settings.hideLastWeekDays(!state);
+                    Kairos.reload();
+                };
+                var state = Settings.hideLastWeekDays() ? 'on' : 'off';
+                var enable = _buildTag(TagName.SPAN, 'fa fa-toggle-'+state+' qz-menu-item-icon');
+                hideLastWeekDays.appendChild(enable);
+                menu.appendChild(hideLastWeekDays);
+                // end hideLastWeekDays
+
+                box.appendChild(menu);
+                return box;
             };
 
         /* Public Functions */
@@ -157,13 +180,13 @@
                 return _buildTag(TagName.STYLE, 'qz-style', Style.CSS);
             },
             header: function() {
-                return _buildTag(TagName.P, 'qz-box-head');
+                return _buildTag(TagName.DIV, 'qz-box-head');
             },
             buildToggleForDayOff: function(key) {
                 return _buildTag(TagName.SPAN, 'fa fa-toggle-'+key+' qz-toggle');
             },
             buildDayOptions: function(TimeOn, MockTime) {
-                var dropdown = _buildTag(TagName.DIV, 'qz-dropdown');
+                var dropdown = _buildTag(TagName.DIV, 'qz-dropdown qz-column-menu');
                 var icon = _buildTag(TagName.SPAN, 'fa fa-bars qz-text-teal');
                 var content = _buildTag(TagName.DIV, 'qz-dropdown-content');
                 var addTimeOn = _buildTag(TagName.P, 'qz-text-left', ':: Abonar Falta');
@@ -185,7 +208,7 @@
                                     Queiroz.reload();
                             }
                         };
-                        eDay.appendChild(_buildEditableTimeOnBox(options));
+                        eDay.appendChild(_buildEditableBox(options));
                     }, 250);
                 };
 
@@ -205,7 +228,7 @@
                                     Queiroz.reload();
                             }
                         };
-                        eDay.appendChild(_buildEditableTimeOnBox(options));
+                        eDay.appendChild(_buildEditableBox(options));
                     }, 250);
                 };
 
@@ -328,7 +351,8 @@
                 box.appendChild(remove);
                 return box;
             },
-            buildMockTime: _buildMockTime
+            buildMockTime: _buildMockTime,
+            buildHeaderMenuBox: _buildHeaderMenuBox
         };
     }();
 
