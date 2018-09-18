@@ -137,7 +137,7 @@
                         day.totalBalance = totalBalance;
                     }
                 });
-                data.weeklyBalance = (0 - _computeWeeklyGoalMillis()) + data.worked;
+                data.weeklyBalance = (_computeWeeklyGoalMillis()*(-1)) + data.worked;
             },
             _computeTimeToLeave = function(data) {
                 data.days.forEach(function(day) {
@@ -149,7 +149,8 @@
                                 _time.leaveMaxConcec = new Date(_time.in.getMillis() + MAX_CONSECUTIVE_MINUTES_IN_MILLIS);
                             }
                             var safeTimeLeave = DAILY_GOAL_MINUTES_IN_MILLIS - MAX_CONSECUTIVE_MINUTES_IN_MILLIS; // Values below exceed the max consecutive limit
-                            if (day.worked >= safeTimeLeave && day.worked < DAILY_GOAL_MINUTES_IN_MILLIS) {
+                            var isWeeklyGoalNear = (data.weeklyBalance*(-1)) < MAX_CONSECUTIVE_MINUTES_IN_MILLIS;
+                            if ((day.worked >= safeTimeLeave && day.worked < DAILY_GOAL_MINUTES_IN_MILLIS) || isWeeklyGoalNear) {
                                 var pending = _diff(day.worked, DAILY_GOAL_MINUTES_IN_MILLIS);
                                 _time.leave = new Date(_time.in.getMillis() + pending);
                                 _time.balancedLeave = new Date(_time.leave.getMillis() - day.totalBalance);

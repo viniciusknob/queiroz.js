@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.4.39';
+            VERSION = '3.4.40';
 
         /* Public API */
 
@@ -55,7 +55,7 @@
 
     Date.now = function() {
         return new Date();
-        //return new Date(2017,8,4,9,34); // => for TEST
+        //return new Date(2018,0,26,13,00); // => for TEST
     };
     Date.parseKairos = function(string) {
         var
@@ -934,7 +934,7 @@
                         day.totalBalance = totalBalance;
                     }
                 });
-                data.weeklyBalance = (0 - _computeWeeklyGoalMillis()) + data.worked;
+                data.weeklyBalance = (_computeWeeklyGoalMillis()*(-1)) + data.worked;
             },
             _computeTimeToLeave = function(data) {
                 data.days.forEach(function(day) {
@@ -946,7 +946,8 @@
                                 _time.leaveMaxConcec = new Date(_time.in.getMillis() + MAX_CONSECUTIVE_MINUTES_IN_MILLIS);
                             }
                             var safeTimeLeave = DAILY_GOAL_MINUTES_IN_MILLIS - MAX_CONSECUTIVE_MINUTES_IN_MILLIS; // Values below exceed the max consecutive limit
-                            if (day.worked >= safeTimeLeave && day.worked < DAILY_GOAL_MINUTES_IN_MILLIS) {
+                            var isWeeklyGoalNear = (data.weeklyBalance*(-1)) < MAX_CONSECUTIVE_MINUTES_IN_MILLIS;
+                            if ((day.worked >= safeTimeLeave && day.worked < DAILY_GOAL_MINUTES_IN_MILLIS) || isWeeklyGoalNear) {
                                 var pending = _diff(day.worked, DAILY_GOAL_MINUTES_IN_MILLIS);
                                 _time.leave = new Date(_time.in.getMillis() + pending);
                                 _time.balancedLeave = new Date(_time.leave.getMillis() - day.totalBalance);
@@ -1845,7 +1846,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.4.39</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.4.40</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');
