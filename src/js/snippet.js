@@ -38,7 +38,8 @@
                 TBODY: 'tbody',
                 TH: 'th',
                 TR: 'tr',
-                TD: 'td'
+                TD: 'td',
+                INPUT: 'input'
             };
 
         var
@@ -66,66 +67,49 @@
 
                 var box = _buildTag(TagName.DIV, 'qz-box qz-box-muted qz-text-center js-has-edit-box');
                 var helpText = _buildTag(TagName.DIV, 'qz-help-text', options.helpText);
-                var upHour = _buildTag(TagName.SPAN,'qz-fa fa fa-chevron-up');
-                var upMin = _buildTag(TagName.SPAN,'qz-fa fa fa-chevron-up');
-                var eTime = _buildTag(TagName.STRONG, 'qz-box-content js-time-edit-box', '00:00');
-                var downHour = _buildTag(TagName.SPAN,'qz-fa fa fa-chevron-down');
-                var downMin = _buildTag(TagName.SPAN,'qz-fa fa fa-chevron-down');
+                var divInput = _buildTag(TagName.DIV);
+                var inputTime = _buildTag(TagName.INPUT, 'qz-input-time js-input-time');
                 var cancel = _buildTag(TagName.SPAN,'qz-fa qz-fa-sw fa fa-times');
                 var save = _buildTag(TagName.SPAN,'qz-fa qz-fa-se qz-text-green fa fa-floppy-o');
 
-                upHour.onclick = function() {
-                    var eTime = this.parentElement.querySelector('.js-time-edit-box');
-                    var time = eTime.textContent.split(':');
-                    var hour = parseInt(time[0]);
-                    if (hour == 23) hour = 0;
-                    else hour+=1;
-                    eTime.textContent = hour.padStart(2) + ':' + time[1];
+                inputTime.setAttribute('maxlength',5);
+                inputTime.setAttribute('placeholder','00:00');
+
+                inputTime.onkeyup = function() {
+                    var _in = this.value;
+
+                    this.classList.remove("qz-input-error");
+
+                    if (/^[0-9:]*$/.test(_in) == false)
+                        this.classList.add("qz-input-error");
+
+                    if (_in.length == 3)
+                        if (/^\d{3}$/.test(_in))
+                            this.value = _in[0] + _in[1] + ":" + _in[2];
                 };
-                downHour.onclick = function() {
-                    var eTime = this.parentElement.querySelector('.js-time-edit-box');
-                    var time = eTime.textContent.split(':');
-                    var hour = parseInt(time[0]);
-                    if (hour == 0) hour = 23;
-                    else hour-=1;
-                    eTime.textContent = hour.padStart(2) + ':' + time[1];
-                };
-                upMin.onclick = function() {
-                    var eTime = this.parentElement.querySelector('.js-time-edit-box');
-                    var time = eTime.textContent.split(':');
-                    var min = parseInt(time[1]);
-                    if (min == 59) min = 0;
-                    else min+=1;
-                    eTime.textContent = time[0] + ':' + min.padStart(2);
-                };
-                downMin.onclick = function() {
-                    var eTime = this.parentElement.querySelector('.js-time-edit-box');
-                    var time = eTime.textContent.split(':');
-                    var min = parseInt(time[1]);
-                    if (min == 0) min = 59;
-                    else min-=1;
-                    eTime.textContent = time[0] + ':' + min.padStart(2);
-                };
+
                 cancel.onclick = function() {
                     options.finally();
                     this.parentElement.remove();
                 };
                 save.onclick = function() {
-                    options.finally();
                     var eDay = this.parentElement.parentElement;
-                    var eDate = eDay.querySelector('[id^=hiddenDiaApont]').value;
-                    var eTime = eDay.querySelector('.js-time-edit-box').textContent;
-                    options.save(eDate, eTime);
+                    var eTime = eDay.querySelector('.js-input-time');
+
+                    var vTime = eTime.value;
+                    if (/\d{2}:\d{2}/.test(vTime) == false) {
+                        eTime.classList.add("qz-input-error");
+                        return;
+                    }
+
+                    options.finally();
+                    var vDate = eDay.querySelector('[id^=hiddenDiaApont]').value;
+                    options.save(vDate, vTime);
                 };
 
                 box.appendChild(helpText);
-                box.appendChild(upHour);
-                box.appendChild(upMin);
-                box.appendChild(_buildTag(TagName.BR));
-                box.appendChild(eTime);
-                box.appendChild(_buildTag(TagName.BR));
-                box.appendChild(downHour);
-                box.appendChild(downMin);
+                divInput.appendChild(inputTime);
+                box.appendChild(divInput);
                 box.appendChild(cancel);
                 box.appendChild(save);
                 return box;

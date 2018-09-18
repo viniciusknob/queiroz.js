@@ -57,6 +57,16 @@
 .qz-help-text {
     font-size: 10px;
 }
+.qz-input-time {
+    height: 13px;
+    width: 45px;
+    text-align: center;
+    padding: 2px;
+    margin: 5px 0;
+}
+.qz-input-error {
+    border-color: red;
+}
 .qz-fa {
     -moz-user-select: -moz-none;
     -khtml-user-select: none;
@@ -65,11 +75,11 @@
 }
 .qz-fa-se {
     float: right;
-    margin: 4px -8px 0px -8px;
+    margin: -10px -8px 0px 0px;
 }
 .qz-fa-sw {
     float: left;
-    margin: 4px -10px 0px -8px;
+    margin: -10px 0px 0px -8px;
 }
 
 /* Queiroz.js DayOff */
