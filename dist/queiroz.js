@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.4.40';
+            VERSION = '3.4.41';
 
         /* Public API */
 
@@ -55,7 +55,7 @@
 
     Date.now = function() {
         return new Date();
-        //return new Date(2018,0,26,13,00); // => for TEST
+        //return new Date(2018,8,14,17,34); // => for TEST
     };
     Date.parseKairos = function(string) {
         var
@@ -323,7 +323,7 @@
         return Strings._[key];
     };
 
-    Strings._ = {"pending":"Pendente","extra":"Extra","balance":"Saldo do dia","totalBalance":"Saldo Total","labor":"Efetuado","shift":"_n_&ordm; Turno","working":"Trabalhando...","exit":"Atinge _s_","exit+":"Meta + Saldo","config":"Config","weeklyGoal":"Meta Semanal","dailyGoal":"Meta do dia","timeOn":"Falta Abonada","mockTime":"Mock Time","notice":"Notificações","noticeMaxConsecutive":"Em _min_min você atingirá 6h de trabalho sem intervalo","noticeDailyGoal":"Em _min_min você completará a Meta Diária de 8h48","noticeMaxDaily":"Em _min_min você atingirá 10h, o máximo permitido por dia","noticeWeeklyGoal":"Em _min_min você completará a Meta Semanal de 44h","menuIcon":"&#9776;","menuItemHideLastWeekDays":"Ocultar dias da semana anterior","menuItemAbout":"Sobre"};
+    Strings._ = {"pending":"Pendente","extra":"Extra","balance":"Saldo do dia","totalBalance":"Saldo Total","labor":"Efetuado","shift":"_n_&ordm; Turno","working":"Trabalhando...","exit":"Atinge _s_","exit+":"Meta + Saldo","config":"Config","weeklyGoal":"Meta Semanal","dailyGoal":"Meta do dia","timeOn":"Falta Abonada","mockTime":"Mock Time","notice":"Notificações","noticeMaxConsecutive":"Em _min_min você atingirá 6h de trabalho sem intervalo","noticeDailyGoal":"Em _min_min você completará a Meta Diária de 8h48","noticeBalancedLeave":"Em _min_min seu saldo total de horas será zerado","noticeMaxDaily":"Em _min_min você atingirá 10h, o máximo permitido por dia","noticeWeeklyGoal":"Em _min_min você completará a Meta Semanal de 44h","menuIcon":"&#9776;","menuItemHideLastWeekDays":"Ocultar dias da semana anterior","menuItemAbout":"Sobre"};
 
     /* Module Definition */
 
@@ -1212,6 +1212,25 @@
                     });
                 });
             },
+            _checkBalancedLeave = function(title, data) {
+                if (_notified)
+                    return;
+
+                NOTICE_RANGE_MINUTES.forEach(function(minute) {
+                    data.days.forEach(function(day) {
+                        if (day.date.isToday()) {
+                            day.periods.forEach(function(time, index) {
+                                if (time.out == false && time.balancedLeave) {
+                                    var balancedLeaveInMinutes = Time.millisToMinute(time.balancedLeave.getMillis());
+                                    var nowInMinutes = Time.millisToMinute(Date.now().getMillis());
+                                    if ((balancedLeaveInMinutes - nowInMinutes) == minute)
+                                        _notify(title, _formatMessage(Strings('noticeBalancedLeave'), minute));
+                                }
+                            });
+                        }
+                    });
+                });
+            },
             _checkMaxDaily = function(title, data) {
                 if (_notified)
                     return;
@@ -1232,7 +1251,7 @@
                     data.days.forEach(function(day) {
                         if (day.date.isToday()) {
                             day.periods.forEach(function(time, index) {
-                                if (time.out == false && day.date.isToday())
+                                if (time.out == false)
                                     if ((Settings.MAX_CONSECUTIVE_MINUTES - minute) == Time.millisToMinute(time.shift))
                                         _notify(title, _formatMessage(Strings('noticeMaxConsecutive'), minute));
                             });
@@ -1253,6 +1272,7 @@
 
                 _checkMaxConsecutive(title, data);
                 _checkMaxDaily(title, data);
+                _checkBalancedLeave(title, data);
                 _checkWeeklyGoal(title, data);
                 _checkDailyGoal(title, data);
             },
@@ -1846,7 +1866,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.4.40</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.4.41</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');

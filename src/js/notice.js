@@ -65,6 +65,25 @@
                     });
                 });
             },
+            _checkBalancedLeave = function(title, data) {
+                if (_notified)
+                    return;
+
+                NOTICE_RANGE_MINUTES.forEach(function(minute) {
+                    data.days.forEach(function(day) {
+                        if (day.date.isToday()) {
+                            day.periods.forEach(function(time, index) {
+                                if (time.out == false && time.balancedLeave) {
+                                    var balancedLeaveInMinutes = Time.millisToMinute(time.balancedLeave.getMillis());
+                                    var nowInMinutes = Time.millisToMinute(Date.now().getMillis());
+                                    if ((balancedLeaveInMinutes - nowInMinutes) == minute)
+                                        _notify(title, _formatMessage(Strings('noticeBalancedLeave'), minute));
+                                }
+                            });
+                        }
+                    });
+                });
+            },
             _checkMaxDaily = function(title, data) {
                 if (_notified)
                     return;
@@ -85,7 +104,7 @@
                     data.days.forEach(function(day) {
                         if (day.date.isToday()) {
                             day.periods.forEach(function(time, index) {
-                                if (time.out == false && day.date.isToday())
+                                if (time.out == false)
                                     if ((Settings.MAX_CONSECUTIVE_MINUTES - minute) == Time.millisToMinute(time.shift))
                                         _notify(title, _formatMessage(Strings('noticeMaxConsecutive'), minute));
                             });
@@ -106,6 +125,7 @@
 
                 _checkMaxConsecutive(title, data);
                 _checkMaxDaily(title, data);
+                _checkBalancedLeave(title, data);
                 _checkWeeklyGoal(title, data);
                 _checkDailyGoal(title, data);
             },
