@@ -20,7 +20,7 @@
 
     Date.now = function() {
         return new Date();
-        //return new Date(2018,8,14,17,34); // => for TEST
+        //return new Date(2018,8,19,17,00); // => for TEST
     };
     Date.parseKairos = function(string) {
         var

@@ -159,9 +159,23 @@
                                 var pending = _diff(day.worked, MAX_DAILY_MINUTES_IN_MILLIS);
                                 _time.leaveMaxDaily = new Date(_time.in.getMillis() + pending);
                             }
+                            _time.orderBy = _defineOrderBy(_time);
                         }
                     }
                 });
+            },
+            _defineOrderBy = function(lastPeriod) {
+                var variables = ['leave','balancedLeave','leaveMaxConcec','leaveMaxDaily'];
+                variables.sort(function(a,b) {
+                    if (lastPeriod[a] == null)
+                        return -1;
+
+                    if (lastPeriod[b] == null)
+                        return 1;
+
+                    return lastPeriod[a].getMillis() - lastPeriod[b].getMillis();
+                });
+                return variables;
             };
 
         /* Public Functions */

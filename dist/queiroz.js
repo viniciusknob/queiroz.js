@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.4.41';
+            VERSION = '3.4.42';
 
         /* Public API */
 
@@ -55,7 +55,7 @@
 
     Date.now = function() {
         return new Date();
-        //return new Date(2018,8,14,17,34); // => for TEST
+        //return new Date(2018,8,19,17,00); // => for TEST
     };
     Date.parseKairos = function(string) {
         var
@@ -956,9 +956,23 @@
                                 var pending = _diff(day.worked, MAX_DAILY_MINUTES_IN_MILLIS);
                                 _time.leaveMaxDaily = new Date(_time.in.getMillis() + pending);
                             }
+                            _time.orderBy = _defineOrderBy(_time);
                         }
                     }
                 });
+            },
+            _defineOrderBy = function(lastPeriod) {
+                var variables = ['leave','balancedLeave','leaveMaxConcec','leaveMaxDaily'];
+                variables.sort(function(a,b) {
+                    if (lastPeriod[a] == null)
+                        return -1;
+
+                    if (lastPeriod[b] == null)
+                        return 1;
+
+                    return lastPeriod[a].getMillis() - lastPeriod[b].getMillis();
+                });
+                return variables;
             };
 
         /* Public Functions */
@@ -1487,14 +1501,22 @@
                                 }
                                 day.periods.forEach(function(time, index) {
                                     if (time.out == false && day.date.isToday()) {
-                                        if (time.leaveMaxConcec)
-                                            eDay.appendChild(Snippet.todayTimeToLeave(time.leaveMaxConcec, false, data.maxConsecutive));
-                                        if (isWorkDay && time.leave)
-                                            eDay.appendChild(Snippet.todayTimeToLeave(time.leave, false, day.goal));
-                                        if (time.leaveMaxDaily)
-                                            eDay.appendChild(Snippet.todayTimeToLeave(time.leaveMaxDaily, false, data.maxDaily));
-                                        if (isWorkDay && time.balancedLeave)
-                                            eDay.appendChild(Snippet.todayTimeToLeave(time.balancedLeave, true));
+                                        time.orderBy.forEach(function(variable, index) {
+                                            var specificTime = time[variable];
+                                            if (!!specificTime == false)
+                                                return;
+
+                                            if (isWorkDay) {
+                                                if (variable == 'leave')
+                                                    eDay.appendChild(Snippet.todayTimeToLeave(specificTime, false, day.goal));
+                                                if (variable == 'balancedLeave')
+                                                    eDay.appendChild(Snippet.todayTimeToLeave(specificTime, true));
+                                            }
+                                            if (variable == 'leaveMaxConcec')
+                                                eDay.appendChild(Snippet.todayTimeToLeave(specificTime, false, data.maxConsecutive));
+                                            if (variable == 'leaveMaxDaily')
+                                                eDay.appendChild(Snippet.todayTimeToLeave(specificTime, false, data.maxDaily));
+                                        });
                                     }
                                 });
                             }
@@ -1866,7 +1888,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.4.41</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.4.42</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');

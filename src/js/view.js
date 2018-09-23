@@ -190,14 +190,22 @@
                                 }
                                 day.periods.forEach(function(time, index) {
                                     if (time.out == false && day.date.isToday()) {
-                                        if (time.leaveMaxConcec)
-                                            eDay.appendChild(Snippet.todayTimeToLeave(time.leaveMaxConcec, false, data.maxConsecutive));
-                                        if (isWorkDay && time.leave)
-                                            eDay.appendChild(Snippet.todayTimeToLeave(time.leave, false, day.goal));
-                                        if (time.leaveMaxDaily)
-                                            eDay.appendChild(Snippet.todayTimeToLeave(time.leaveMaxDaily, false, data.maxDaily));
-                                        if (isWorkDay && time.balancedLeave)
-                                            eDay.appendChild(Snippet.todayTimeToLeave(time.balancedLeave, true));
+                                        time.orderBy.forEach(function(variable, index) {
+                                            var specificTime = time[variable];
+                                            if (!!specificTime == false)
+                                                return;
+
+                                            if (isWorkDay) {
+                                                if (variable == 'leave')
+                                                    eDay.appendChild(Snippet.todayTimeToLeave(specificTime, false, day.goal));
+                                                if (variable == 'balancedLeave')
+                                                    eDay.appendChild(Snippet.todayTimeToLeave(specificTime, true));
+                                            }
+                                            if (variable == 'leaveMaxConcec')
+                                                eDay.appendChild(Snippet.todayTimeToLeave(specificTime, false, data.maxConsecutive));
+                                            if (variable == 'leaveMaxDaily')
+                                                eDay.appendChild(Snippet.todayTimeToLeave(specificTime, false, data.maxDaily));
+                                        });
                                     }
                                 });
                             }
