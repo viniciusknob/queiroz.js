@@ -60,7 +60,7 @@
                 NOTICE_RANGE_MINUTES.forEach(function(minute) {
                     data.days.forEach(function(day) {
                         if (day.date.isToday())
-                            if ((Settings.DAILY_GOAL_MINUTES - minute) == Time.millisToMinute(day.reallyWorked))
+                            if ((Settings.DAILY_GOAL_MINUTES[day.date.getDay()] - minute) == Time.millisToMinute(day.reallyWorked))
                                 _notify(title, _formatMessage(Strings('noticeDailyGoal'), minute));
                     });
                 });

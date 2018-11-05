@@ -23,15 +23,18 @@
             ZERO_TIME = '00:00',
             MINUTE_IN_MILLIS = 1000 * 60,
             HOUR_IN_MILLIS = MINUTE_IN_MILLIS * 60,
-            DAILY_GOAL_MINUTES_IN_MILLIS = Settings.DAILY_GOAL_MINUTES * MINUTE_IN_MILLIS,
             MAX_CONSECUTIVE_MINUTES_IN_MILLIS = Settings.MAX_CONSECUTIVE_MINUTES * MINUTE_IN_MILLIS,
             MAX_DAILY_MINUTES_IN_MILLIS = Settings.MAX_DAILY_MINUTES * MINUTE_IN_MILLIS;
 
         /* Private Functions */
 
         var
+            _computeDailyGoalMinutesInMillis = function(day) {
+                return Settings.DAILY_GOAL_MINUTES[day] * MINUTE_IN_MILLIS;
+            },
             _computeWeeklyGoalMillis = function() {
-                return (Settings.WEEKLY_GOAL_MINUTES * MINUTE_IN_MILLIS) - (DayOff.count * DAILY_GOAL_MINUTES_IN_MILLIS);
+                var millisOff = DayOff.count * _computeDailyGoalMinutesInMillis(1); // FIXME hardcoded day
+                return (Settings.WEEKLY_GOAL_MINUTES * MINUTE_IN_MILLIS) - millisOff;
             },
             _diff = function(init, end) {
                 if (init instanceof Date && end instanceof Date) {
@@ -128,7 +131,7 @@
                     if (day.periods.length) {
                         var isWorkDay = Settings.WORK_DAYS.contains(day.date.getDay());
                         if (isWorkDay) {
-                            day.balance = (0 - DAILY_GOAL_MINUTES_IN_MILLIS);
+                            day.balance = (0 - _computeDailyGoalMinutesInMillis(day.date.getDay()));
                         }
                         day.balance += day.worked;
                         if (day.date.isToday() == false || isWorkDay == false) {
@@ -148,10 +151,11 @@
                             if (day.worked <= _hourToMillis(4)) { // Values above 4h exceed the max daily limit
                                 _time.leaveMaxConcec = new Date(_time.in.getMillis() + MAX_CONSECUTIVE_MINUTES_IN_MILLIS);
                             }
-                            var safeTimeLeave = DAILY_GOAL_MINUTES_IN_MILLIS - MAX_CONSECUTIVE_MINUTES_IN_MILLIS; // Values below exceed the max consecutive limit
+                            var dailyGoalMillis = _computeDailyGoalMinutesInMillis(day.date.getDay());
+                            var safeTimeLeave = dailyGoalMillis - MAX_CONSECUTIVE_MINUTES_IN_MILLIS; // Values below exceed the max consecutive limit
                             var isWeeklyGoalNear = (data.weeklyBalance*(-1)) < MAX_CONSECUTIVE_MINUTES_IN_MILLIS;
-                            if ((day.worked >= safeTimeLeave && day.worked < DAILY_GOAL_MINUTES_IN_MILLIS) || isWeeklyGoalNear) {
-                                var pending = _diff(day.worked, DAILY_GOAL_MINUTES_IN_MILLIS);
+                            if ((day.worked >= safeTimeLeave && day.worked < dailyGoalMillis) || isWeeklyGoalNear) {
+                                var pending = _diff(day.worked, dailyGoalMillis);
                                 _time.leave = new Date(_time.in.getMillis() + pending);
                                 _time.balancedLeave = new Date(_time.leave.getMillis() - day.totalBalance);
                             }
@@ -224,7 +228,7 @@
                         if (time.balancedLeave)
                             time.balancedLeave = time.balancedLeave.getTimeAsString();
                     });
-                    day.goal = _millisToHuman(DAILY_GOAL_MINUTES_IN_MILLIS);
+                    day.goal = _millisToHuman(_computeDailyGoalMinutesInMillis(day.date.getDay()));
                     day.worked = _millisToHuman(day.worked);
                     day.reallyWorked = _millisToHuman(day.reallyWorked);
                     day.balance = _millisToHumanWithSign(day.balance);

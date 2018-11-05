@@ -4,7 +4,15 @@
         "maxConsecutiveMinutes": 360,
         "maxDailyMinutes": 600,
         "weeklyGoalMinutes": 2640,
-        "dailyGoalMinutes": 528,
+        "dailyGoalMinutes": {
+            "1": 528,
+            "2": 528,
+            "3": 528,
+            "4": 528,
+            "5": 528,
+            "6": 0,
+            "7": 0
+        },
         "workDays": [1,2,3,4,5],
         "initialWeekday": 1,
         "gaTrackingId": "UA-105390656-1",

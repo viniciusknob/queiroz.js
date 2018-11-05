@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.4.42';
+            VERSION = '3.4.43';
 
         /* Public API */
 
@@ -129,7 +129,7 @@
 
         var
             NAME = 'settings',
-            DEFAULT = {"_static_":{"userscriptDelay":1000,"maxConsecutiveMinutes":360,"maxDailyMinutes":600,"weeklyGoalMinutes":2640,"dailyGoalMinutes":528,"workDays":[1,2,3,4,5],"initialWeekday":1,"gaTrackingId":"UA-105390656-1","qzKeepalive":60000,"ksKeepalive":1200000,"noticeRangeMinutes":[15,5,3,1],"notice_icon":"https://github.com/viniciusknob/queiroz.js/raw/master/src/img/ic_notification.png"},"_mutable_":{"hideLastWeekDays":true}},
+            DEFAULT = {"_static_":{"userscriptDelay":1000,"maxConsecutiveMinutes":360,"maxDailyMinutes":600,"weeklyGoalMinutes":2640,"dailyGoalMinutes":{"1":528,"2":528,"3":528,"4":528,"5":528,"6":0,"7":0},"workDays":[1,2,3,4,5],"initialWeekday":1,"gaTrackingId":"UA-105390656-1","qzKeepalive":60000,"ksKeepalive":1200000,"noticeRangeMinutes":[15,5,3,1],"notice_icon":"https://github.com/viniciusknob/queiroz.js/raw/master/src/img/ic_notification.png"},"_mutable_":{"hideLastWeekDays":true}},
             KEY = {
                 hideLastWeekDays: 'hideLastWeekDays'
             },
@@ -820,15 +820,18 @@
             ZERO_TIME = '00:00',
             MINUTE_IN_MILLIS = 1000 * 60,
             HOUR_IN_MILLIS = MINUTE_IN_MILLIS * 60,
-            DAILY_GOAL_MINUTES_IN_MILLIS = Settings.DAILY_GOAL_MINUTES * MINUTE_IN_MILLIS,
             MAX_CONSECUTIVE_MINUTES_IN_MILLIS = Settings.MAX_CONSECUTIVE_MINUTES * MINUTE_IN_MILLIS,
             MAX_DAILY_MINUTES_IN_MILLIS = Settings.MAX_DAILY_MINUTES * MINUTE_IN_MILLIS;
 
         /* Private Functions */
 
         var
+            _computeDailyGoalMinutesInMillis = function(day) {
+                return Settings.DAILY_GOAL_MINUTES[day] * MINUTE_IN_MILLIS;
+            },
             _computeWeeklyGoalMillis = function() {
-                return (Settings.WEEKLY_GOAL_MINUTES * MINUTE_IN_MILLIS) - (DayOff.count * DAILY_GOAL_MINUTES_IN_MILLIS);
+                var millisOff = DayOff.count * _computeDailyGoalMinutesInMillis(1); // FIXME hardcoded day
+                return (Settings.WEEKLY_GOAL_MINUTES * MINUTE_IN_MILLIS) - millisOff;
             },
             _diff = function(init, end) {
                 if (init instanceof Date && end instanceof Date) {
@@ -925,7 +928,7 @@
                     if (day.periods.length) {
                         var isWorkDay = Settings.WORK_DAYS.contains(day.date.getDay());
                         if (isWorkDay) {
-                            day.balance = (0 - DAILY_GOAL_MINUTES_IN_MILLIS);
+                            day.balance = (0 - _computeDailyGoalMinutesInMillis(day.date.getDay()));
                         }
                         day.balance += day.worked;
                         if (day.date.isToday() == false || isWorkDay == false) {
@@ -945,10 +948,11 @@
                             if (day.worked <= _hourToMillis(4)) { // Values above 4h exceed the max daily limit
                                 _time.leaveMaxConcec = new Date(_time.in.getMillis() + MAX_CONSECUTIVE_MINUTES_IN_MILLIS);
                             }
-                            var safeTimeLeave = DAILY_GOAL_MINUTES_IN_MILLIS - MAX_CONSECUTIVE_MINUTES_IN_MILLIS; // Values below exceed the max consecutive limit
+                            var dailyGoalMillis = _computeDailyGoalMinutesInMillis(day.date.getDay());
+                            var safeTimeLeave = dailyGoalMillis - MAX_CONSECUTIVE_MINUTES_IN_MILLIS; // Values below exceed the max consecutive limit
                             var isWeeklyGoalNear = (data.weeklyBalance*(-1)) < MAX_CONSECUTIVE_MINUTES_IN_MILLIS;
-                            if ((day.worked >= safeTimeLeave && day.worked < DAILY_GOAL_MINUTES_IN_MILLIS) || isWeeklyGoalNear) {
-                                var pending = _diff(day.worked, DAILY_GOAL_MINUTES_IN_MILLIS);
+                            if ((day.worked >= safeTimeLeave && day.worked < dailyGoalMillis) || isWeeklyGoalNear) {
+                                var pending = _diff(day.worked, dailyGoalMillis);
                                 _time.leave = new Date(_time.in.getMillis() + pending);
                                 _time.balancedLeave = new Date(_time.leave.getMillis() - day.totalBalance);
                             }
@@ -1021,7 +1025,7 @@
                         if (time.balancedLeave)
                             time.balancedLeave = time.balancedLeave.getTimeAsString();
                     });
-                    day.goal = _millisToHuman(DAILY_GOAL_MINUTES_IN_MILLIS);
+                    day.goal = _millisToHuman(_computeDailyGoalMinutesInMillis(day.date.getDay()));
                     day.worked = _millisToHuman(day.worked);
                     day.reallyWorked = _millisToHuman(day.reallyWorked);
                     day.balance = _millisToHumanWithSign(day.balance);
@@ -1221,7 +1225,7 @@
                 NOTICE_RANGE_MINUTES.forEach(function(minute) {
                     data.days.forEach(function(day) {
                         if (day.date.isToday())
-                            if ((Settings.DAILY_GOAL_MINUTES - minute) == Time.millisToMinute(day.reallyWorked))
+                            if ((Settings.DAILY_GOAL_MINUTES[day.date.getDay()] - minute) == Time.millisToMinute(day.reallyWorked))
                                 _notify(title, _formatMessage(Strings('noticeDailyGoal'), minute));
                     });
                 });
@@ -1888,7 +1892,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.4.42</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.4.43</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');
