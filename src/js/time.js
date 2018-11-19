@@ -34,7 +34,7 @@
             },
             _computeWeeklyGoalMillis = function() {
                 var millisOff = DayOff.count * _computeDailyGoalMinutesInMillis(1); // FIXME hardcoded day
-                return (Settings.WEEKLY_GOAL_MINUTES * MINUTE_IN_MILLIS) - millisOff;
+                return (Settings.computeWeeklyGoalMinutes() * MINUTE_IN_MILLIS) - millisOff;
             },
             _diff = function(init, end) {
                 if (init instanceof Date && end instanceof Date) {

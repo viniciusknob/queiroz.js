@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.4.43';
+            VERSION = '3.4.44';
 
         /* Public API */
 
@@ -129,7 +129,7 @@
 
         var
             NAME = 'settings',
-            DEFAULT = {"_static_":{"userscriptDelay":1000,"maxConsecutiveMinutes":360,"maxDailyMinutes":600,"weeklyGoalMinutes":2640,"dailyGoalMinutes":{"1":528,"2":528,"3":528,"4":528,"5":528,"6":0,"7":0},"workDays":[1,2,3,4,5],"initialWeekday":1,"gaTrackingId":"UA-105390656-1","qzKeepalive":60000,"ksKeepalive":1200000,"noticeRangeMinutes":[15,5,3,1],"notice_icon":"https://github.com/viniciusknob/queiroz.js/raw/master/src/img/ic_notification.png"},"_mutable_":{"hideLastWeekDays":true}},
+            DEFAULT = {"_static_":{"userscriptDelay":1000,"maxConsecutiveMinutes":360,"maxDailyMinutes":600,"dailyGoalMinutes":{"1":528,"2":528,"3":528,"4":528,"5":528,"6":0,"7":0},"workDays":[1,2,3,4,5],"initialWeekday":1,"gaTrackingId":"UA-105390656-1","qzKeepalive":60000,"ksKeepalive":1200000,"noticeRangeMinutes":[15,5,3,1],"notice_icon":"https://github.com/viniciusknob/queiroz.js/raw/master/src/img/ic_notification.png"},"_mutable_":{"hideLastWeekDays":true}},
             KEY = {
                 hideLastWeekDays: 'hideLastWeekDays'
             },
@@ -140,6 +140,14 @@
         var
             _persistCache = function() {
                 localStorage.setItem(NAME, JSON.stringify(cache));
+            },
+            _computeWeeklyGoalMinutes = function() {
+                var weeklyGoalMinutes = 0;
+                var values = Object.values(DEFAULT._static_.dailyGoalMinutes);
+                values.forEach(function(minutes) {
+                    weeklyGoalMinutes += minutes;
+                });
+                return weeklyGoalMinutes;
             },
             _hideLastWeekDays = function(enable) {
                 if (typeof enable === 'boolean') {
@@ -167,7 +175,6 @@
             USERSCRIPT_DELAY: DEFAULT._static_.userscriptDelay,
             MAX_CONSECUTIVE_MINUTES: DEFAULT._static_.maxConsecutiveMinutes,
             MAX_DAILY_MINUTES: DEFAULT._static_.maxDailyMinutes,
-            WEEKLY_GOAL_MINUTES: DEFAULT._static_.weeklyGoalMinutes,
             DAILY_GOAL_MINUTES: DEFAULT._static_.dailyGoalMinutes,
             WORK_DAYS: DEFAULT._static_.workDays,
             INITIAL_WEEKDAY: DEFAULT._static_.initialWeekday,
@@ -176,6 +183,7 @@
             KS_KEEPALIVE: DEFAULT._static_.ksKeepalive,
             NOTICE_RANGE_MINUTES: DEFAULT._static_.noticeRangeMinutes,
             NOTICE_ICON: DEFAULT._static_.notice_icon,
+            computeWeeklyGoalMinutes: _computeWeeklyGoalMinutes,
             hideLastWeekDays: _hideLastWeekDays
         };
 
@@ -831,7 +839,7 @@
             },
             _computeWeeklyGoalMillis = function() {
                 var millisOff = DayOff.count * _computeDailyGoalMinutesInMillis(1); // FIXME hardcoded day
-                return (Settings.WEEKLY_GOAL_MINUTES * MINUTE_IN_MILLIS) - millisOff;
+                return (Settings.computeWeeklyGoalMinutes() * MINUTE_IN_MILLIS) - millisOff;
             },
             _diff = function(init, end) {
                 if (init instanceof Date && end instanceof Date) {
@@ -1214,7 +1222,7 @@
                     return;
 
                 NOTICE_RANGE_MINUTES.forEach(function(minute) {
-                    if ((Settings.WEEKLY_GOAL_MINUTES - minute) == Time.millisToMinute(data.reallyWorked))
+                    if ((Settings.computeWeeklyGoalMinutes() - minute) == Time.millisToMinute(data.reallyWorked))
                         _notify(title, _formatMessage(Strings('noticeWeeklyGoal'), minute));
                 });
             },
@@ -1892,7 +1900,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.4.43</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.4.44</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');

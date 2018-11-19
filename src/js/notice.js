@@ -49,7 +49,7 @@
                     return;
 
                 NOTICE_RANGE_MINUTES.forEach(function(minute) {
-                    if ((Settings.WEEKLY_GOAL_MINUTES - minute) == Time.millisToMinute(data.reallyWorked))
+                    if ((Settings.computeWeeklyGoalMinutes() - minute) == Time.millisToMinute(data.reallyWorked))
                         _notify(title, _formatMessage(Strings('noticeWeeklyGoal'), minute));
                 });
             },

@@ -27,6 +27,14 @@
             _persistCache = function() {
                 localStorage.setItem(NAME, JSON.stringify(cache));
             },
+            _computeWeeklyGoalMinutes = function() {
+                var weeklyGoalMinutes = 0;
+                var values = Object.values(DEFAULT._static_.dailyGoalMinutes);
+                values.forEach(function(minutes) {
+                    weeklyGoalMinutes += minutes;
+                });
+                return weeklyGoalMinutes;
+            },
             _hideLastWeekDays = function(enable) {
                 if (typeof enable === 'boolean') {
                     cache[KEY.hideLastWeekDays] = enable;
@@ -53,7 +61,6 @@
             USERSCRIPT_DELAY: DEFAULT._static_.userscriptDelay,
             MAX_CONSECUTIVE_MINUTES: DEFAULT._static_.maxConsecutiveMinutes,
             MAX_DAILY_MINUTES: DEFAULT._static_.maxDailyMinutes,
-            WEEKLY_GOAL_MINUTES: DEFAULT._static_.weeklyGoalMinutes,
             DAILY_GOAL_MINUTES: DEFAULT._static_.dailyGoalMinutes,
             WORK_DAYS: DEFAULT._static_.workDays,
             INITIAL_WEEKDAY: DEFAULT._static_.initialWeekday,
@@ -62,6 +69,7 @@
             KS_KEEPALIVE: DEFAULT._static_.ksKeepalive,
             NOTICE_RANGE_MINUTES: DEFAULT._static_.noticeRangeMinutes,
             NOTICE_ICON: DEFAULT._static_.notice_icon,
+            computeWeeklyGoalMinutes: _computeWeeklyGoalMinutes,
             hideLastWeekDays: _hideLastWeekDays
         };
 
