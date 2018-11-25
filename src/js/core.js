@@ -56,7 +56,7 @@
                 if (day.getDay() === Settings.INITIAL_WEEKDAY)
                     active = true;
 
-                if (active && Settings.WORK_DAYS.contains(day.getDay())) {
+                if (active && Settings.isWorkDay(day)) {
                     var eToggle = _buildToggleForDayOff(day);
                     View.appendToggle(eDay, eToggle);
 

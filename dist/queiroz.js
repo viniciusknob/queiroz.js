@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.4.44';
+            VERSION = '3.4.45';
 
         /* Public API */
 
@@ -129,7 +129,7 @@
 
         var
             NAME = 'settings',
-            DEFAULT = {"_static_":{"userscriptDelay":1000,"maxConsecutiveMinutes":360,"maxDailyMinutes":600,"dailyGoalMinutes":{"1":528,"2":528,"3":528,"4":528,"5":528,"6":0,"7":0},"workDays":[1,2,3,4,5],"initialWeekday":1,"gaTrackingId":"UA-105390656-1","qzKeepalive":60000,"ksKeepalive":1200000,"noticeRangeMinutes":[15,5,3,1],"notice_icon":"https://github.com/viniciusknob/queiroz.js/raw/master/src/img/ic_notification.png"},"_mutable_":{"hideLastWeekDays":true}},
+            DEFAULT = {"_static_":{"userscriptDelay":1000,"maxConsecutiveMinutes":360,"maxDailyMinutes":600,"dailyGoalMinutes":{"0":0,"1":528,"2":528,"3":528,"4":528,"5":528,"6":0},"initialWeekday":1,"gaTrackingId":"UA-105390656-1","qzKeepalive":60000,"ksKeepalive":1200000,"noticeRangeMinutes":[15,5,3,1],"notice_icon":"https://github.com/viniciusknob/queiroz.js/raw/master/src/img/ic_notification.png"},"_mutable_":{"hideLastWeekDays":true}},
             KEY = {
                 hideLastWeekDays: 'hideLastWeekDays'
             },
@@ -161,6 +161,10 @@
                     return cache[KEY.hideLastWeekDays];
 
                 return DEFAULT._mutable_.hideLastWeekDays;
+            },
+            _isWorkDay = function(date) {
+                var day = date.getDay();
+                return DEFAULT._static_.dailyGoalMinutes[day] > 0;
             };
 
 
@@ -176,7 +180,6 @@
             MAX_CONSECUTIVE_MINUTES: DEFAULT._static_.maxConsecutiveMinutes,
             MAX_DAILY_MINUTES: DEFAULT._static_.maxDailyMinutes,
             DAILY_GOAL_MINUTES: DEFAULT._static_.dailyGoalMinutes,
-            WORK_DAYS: DEFAULT._static_.workDays,
             INITIAL_WEEKDAY: DEFAULT._static_.initialWeekday,
             GA_TRACKING_ID: DEFAULT._static_.gaTrackingId,
             QZ_KEEPALIVE: DEFAULT._static_.qzKeepalive,
@@ -184,7 +187,8 @@
             NOTICE_RANGE_MINUTES: DEFAULT._static_.noticeRangeMinutes,
             NOTICE_ICON: DEFAULT._static_.notice_icon,
             computeWeeklyGoalMinutes: _computeWeeklyGoalMinutes,
-            hideLastWeekDays: _hideLastWeekDays
+            hideLastWeekDays: _hideLastWeekDays,
+            isWorkDay: _isWorkDay
         };
 
     }();
@@ -934,7 +938,7 @@
                 data.days.forEach(function(day) {
                     day.balance = 0; // balance per day
                     if (day.periods.length) {
-                        var isWorkDay = Settings.WORK_DAYS.contains(day.date.getDay());
+                        var isWorkDay = Settings.isWorkDay(day.date);
                         if (isWorkDay) {
                             day.balance = (0 - _computeDailyGoalMinutesInMillis(day.date.getDay()));
                         }
@@ -1496,7 +1500,7 @@
                                 eDay.appendChild(TimeOn.buildBox(day.timeOn));
                             }
                             if (day.periods.length) {
-                                var isWorkDay = Settings.WORK_DAYS.contains(day.date.getDay());
+                                var isWorkDay = Settings.isWorkDay(day.date);
                                 day.periods.forEach(function(time, index) {
                                     if (!!time.out || (time.out == false && day.date.isToday()))
                                         eDay.appendChild(Snippet.laborTimePerShift(time.shift, (!!time.out), (index+1)));
@@ -1806,7 +1810,7 @@
                 if (day.getDay() === Settings.INITIAL_WEEKDAY)
                     active = true;
 
-                if (active && Settings.WORK_DAYS.contains(day.getDay())) {
+                if (active && Settings.isWorkDay(day)) {
                     var eToggle = _buildToggleForDayOff(day);
                     View.appendToggle(eDay, eToggle);
 
@@ -1900,7 +1904,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.4.44</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.4.45</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');

@@ -129,7 +129,7 @@
                 data.days.forEach(function(day) {
                     day.balance = 0; // balance per day
                     if (day.periods.length) {
-                        var isWorkDay = Settings.WORK_DAYS.contains(day.date.getDay());
+                        var isWorkDay = Settings.isWorkDay(day.date);
                         if (isWorkDay) {
                             day.balance = (0 - _computeDailyGoalMinutesInMillis(day.date.getDay()));
                         }

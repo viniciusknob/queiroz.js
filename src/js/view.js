@@ -173,7 +173,7 @@
                                 eDay.appendChild(TimeOn.buildBox(day.timeOn));
                             }
                             if (day.periods.length) {
-                                var isWorkDay = Settings.WORK_DAYS.contains(day.date.getDay());
+                                var isWorkDay = Settings.isWorkDay(day.date);
                                 day.periods.forEach(function(time, index) {
                                     if (!!time.out || (time.out == false && day.date.isToday()))
                                         eDay.appendChild(Snippet.laborTimePerShift(time.shift, (!!time.out), (index+1)));
