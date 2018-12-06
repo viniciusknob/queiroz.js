@@ -1,4 +1,4 @@
-# Queiroz.js 3.4.45
+# Queiroz.js 3.4.46
 JavaScript Extension for Dimep Kairos
 
 ### Autor

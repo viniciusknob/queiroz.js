@@ -32,9 +32,30 @@
             _computeDailyGoalMinutesInMillis = function(day) {
                 return Settings.DAILY_GOAL_MINUTES[day] * MINUTE_IN_MILLIS;
             },
-            _computeWeeklyGoalMillis = function() {
-                var millisOff = DayOff.count * _computeDailyGoalMinutesInMillis(1); // FIXME hardcoded day
-                return (Settings.computeWeeklyGoalMinutes() * MINUTE_IN_MILLIS) - millisOff;
+            _computeWeeklyGoalMinutesInMillis = function() {
+                return Settings.computeWeeklyGoalMinutes() * MINUTE_IN_MILLIS;
+            },
+            _computeFixedWeeklyGoalInMillis = function(days) {
+                var currentWeekDay = Date.now().getDay();
+                if (currentWeekDay === 0)
+                    currentWeekDay = 7;
+
+                var weeklyGoal = _computeWeeklyGoalMinutesInMillis();
+                if (days.length === currentWeekDay)
+                    return weeklyGoal;
+
+                var workedDays = [];
+                days.forEach(function(day, index) {
+                    workedDays.push(day.date.getDay());
+                });
+
+                var millisOff = 0;
+                for (let idx = 1; idx <= currentWeekDay; idx++) {
+                     if (workedDays.contains(idx) == false)
+                         millisOff += _computeDailyGoalMinutesInMillis(idx);
+                }
+
+                return weeklyGoal - millisOff;
             },
             _diff = function(init, end) {
                 if (init instanceof Date && end instanceof Date) {
@@ -140,7 +161,7 @@
                         day.totalBalance = totalBalance;
                     }
                 });
-                data.weeklyBalance = (_computeWeeklyGoalMillis()*(-1)) + data.worked;
+                data.weeklyBalance = (_computeFixedWeeklyGoalInMillis(data.days)*(-1)) + data.worked;
             },
             _computeTimeToLeave = function(data) {
                 data.days.forEach(function(day) {
@@ -238,7 +259,7 @@
                 });
                 data.maxConsecutive = _millisToHuman(MAX_CONSECUTIVE_MINUTES_IN_MILLIS);
                 data.maxDaily = _millisToHuman(MAX_DAILY_MINUTES_IN_MILLIS);
-                data.weeklyGoal = _millisToHuman(_computeWeeklyGoalMillis());
+                data.weeklyGoal = _millisToHuman(_computeFixedWeeklyGoalInMillis(data.days));
                 data.worked = _millisToHuman(data.worked);
                 data.reallyWorked = _millisToHuman(data.reallyWorked);
                 data.weeklyBalance = _millisToHumanWithSign(data.weeklyBalance);

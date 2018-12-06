@@ -70,8 +70,6 @@
         };
     }();
 
-    DayOff.count = 0;
-
     /* Module Definition */
 
     Queiroz.module.dayoff = DayOff;

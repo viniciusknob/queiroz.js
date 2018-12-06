@@ -30,10 +30,8 @@
                 var _day = day;
                 if (DayOff.is(_day)) {
                     DayOff.remove(_day);
-                    DayOff.count--;
                 } else {
                     DayOff.add(_day);
-                    DayOff.count++;
                 }
                 Queiroz.reload();
             };
@@ -59,12 +57,6 @@
                 if (active && Settings.isWorkDay(day)) {
                     var eToggle = _buildToggleForDayOff(day);
                     View.appendToggle(eDay, eToggle);
-
-                    // ignores stored days
-                    if (DayOff.is(day)) {
-                        DayOff.count++;
-                        return;
-                    }
                 }
             });
         },
@@ -165,9 +157,6 @@
         View.getAllQueirozElements().forEach(function(element) {
             element.remove();
         });
-
-        // reset
-        DayOff.count = 0;
 
         _init();
     };
