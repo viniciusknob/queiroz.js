@@ -59,9 +59,13 @@
 
                 NOTICE_RANGE_MINUTES.forEach(function(minute) {
                     data.days.forEach(function(day) {
-                        if (day.date.isToday())
-                            if ((Settings.DAILY_GOAL_MINUTES[day.date.getDay()] - minute) == Time.millisToMinute(day.reallyWorked))
-                                _notify(title, _formatMessage(Strings('noticeDailyGoal'), minute));
+                        if (day.date.isToday()) {
+                            day.periods.forEach(function(time, index) {
+                                if (time.out == false)
+                                    if ((Settings.DAILY_GOAL_MINUTES[day.date.getDay()] - minute) == Time.millisToMinute(day.reallyWorked))
+                                        _notify(title, _formatMessage(Strings('noticeDailyGoal'), minute));
+                            });
+                        }
                     });
                 });
             },
@@ -90,9 +94,13 @@
 
                 NOTICE_RANGE_MINUTES.forEach(function(minute) {
                     data.days.forEach(function(day) {
-                        if (day.date.isToday())
-                            if ((Settings.MAX_DAILY_MINUTES - minute) == Time.millisToMinute(day.reallyWorked))
-                                _notify(title, _formatMessage(Strings('noticeMaxDaily'), minute));
+                        if (day.date.isToday()) {
+                            day.periods.forEach(function(time, index) {
+                                if (time.out == false)
+                                    if ((Settings.MAX_DAILY_MINUTES - minute) == Time.millisToMinute(day.reallyWorked))
+                                        _notify(title, _formatMessage(Strings('noticeMaxDaily'), minute));
+                            });
+                        }
                     });
                 });
             },
