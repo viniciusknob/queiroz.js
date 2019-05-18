@@ -16,6 +16,7 @@
         ViewTime  = mod.viewtime,
         KeepAlive = mod.keepalive,
         MockTime  = mod.mocktime,
+        DailyGoal = mod.dailygoal,
         Snippet   = mod.snippet,
         View      = mod.view,
         DayOff    = mod.dayoff,
@@ -128,8 +129,11 @@
         } else {
             _initWithDelay();
         }
+
         TimeOn.addObserver(KeepAlive);
         MockTime.addObserver(KeepAlive);
+        DailyGoal.addObserver(KeepAlive);
+
         window.addEventListener('unload', Notice.closeFiredOnUnload);
         View.appendToFooter(this.description);
         return this.description;

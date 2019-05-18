@@ -71,6 +71,10 @@
                 View.injectTimes(MockTime);
             },
             _add = function(eDate, eTime) {
+                var time = Time.humanToMillis(eTime);
+                if (!!time == false)
+                    return false;
+
                 var
                     date = Date.parseKairos(eDate + " " + Time.zero),
                     key = _buildKey(date);

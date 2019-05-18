@@ -9,9 +9,10 @@
     /* Modules */
 
     var
-        mod      = Queiroz.module,
-        Settings = mod.settings,
-        Time     = mod.time;
+        mod       = Queiroz.module,
+        Settings  = mod.settings,
+        Time      = mod.time,
+        DailyGoal = mod.dailygoal;
 
     /* Class Definition */
 
@@ -27,10 +28,10 @@
 
         var
             _computeDailyGoalMinutesInMillis = function(day) {
-                return Time.minuteToMillis(Settings.DAILY_GOAL_MINUTES[day]);
+                return Time.minuteToMillis(DailyGoal.get(day));
             },
             _computeWeeklyGoalMinutesInMillis = function() {
-                return Time.minuteToMillis(Settings.computeWeeklyGoalMinutes());
+                return Time.minuteToMillis(DailyGoal.computeWeeklyGoalMinutes());
             },
             _computeFixedWeeklyGoalInMillis = function(days) {
                 var currentWeekDay = Date.now().getDay();

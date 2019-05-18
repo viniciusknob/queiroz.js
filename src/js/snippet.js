@@ -292,12 +292,36 @@
                     contentClass: 'qz-text-'+ (total ? 'purple' : 'teal')
                 });
             },
-            dailyGoal: function(dailyGoal) {
-                return _buildBox({
+            dailyGoal: function(dailyGoal, DailyGoal) {
+                var box = _buildBox({
                     helpText: 'dailyGoal',
                     humanTime: dailyGoal,
-                    contentClass: 'qz-text-black'
+                    contentClass: 'qz-text-black qz-box-with-fa-se'
                 });
+                var edit = _buildTag(TagName.SPAN,'qz-fa qz-fa-se2 fa fa-edit');
+
+                edit.onclick = function() {
+                  var eDay = this.parentElement.parentElement;
+                  if (eDay.querySelector('.js-has-edit-box'))
+                      return;
+
+                  window.scrollTo(0, 300);
+                  setTimeout(function() {
+                      var options = {
+                          'helpText': Strings('dailyGoal'),
+                          'init': DailyGoal.activate,
+                          'finally': DailyGoal.deactivate,
+                          'save': function(eDate, eTime) {
+                              if (DailyGoal.add(eDate, eTime))
+                                  Queiroz.reload();
+                          }
+                      };
+                      eDay.appendChild(_buildEditableBox(options));
+                  }, 250);
+                };
+
+                box.appendChild(edit);
+                return box;
             },
             laborTimePerDay: function(laborTime) {
                 return _buildBox({

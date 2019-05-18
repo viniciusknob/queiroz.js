@@ -54,6 +54,9 @@
 .qz-box .qz-box-content {
     vertical-align: middle;
 }
+.qz-box-with-fa-se {
+    margin: 0 0 0 5px;
+}
 .qz-help-text {
     font-size: 10px;
 }
@@ -80,6 +83,10 @@
 .qz-fa-sw {
     float: left;
     margin: -10px 0px 0px -8px;
+}
+.qz-fa-se2 {
+    float: right;
+    margin: 5px -8px 0px 0px;
 }
 
 /* Queiroz.js DayOff */

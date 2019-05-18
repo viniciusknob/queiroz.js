@@ -13,7 +13,8 @@
         mod       = Queiroz.module,
         Settings  = mod.settings,
         Time      = mod.time,
-        Strings   = mod.strings;
+        Strings   = mod.strings,
+        DailyGoal = mod.dailygoal;
 
     /* Class Definition */
 
@@ -49,7 +50,7 @@
                     return;
 
                 NOTICE_RANGE_MINUTES.forEach(function(minute) {
-                    if ((Settings.computeWeeklyGoalMinutes() - minute) == Time.millisToMinute(data.reallyWorked))
+                    if ((DailyGoal.computeWeeklyGoalMinutes() - minute) == Time.millisToMinute(data.reallyWorked))
                         _notify(title, _formatMessage(Strings('noticeWeeklyGoal'), minute));
                 });
             },

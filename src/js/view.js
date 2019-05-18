@@ -10,11 +10,12 @@
     /* Modules */
 
     var
-        mod      = Queiroz.module,
-        Settings = mod.settings,
-        Snippet  = mod.snippet,
-        TimeOn   = mod.timeon,
-        Notice   = mod.notice;
+        mod       = Queiroz.module,
+        Settings  = mod.settings,
+        Snippet   = mod.snippet,
+        TimeOn    = mod.timeon,
+        DailyGoal = mod.dailygoal,
+        Notice    = mod.notice;
 
     /* Class Definition */
 
@@ -179,7 +180,7 @@
                                         eDay.appendChild(Snippet.laborTimePerShift(time.shift, (!!time.out), (index+1)));
                                 });
                                 if (isWorkDay) {
-                                    eDay.appendChild(Snippet.dailyGoal(day.goal));
+                                    eDay.appendChild(Snippet.dailyGoal(day.goal, DailyGoal));
                                 }
                                 eDay.appendChild(Snippet.laborTimePerDay(day.worked, TimeOn));
                                 if (isWorkDay) {
