@@ -1,0 +1,223 @@
+/*!
+ * Queiroz.js: viewtime.js
+ * JavaScript Extension for Dimep Kairos
+ * https://github.com/viniciusknob/queiroz.js
+ */
+
+(function(Queiroz) {
+
+    /* Modules */
+
+    var
+        mod      = Queiroz.module,
+        Settings = mod.settings,
+        Time     = mod.time;
+
+    /* Class Definition */
+
+    var ViewTime = function() {
+
+        /* Constants */
+
+        var
+            MAX_CONSECUTIVE_MINUTES_IN_MILLIS = Time.minuteToMillis(Settings.MAX_CONSECUTIVE_MINUTES),
+            MAX_DAILY_MINUTES_IN_MILLIS = Time.minuteToMillis(Settings.MAX_DAILY_MINUTES);
+
+        /* Private Functions */
+
+        var
+            _computeDailyGoalMinutesInMillis = function(day) {
+                return Time.minuteToMillis(Settings.DAILY_GOAL_MINUTES[day]);
+            },
+            _computeWeeklyGoalMinutesInMillis = function() {
+                return Time.minuteToMillis(Settings.computeWeeklyGoalMinutes());
+            },
+            _computeFixedWeeklyGoalInMillis = function(days) {
+                var currentWeekDay = Date.now().getDay();
+                if (currentWeekDay === 0)
+                    currentWeekDay = 7;
+
+                var weeklyGoal = _computeWeeklyGoalMinutesInMillis();
+                if (days.length === currentWeekDay)
+                    return weeklyGoal;
+
+                var workedDays = [];
+                days.forEach(function(day, index) {
+                    workedDays.push(day.date.getDay());
+                });
+
+                var millisOff = 0;
+                for (let idx = 1; idx <= currentWeekDay; idx++) {
+                     if (workedDays.contains(idx) == false)
+                         millisOff += _computeDailyGoalMinutesInMillis(idx);
+                }
+
+                return weeklyGoal - millisOff;
+            },
+            _computeShiftTime = function(data) {
+                data.days.forEach(function(day) {
+                    day.periods.forEach(function(time) {
+                        time.shift = false;
+                        if (time.in && time.out){
+                            if(Time.before(time.in, time.out)) {
+                                time.shift = Time.diff(time.in, time.out);
+                            } else {
+                                var endOfFirstDay = new Date(time.in.getTime());
+                                endOfFirstDay.setHours(23,59,59,999);
+                                var initOfSecondDay = new Date(time.out.getTime());
+                                initOfSecondDay.setHours(00,00,00,000);
+                                var initDiff = Time.diff(time.in, endOfFirstDay);
+                                var endDiff = Time.diff(initOfSecondDay, time.out);
+                                time.shift = initDiff + endDiff + 1000;
+                            }
+                        } else if (time.in) {
+                            time.shift = Time.diff(time.in, Date.now());
+                        }
+                    });
+                });
+            },
+            _computeLaborTime = function(data) {
+                data.worked = 0; // in/out OK
+                data.reallyWorked = 0; // in OK, out undefined
+                data.days.forEach(function(day) {
+                    day.worked = 0; // in/out OK
+                    day.reallyWorked = 0; // in OK, out undefined
+                    day.worked += day.timeOn;
+                    day.periods.forEach(function(time) {
+                        if (time.in && (time.out == false && day.date.isToday()))
+                            day.reallyWorked += time.shift;
+                        if (time.in && time.out)
+                            day.worked += time.shift
+                    });
+                    day.reallyWorked += day.worked;
+                    data.worked += day.worked;
+                    data.reallyWorked += day.reallyWorked;
+                });
+            },
+            _computeBalanceTime = function(data) {
+                var totalBalance = 0; // compilation of all days, except the current day
+                data.days.forEach(function(day) {
+                    day.balance = 0; // balance per day
+                    if (day.periods.length) {
+                        var isWorkDay = Settings.isWorkDay(day.date);
+                        if (isWorkDay) {
+                            day.balance = (0 - _computeDailyGoalMinutesInMillis(day.date.getDay()));
+                        }
+                        day.balance += day.worked;
+                        if (day.date.isToday() == false || isWorkDay == false) {
+                            totalBalance += day.balance;
+                        }
+                        day.totalBalance = totalBalance;
+                    }
+                });
+                data.weeklyBalance = (_computeFixedWeeklyGoalInMillis(data.days)*(-1)) + data.worked;
+            },
+            _computeTimeToLeave = function(data) {
+                data.days.forEach(function(day) {
+                    var _periods = day.periods;
+                    if (day.date.isToday() && _periods.length) {
+                        var _time = _periods.last();
+                        if (_time.out == false) {
+                            if (day.worked <= Time.hourToMillis(4)) { // Values above 4h exceed the max daily limit
+                                _time.leaveMaxConcec = new Date(_time.in.getMillis() + MAX_CONSECUTIVE_MINUTES_IN_MILLIS);
+                            }
+                            var dailyGoalMillis = _computeDailyGoalMinutesInMillis(day.date.getDay());
+                            var safeTimeLeave = dailyGoalMillis - MAX_CONSECUTIVE_MINUTES_IN_MILLIS; // Values below exceed the max consecutive limit
+                            var isWeeklyGoalNear = (data.weeklyBalance*(-1)) < MAX_CONSECUTIVE_MINUTES_IN_MILLIS;
+                            if ((day.worked >= safeTimeLeave && day.worked < dailyGoalMillis) || isWeeklyGoalNear) {
+                                var pending = Time.diff(day.worked, dailyGoalMillis);
+                                _time.leave = new Date(_time.in.getMillis() + pending);
+                                _time.balancedLeave = new Date(_time.leave.getMillis() - day.totalBalance);
+                            }
+                            if (day.worked > Time.hourToMillis(4)) { // Values below 4h confuse decision making
+                                var pending = Time.diff(day.worked, MAX_DAILY_MINUTES_IN_MILLIS);
+                                _time.leaveMaxDaily = new Date(_time.in.getMillis() + pending);
+                            }
+                            _time.orderBy = _defineOrderBy(_time);
+                        }
+                    }
+                });
+            },
+            _defineOrderBy = function(lastPeriod) {
+                var variables = ['leave','balancedLeave','leaveMaxConcec','leaveMaxDaily'];
+                variables.sort(function(a,b) {
+                    if (lastPeriod[a] == null)
+                        return -1;
+
+                    if (lastPeriod[b] == null)
+                        return 1;
+
+                    return lastPeriod[a].getMillis() - lastPeriod[b].getMillis();
+                });
+                return variables;
+            };
+
+        /* Public Functions */
+
+        return {
+            parse: function(data) {
+                data.days.forEach(function(day) {
+                    day.periods.forEach(function(time) {
+                        if (time.in)
+                            time.in = Date.parseKairos(day.date + " " + time.in);
+
+                        if (time.out)
+                            time.out = Date.parseKairos(day.date + " " + time.out);
+                    });
+                    day.date = Date.parseKairos(day.date + " " + Time.zero);
+                });
+                data.date = Date.now();
+            },
+            compute: function(data) {
+                _computeShiftTime(data);
+                _computeLaborTime(data);
+                _computeBalanceTime(data);
+                _computeTimeToLeave(data);
+            },
+            toHuman: function(data) {
+                data.days.forEach(function(day) {
+                    day.periods.forEach(function(time) {
+                        if (time.in)
+                            time.in = time.in.getTimeAsString();
+
+                        if (time.out)
+                            time.out = time.out.getTimeAsString();
+
+                        if (time.shift)
+                            time.shift = Time.millisToHuman(time.shift);
+
+                        if (time.leaveMaxConcec)
+                            time.leaveMaxConcec = time.leaveMaxConcec.getTimeAsString();
+
+                        if (time.leave)
+                            time.leave = time.leave.getTimeAsString();
+
+                        if (time.leaveMaxDaily)
+                            time.leaveMaxDaily = time.leaveMaxDaily.getTimeAsString();
+
+                        if (time.balancedLeave)
+                            time.balancedLeave = time.balancedLeave.getTimeAsString();
+                    });
+                    day.goal = Time.millisToHuman(_computeDailyGoalMinutesInMillis(day.date.getDay()));
+                    day.worked = Time.millisToHuman(day.worked);
+                    day.reallyWorked = Time.millisToHuman(day.reallyWorked);
+                    day.balance = Time.millisToHumanWithSign(day.balance);
+                    day.totalBalance = Time.millisToHumanWithSign(day.totalBalance);
+                    if (day.timeOn)
+                        day.timeOn = Time.millisToHuman(day.timeOn);
+                });
+                data.maxConsecutive = Time.millisToHuman(MAX_CONSECUTIVE_MINUTES_IN_MILLIS);
+                data.maxDaily = Time.millisToHuman(MAX_DAILY_MINUTES_IN_MILLIS);
+                data.weeklyGoal = Time.millisToHuman(_computeFixedWeeklyGoalInMillis(data.days));
+                data.worked = Time.millisToHuman(data.worked);
+                data.reallyWorked = Time.millisToHuman(data.reallyWorked);
+                data.weeklyBalance = Time.millisToHumanWithSign(data.weeklyBalance);
+            }
+        };
+    }();
+
+    /* Module Definition */
+
+    Queiroz.module.viewtime = ViewTime;
+
+})(Queiroz);

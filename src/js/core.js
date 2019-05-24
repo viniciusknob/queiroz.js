@@ -12,12 +12,13 @@
     var
         mod       = Queiroz.module,
         Settings  = mod.settings,
+        Time      = mod.time,
+        ViewTime  = mod.viewtime,
         KeepAlive = mod.keepalive,
         MockTime  = mod.mocktime,
         Snippet   = mod.snippet,
         View      = mod.view,
         DayOff    = mod.dayoff,
-        Time      = mod.time,
         TimeOn    = mod.timeon,
         Notice    = mod.notice;
 
@@ -95,7 +96,7 @@
             View.appendToHead(Snippet.style());
             MockTime.injectIfExists();
             var data = View.read();
-            Time.parse(data);
+            ViewTime.parse(data);
             _removeDaysBeforeInicialWeekday(data);
 
             if (Settings.hideLastWeekDays())
@@ -104,9 +105,9 @@
             DayOff.check(data);
             TimeOn.check(data);
             _buildDayOptions(data);
-            Time.compute(data);
+            ViewTime.compute(data);
             Notice.check(data);
-            Time.toHuman(data);
+            ViewTime.toHuman(data);
             View.render(data);
             KeepAlive.init();
         },
