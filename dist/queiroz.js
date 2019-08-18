@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.5.49';
+            VERSION = '3.5.50';
 
         /* Public API */
 
@@ -1739,6 +1739,21 @@
             isLoaded: function() {
                 return _get(Selector.COLUMN_DAY);
             },
+            isTargetOnVacation: function(target) {
+                var e = _get(Selector.TOOGLE, target).parentElement;
+                if (!!e == false)
+                    return false;
+
+                var div = e.firstElementChild;
+                if (!!div == false || div.tagName != 'DIV')
+                    return false;
+
+                var span = div.firstElementChild;
+                if (!!span == false || span.tagName != 'SPAN')
+                    return false;
+
+                return span.innerText == 'Férias';
+            },
             getAllColumnDay: function() {
                 return _getAll(Selector.COLUMN_DAY);
             },
@@ -1774,6 +1789,7 @@
             appendToggle: function(target, eToggle) {
                 _get(Selector.TOOGLE, target).parentElement.appendChild(eToggle);
             },
+
             getDisplayedDays: _getDisplayedDays,
             injectTimes: _injectTimes
         };
@@ -1973,7 +1989,8 @@
 
     var
         _buildToggleForDayOff = function(day) {
-            var eToggle = Snippet.buildToggleForDayOff(DayOff.is(day) ? 'off' : 'on');
+            var state = DayOff.is(day) ? 'off' : 'on';
+            var eToggle = Snippet.buildToggleForDayOff(state);
             eToggle.onclick = function() {
                 var _day = day;
                 if (DayOff.is(_day)) {
@@ -2003,6 +2020,9 @@
                     active = true;
 
                 if (active && Settings.isWorkDay(day)) {
+                    if (View.isTargetOnVacation(eDay))
+                        DayOff.add(day);
+
                     var eToggle = _buildToggleForDayOff(day);
                     View.appendToggle(eDay, eToggle);
                 }
@@ -2093,7 +2113,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.5.49</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.5.50</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');

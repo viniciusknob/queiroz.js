@@ -225,6 +225,21 @@
             isLoaded: function() {
                 return _get(Selector.COLUMN_DAY);
             },
+            isTargetOnVacation: function(target) {
+                var e = _get(Selector.TOOGLE, target).parentElement;
+                if (!!e == false)
+                    return false;
+
+                var div = e.firstElementChild;
+                if (!!div == false || div.tagName != 'DIV')
+                    return false;
+
+                var span = div.firstElementChild;
+                if (!!span == false || span.tagName != 'SPAN')
+                    return false;
+
+                return span.innerText == 'Férias';
+            },
             getAllColumnDay: function() {
                 return _getAll(Selector.COLUMN_DAY);
             },
@@ -260,6 +275,7 @@
             appendToggle: function(target, eToggle) {
                 _get(Selector.TOOGLE, target).parentElement.appendChild(eToggle);
             },
+
             getDisplayedDays: _getDisplayedDays,
             injectTimes: _injectTimes
         };

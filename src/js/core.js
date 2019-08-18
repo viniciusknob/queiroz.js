@@ -27,7 +27,8 @@
 
     var
         _buildToggleForDayOff = function(day) {
-            var eToggle = Snippet.buildToggleForDayOff(DayOff.is(day) ? 'off' : 'on');
+            var state = DayOff.is(day) ? 'off' : 'on';
+            var eToggle = Snippet.buildToggleForDayOff(state);
             eToggle.onclick = function() {
                 var _day = day;
                 if (DayOff.is(_day)) {
@@ -57,6 +58,9 @@
                     active = true;
 
                 if (active && Settings.isWorkDay(day)) {
+                    if (View.isTargetOnVacation(eDay))
+                        DayOff.add(day);
+
                     var eToggle = _buildToggleForDayOff(day);
                     View.appendToggle(eDay, eToggle);
                 }
