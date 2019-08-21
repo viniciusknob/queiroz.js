@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.5.48';
+            VERSION = '3.5.49';
 
         /* Public API */
 
@@ -594,12 +594,11 @@
                 return Time.minuteToMillis(DailyGoal.computeWeeklyGoalMinutes());
             },
             _computeFixedWeeklyGoalInMillis = function(days) {
-                var currentWeekDay = Date.now().getDay();
-                if (currentWeekDay === 0)
-                    currentWeekDay = 7;
-
+                var currentWeekDay = Date.now().getDay(); // 0 = Sunday, 1 = Monday,...
+                var fixedCurrentWeekDay = currentWeekDay === 0 ? 7 : currentWeekDay; // DimepKairos starts on monday, then sunday should be controlled different.
                 var weeklyGoal = _computeWeeklyGoalMinutesInMillis();
-                if (days.length === currentWeekDay)
+
+                if (days.length === fixedCurrentWeekDay)
                     return weeklyGoal;
 
                 var workedDays = [];
@@ -608,9 +607,10 @@
                 });
 
                 var millisOff = 0;
-                for (let idx = 1; idx <= currentWeekDay; idx++) {
-                     if (workedDays.contains(idx) == false)
-                         millisOff += _computeDailyGoalMinutesInMillis(idx);
+                for (let idx = 1; idx <= fixedCurrentWeekDay; idx++) {
+                     let fixedIdx = idx === 7 ? 0 : idx; // use native day of week
+                     if (workedDays.contains(fixedIdx) == false)
+                         millisOff += _computeDailyGoalMinutesInMillis(fixedIdx);
                 }
 
                 return weeklyGoal - millisOff;
@@ -2093,7 +2093,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.5.48</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.5.49</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');
