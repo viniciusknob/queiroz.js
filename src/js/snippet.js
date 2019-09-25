@@ -248,6 +248,9 @@
                 }
                 return box;
             },
+            headerMessageCentral: function() {
+                return _buildTag(TagName.P, 'qz-box-inline qz-text-right qz-text-message', 'Hello World! This is a message central.');
+            },
             headerWeeklyGoal: function(weeklyGoal) {
                 return _buildBox({
                     helpText: 'weeklyGoal',

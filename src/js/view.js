@@ -215,6 +215,7 @@
                 });
 
                 var header = Snippet.header();
+                header.appendChild(Snippet.headerMessageCentral())
                 header.appendChild(Snippet.headerWeeklyGoal(data.weeklyGoal));
                 header.appendChild(Snippet.headerLaborTime(data.worked));
                 header.appendChild(Snippet.headerBalanceTime(data.weeklyBalance));

@@ -7,6 +7,9 @@
 .qz-text-left {
     text-align: left;
 }
+.qz-text-right {
+    text-align: right;
+}
 .qz-text-primary { /* change primary for brown */
     color: #a52a2a;
 }
@@ -27,6 +30,12 @@
 }
 .qz-text-orange {
     color: #e27300;
+}
+.qz-text-message {
+    padding: 0 10px;
+    font-weight: bold;
+    color: #ff4500; /* #ff1493, #ff4500, #ff6347, #ff8c00, #ff7f50 */
+    font-size: 16px;
 }
 .qz-box {
     padding: 5px 10px;
