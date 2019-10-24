@@ -21,5 +21,6 @@
     "noticeWeeklyGoal" : "Em _min_min você completará a Meta Semanal de 44h",
     "menuIcon" : "&#9776;",
     "menuItemHideLastWeekDays" : "Ocultar dias da semana anterior",
+    "menuItemSupport": "Apoie este projeto",
     "menuItemAbout" : "Sobre"
 }

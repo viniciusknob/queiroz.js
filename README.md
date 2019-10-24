@@ -1,4 +1,4 @@
-# Queiroz.js 3.5.50
+# Queiroz.js 3.6.50
 JavaScript Extension for Dimep Kairos
 
 ### Autor
@@ -66,6 +66,10 @@ OBS: O saldo do dia, no dia atual, sempre apresentará a meta diária + o saldo 
 Existem 2 tipos de previsão de saída que são apresentados:
 * Saída (Meta): baseada na meta diária. Esse campo apresentará exatamente a hora de saída caso o usuário deseje completar a meta diária.
 * Saída + Saldo: baseada na meta diária + saldo total. Esse campo mostrará a hora de saída ajustada.
+
+### Apoie este projeto!
+
+Se você gostou do Queiroz.js, por favor considere apoiar o desenvolvimento dessa extensão de código aberto com uma doação. Acesse [Support this project!](SUPPORT.md) para mais detalhes.
 
 ### Contribuindo
 

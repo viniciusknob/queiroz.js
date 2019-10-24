@@ -149,10 +149,24 @@
                     Kairos.reload();
                 };
                 var state = Settings.hideLastWeekDays() ? 'on' : 'off';
-                var enable = _buildTag(TagName.SPAN, 'fa fa-toggle-'+state+' qz-menu-item-icon');
+                var enable = _buildTag(TagName.SPAN, 'fa fa-toggle-'+state+' qz-menu-item-icon-rg');
                 hideLastWeekDays.appendChild(enable);
                 menu.appendChild(hideLastWeekDays);
                 // end hideLastWeekDays
+
+                // support
+                var support = _buildTag(TagName.P, 'qz-text-left');
+                var icon = _buildTag(TagName.SPAN, 'fa fa-heart qz-menu-item-icon');
+                support.appendChild(icon);
+                var linkSupport = _buildTag(TagName.A, 'qz-menu-item-anchor', Strings('menuItemSupport'));
+                linkSupport.href = 'https://github.com/viniciusknob/queiroz.js/blob/master/SUPPORT.md';
+                linkSupport.target = '_blank';
+                support.onclick = function() {
+                    linkSupport.click();
+                };
+                support.appendChild(linkSupport);
+                menu.appendChild(support);
+                // end support
 
                 // about
                 var about = _buildTag(TagName.P, 'qz-text-left');

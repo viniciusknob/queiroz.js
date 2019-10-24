@@ -146,6 +146,10 @@
     left: -160px;
 }
 .qz-menu-item-icon {
+    margin-right: 4px;
+    vertical-align: text-top;
+}
+.qz-menu-item-icon-rg {
     float: right;
     margin: -1px;
 }
