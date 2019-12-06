@@ -64,4 +64,4 @@
 
     Queiroz.module.keepalive = KeepAlive;
 
-})(setTimeout, clearTimeout, setInterval, clearInterval, Queiroz);
+})(setTimeout, clearTimeout, setInterval, clearInterval, window.Queiroz);

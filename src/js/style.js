@@ -19,4 +19,4 @@
 
     Queiroz.module.style = Style;
 
-})(Queiroz);
+})(window.Queiroz);

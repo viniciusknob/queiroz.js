@@ -103,4 +103,4 @@
 
     Queiroz.module.timeon = TimeOn;
 
-})(localStorage, Queiroz);
+})(localStorage, window.Queiroz);

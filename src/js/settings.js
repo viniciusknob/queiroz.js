@@ -15,7 +15,7 @@
 
         var
             NAME = 'settings',
-            DEFAULT = __settings__,
+            DEFAULT = JSON.parse('__settings__'),
             KEY = {
                 hideLastWeekDays: 'hideLastWeekDays'
             },
@@ -74,4 +74,4 @@
 
     Queiroz.module.settings = Settings;
 
-})(localStorage, Queiroz);
+})(localStorage, window.Queiroz);

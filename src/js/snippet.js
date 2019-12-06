@@ -395,4 +395,4 @@
 
     Queiroz.module.snippet = Snippet;
 
-})(document, Queiroz);
+})(document, window.Queiroz);

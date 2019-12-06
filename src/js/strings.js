@@ -13,10 +13,10 @@
         return Strings._[key];
     };
 
-    Strings._ = __strings__;
+    Strings._ = JSON.parse('__strings__');
 
     /* Module Definition */
 
     Queiroz.module.strings = Strings;
 
-})(Queiroz);
+})(window.Queiroz);

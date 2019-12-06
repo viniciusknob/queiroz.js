@@ -74,4 +74,4 @@
 
     Queiroz.module.dayoff = DayOff;
 
-})(localStorage, Queiroz);
+})(localStorage, window.Queiroz);

@@ -49,7 +49,7 @@
             });
             return found;
         },
-        _buildDayOffOption = function(data) {
+        _buildDayOffOption = function() {
             var active = false;
             View.getAllColumnDay().forEach(function(eDay) {
                 var day = Date.parseKairos(View.getDateFromTargetAsString(eDay) + " " + Time.zero);
@@ -170,4 +170,4 @@
         _init();
     };
 
-})(window, Queiroz);
+})(window, window.Queiroz);

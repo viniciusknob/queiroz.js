@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.7.50';
+            VERSION = '3.7.51';
 
         /* Public API */
 
@@ -129,7 +129,7 @@
 
         var
             NAME = 'settings',
-            DEFAULT = {"_static_":{"userscriptDelay":1000,"maxConsecutiveMinutes":360,"maxDailyMinutes":600,"dailyGoalMinutes":{"0":0,"1":528,"2":528,"3":528,"4":528,"5":528,"6":0},"initialWeekday":1,"gaTrackingId":"UA-105390656-1","qzKeepalive":60000,"ksKeepalive":1200000,"noticeRangeMinutes":[15,5,3,1],"notice_icon":"https://github.com/viniciusknob/queiroz.js/raw/master/src/img/ic_notification.png"},"_mutable_":{"hideLastWeekDays":true}},
+            DEFAULT = JSON.parse('{"_static_":{"userscriptDelay":1000,"maxConsecutiveMinutes":360,"maxDailyMinutes":600,"dailyGoalMinutes":{"0":0,"1":528,"2":528,"3":528,"4":528,"5":528,"6":0},"initialWeekday":1,"gaTrackingId":"UA-105390656-1","qzKeepalive":60000,"ksKeepalive":1200000,"noticeRangeMinutes":[15,5,3,1],"notice_icon":"https://github.com/viniciusknob/queiroz.js/raw/master/src/img/ic_notification.png"},"_mutable_":{"hideLastWeekDays":true}}'),
             KEY = {
                 hideLastWeekDays: 'hideLastWeekDays'
             },
@@ -188,7 +188,7 @@
 
     Queiroz.module.settings = Settings;
 
-})(localStorage, Queiroz);
+})(localStorage, window.Queiroz);
 
 /*!
  * Queiroz.js: analytics.js
@@ -216,7 +216,7 @@
         screenName: document.querySelector('.PageTitle').textContent
     });
 
-})(Queiroz, ga);
+})(window.Queiroz, window.ga);
 
 
 /*!
@@ -241,7 +241,7 @@
 
     Queiroz.module.kairos = Kairos;
 
-})(window, Queiroz);
+})(window, window.Queiroz);
 
 /*!
  * Queiroz.js: keepalive.js
@@ -309,7 +309,7 @@
 
     Queiroz.module.keepalive = KeepAlive;
 
-})(setTimeout, clearTimeout, setInterval, clearInterval, Queiroz);
+})(setTimeout, clearTimeout, setInterval, clearInterval, window.Queiroz);
 
 
 /*!
@@ -326,13 +326,13 @@
         return Strings._[key];
     };
 
-    Strings._ = {"pending":"Pendente","extra":"Extra","balance":"Saldo do dia","totalBalance":"Saldo Total","labor":"Efetuado","shift":"_n_&ordm; Turno","working":"Trabalhando...","exit":"Atinge _s_","exit+":"Meta + Saldo","config":"Config","weeklyGoal":"Meta Semanal","dailyGoal":"Meta do dia","timeOn":"Falta Abonada","mockTime":"Mock Time","notice":"Notificações","noticeMaxConsecutive":"Em _min_min você atingirá 6h de trabalho sem intervalo","noticeDailyGoal":"Em _min_min você completará a Meta Diária de 8h48","noticeBalancedLeave":"Em _min_min seu saldo total de horas será zerado","noticeMaxDaily":"Em _min_min você atingirá 10h, o máximo permitido por dia","noticeWeeklyGoal":"Em _min_min você completará a Meta Semanal de 44h","menuIcon":"&#9776;","menuItemHideLastWeekDays":"Ocultar dias da semana anterior","menuItemSupport":"Apoie este projeto","menuItemAbout":"Sobre"};
+    Strings._ = JSON.parse('{"pending":"Pendente","extra":"Extra","balance":"Saldo do dia","totalBalance":"Saldo Total","labor":"Efetuado","shift":"_n_&ordm; Turno","working":"Trabalhando...","exit":"Atinge _s_","exit+":"Meta + Saldo","config":"Config","weeklyGoal":"Meta Semanal","dailyGoal":"Meta do dia","timeOn":"Falta Abonada","mockTime":"Mock Time","notice":"Notificações","noticeMaxConsecutive":"Em _min_min você atingirá 6h de trabalho sem intervalo","noticeDailyGoal":"Em _min_min você completará a Meta Diária de 8h48","noticeBalancedLeave":"Em _min_min seu saldo total de horas será zerado","noticeMaxDaily":"Em _min_min você atingirá 10h, o máximo permitido por dia","noticeWeeklyGoal":"Em _min_min você completará a Meta Semanal de 44h","menuIcon":"&#9776;","menuItemHideLastWeekDays":"Ocultar dias da semana anterior","menuItemSupport":"Apoie este projeto","menuItemAbout":"Sobre"}');
 
     /* Module Definition */
 
     Queiroz.module.strings = Strings;
 
-})(Queiroz);
+})(window.Queiroz);
 
 
 /*!
@@ -355,7 +355,7 @@
 
     Queiroz.module.style = Style;
 
-})(Queiroz);
+})(window.Queiroz);
 
 /*!
  * Queiroz.js: time.js
@@ -364,12 +364,6 @@
  */
 
 (function(Queiroz) {
-
-    /* Modules */
-
-    var
-        mod      = Queiroz.module,
-        Settings = mod.settings;
 
     /* Class Definition */
 
@@ -453,7 +447,7 @@
 
     Queiroz.module.time = Time;
 
-})(Queiroz);
+})(window.Queiroz);
 
 
 /*!
@@ -556,7 +550,7 @@
 
     Queiroz.module.dailygoal = DailyGoal;
 
-})(localStorage, Queiroz);
+})(localStorage, window.Queiroz);
 
 /*!
  * Queiroz.js: viewtime.js
@@ -602,7 +596,7 @@
                     return weeklyGoal;
 
                 var workedDays = [];
-                days.forEach(function(day, index) {
+                days.forEach(function(day) {
                     workedDays.push(day.date.getDay());
                 });
 
@@ -626,7 +620,7 @@
                                 var endOfFirstDay = new Date(time.in.getTime());
                                 endOfFirstDay.setHours(23,59,59,999);
                                 var initOfSecondDay = new Date(time.out.getTime());
-                                initOfSecondDay.setHours(00,00,00,000);
+                                initOfSecondDay.setHours(0,0,0,0);
                                 var initDiff = Time.diff(time.in, endOfFirstDay);
                                 var endDiff = Time.diff(initOfSecondDay, time.out);
                                 time.shift = initDiff + endDiff + 1000;
@@ -686,12 +680,12 @@
                             var safeTimeLeave = dailyGoalMillis - MAX_CONSECUTIVE_MINUTES_IN_MILLIS; // Values below exceed the max consecutive limit
                             var isWeeklyGoalNear = (data.weeklyBalance*(-1)) < MAX_CONSECUTIVE_MINUTES_IN_MILLIS;
                             if ((day.worked >= safeTimeLeave && day.worked < dailyGoalMillis) || isWeeklyGoalNear) {
-                                var pending = Time.diff(day.worked, dailyGoalMillis);
+                                let pending = Time.diff(day.worked, dailyGoalMillis);
                                 _time.leave = new Date(_time.in.getMillis() + pending);
                                 _time.balancedLeave = new Date(_time.leave.getMillis() - day.totalBalance);
                             }
                             if (day.worked > Time.hourToMillis(4)) { // Values below 4h confuse decision making
-                                var pending = Time.diff(day.worked, MAX_DAILY_MINUTES_IN_MILLIS);
+                                let pending = Time.diff(day.worked, MAX_DAILY_MINUTES_IN_MILLIS);
                                 _time.leaveMaxDaily = new Date(_time.in.getMillis() + pending);
                             }
                             _time.orderBy = _defineOrderBy(_time);
@@ -781,7 +775,7 @@
 
     Queiroz.module.viewtime = ViewTime;
 
-})(Queiroz);
+})(window.Queiroz);
 
 
 /*!
@@ -1180,7 +1174,7 @@
 
     Queiroz.module.snippet = Snippet;
 
-})(document, Queiroz);
+})(document, window.Queiroz);
 
 
 /*!
@@ -1258,7 +1252,7 @@
 
     Queiroz.module.dayoff = DayOff;
 
-})(localStorage, Queiroz);
+})(localStorage, window.Queiroz);
 
 
 /*!
@@ -1365,7 +1359,7 @@
 
     Queiroz.module.timeon = TimeOn;
 
-})(localStorage, Queiroz);
+})(localStorage, window.Queiroz);
 
 
 /*!
@@ -1430,7 +1424,7 @@
                 NOTICE_RANGE_MINUTES.forEach(function(minute) {
                     data.days.forEach(function(day) {
                         if (day.date.isToday()) {
-                            day.periods.forEach(function(time, index) {
+                            day.periods.forEach(function(time) {
                                 if (time.out == false)
                                     if ((Settings.DAILY_GOAL_MINUTES[day.date.getDay()] - minute) == Time.millisToMinute(day.reallyWorked))
                                         _notify(title, _formatMessage(Strings('noticeDailyGoal'), minute));
@@ -1446,7 +1440,7 @@
                 NOTICE_RANGE_MINUTES.forEach(function(minute) {
                     data.days.forEach(function(day) {
                         if (day.date.isToday()) {
-                            day.periods.forEach(function(time, index) {
+                            day.periods.forEach(function(time) {
                                 if (time.out == false && time.balancedLeave) {
                                     var balancedLeaveInMinutes = Time.millisToMinute(time.balancedLeave.getMillis());
                                     var nowInMinutes = Time.millisToMinute(Date.now().getMillis());
@@ -1465,7 +1459,7 @@
                 NOTICE_RANGE_MINUTES.forEach(function(minute) {
                     data.days.forEach(function(day) {
                         if (day.date.isToday()) {
-                            day.periods.forEach(function(time, index) {
+                            day.periods.forEach(function(time) {
                                 if (time.out == false)
                                     if ((Settings.MAX_DAILY_MINUTES - minute) == Time.millisToMinute(day.reallyWorked))
                                         _notify(title, _formatMessage(Strings('noticeMaxDaily'), minute));
@@ -1481,7 +1475,7 @@
                 NOTICE_RANGE_MINUTES.forEach(function(minute) {
                     data.days.forEach(function(day) {
                         if (day.date.isToday()) {
-                            day.periods.forEach(function(time, index) {
+                            day.periods.forEach(function(time) {
                                 if (time.out == false)
                                     if ((Settings.MAX_CONSECUTIVE_MINUTES - minute) == Time.millisToMinute(time.shift))
                                         _notify(title, _formatMessage(Strings('noticeMaxConsecutive'), minute));
@@ -1512,9 +1506,7 @@
             },
             requestPermission: function() {
                 if (Notification) {
-                    Notification.requestPermission().then(function(status) {
-                        Queiroz.reload();
-                    });
+                    Notification.requestPermission().then(Queiroz.reload);
                 }
             }
         };
@@ -1524,7 +1516,7 @@
 
     Queiroz.module.notice = Notice;
 
-})(Notification, Queiroz);
+})(Notification, window.Queiroz);
 
 
 /*!
@@ -1593,10 +1585,6 @@
                   if (callback)
                     callback();
               });
-          },
-          _appendTo = function(target, element) {
-              var filledSlotOut = target.parentNode;
-              filledSlotOut.parentNode.insertBefore(element, filledSlotOut.nextSibling);
           },
           _getDisplayedDays = function() {
               var
@@ -1717,9 +1705,9 @@
                                 if (day.date.isToday() == false || isWorkDay == false) {
                                     eDay.appendChild(Snippet.balanceTimePerDay(day.totalBalance, true));
                                 }
-                                day.periods.forEach(function(time, index) {
+                                day.periods.forEach(function(time) {
                                     if (time.out == false && day.date.isToday()) {
-                                        time.orderBy.forEach(function(variable, index) {
+                                        time.orderBy.forEach(function(variable) {
                                             var specificTime = time[variable];
                                             if (!!specificTime == false)
                                                 return;
@@ -1813,7 +1801,7 @@
 
     Queiroz.module.view = View;
 
-})(document, Queiroz);
+})(document, window.Queiroz);
 
 
 /*!
@@ -1870,7 +1858,7 @@
 
                 if (date && mockTime) {
                     var
-                        found = false;
+                        found = false,
                         timeArr = _get(date);
 
                     timeArr.forEach(function(time) {
@@ -1882,7 +1870,6 @@
                 } else {
                     return !!cachedDate;
                 }
-                return false;
             },
             _inject = function() {
                 View.injectTimes(MockTime);
@@ -1972,7 +1959,7 @@
 
     Queiroz.module.mocktime = MockTime;
 
-})(localStorage, Queiroz);
+})(localStorage, window.Queiroz);
 
 
 /*!
@@ -2025,7 +2012,7 @@
             });
             return found;
         },
-        _buildDayOffOption = function(data) {
+        _buildDayOffOption = function() {
             var active = false;
             View.getAllColumnDay().forEach(function(eDay) {
                 var day = Date.parseKairos(View.getDateFromTargetAsString(eDay) + " " + Time.zero);
@@ -2127,7 +2114,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.7.50</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.7.51</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');
@@ -2146,7 +2133,7 @@
         _init();
     };
 
-})(window, Queiroz);
+})(window, window.Queiroz);
 
 
 /*!
@@ -2155,4 +2142,4 @@
  * https://github.com/viniciusknob/queiroz.js
  */
 
-Queiroz.bless();
+window.Queiroz.bless();

@@ -6,12 +6,6 @@
 
 (function(Queiroz) {
 
-    /* Modules */
-
-    var
-        mod      = Queiroz.module,
-        Settings = mod.settings;
-
     /* Class Definition */
 
     var Time = function() {
@@ -94,4 +88,4 @@
 
     Queiroz.module.time = Time;
 
-})(Queiroz);
+})(window.Queiroz);

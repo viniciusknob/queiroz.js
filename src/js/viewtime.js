@@ -42,7 +42,7 @@
                     return weeklyGoal;
 
                 var workedDays = [];
-                days.forEach(function(day, index) {
+                days.forEach(function(day) {
                     workedDays.push(day.date.getDay());
                 });
 
@@ -66,7 +66,7 @@
                                 var endOfFirstDay = new Date(time.in.getTime());
                                 endOfFirstDay.setHours(23,59,59,999);
                                 var initOfSecondDay = new Date(time.out.getTime());
-                                initOfSecondDay.setHours(00,00,00,000);
+                                initOfSecondDay.setHours(0,0,0,0);
                                 var initDiff = Time.diff(time.in, endOfFirstDay);
                                 var endDiff = Time.diff(initOfSecondDay, time.out);
                                 time.shift = initDiff + endDiff + 1000;
@@ -126,12 +126,12 @@
                             var safeTimeLeave = dailyGoalMillis - MAX_CONSECUTIVE_MINUTES_IN_MILLIS; // Values below exceed the max consecutive limit
                             var isWeeklyGoalNear = (data.weeklyBalance*(-1)) < MAX_CONSECUTIVE_MINUTES_IN_MILLIS;
                             if ((day.worked >= safeTimeLeave && day.worked < dailyGoalMillis) || isWeeklyGoalNear) {
-                                var pending = Time.diff(day.worked, dailyGoalMillis);
+                                let pending = Time.diff(day.worked, dailyGoalMillis);
                                 _time.leave = new Date(_time.in.getMillis() + pending);
                                 _time.balancedLeave = new Date(_time.leave.getMillis() - day.totalBalance);
                             }
                             if (day.worked > Time.hourToMillis(4)) { // Values below 4h confuse decision making
-                                var pending = Time.diff(day.worked, MAX_DAILY_MINUTES_IN_MILLIS);
+                                let pending = Time.diff(day.worked, MAX_DAILY_MINUTES_IN_MILLIS);
                                 _time.leaveMaxDaily = new Date(_time.in.getMillis() + pending);
                             }
                             _time.orderBy = _defineOrderBy(_time);
@@ -221,4 +221,4 @@
 
     Queiroz.module.viewtime = ViewTime;
 
-})(Queiroz);
+})(window.Queiroz);

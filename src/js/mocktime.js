@@ -53,7 +53,7 @@
 
                 if (date && mockTime) {
                     var
-                        found = false;
+                        found = false,
                         timeArr = _get(date);
 
                     timeArr.forEach(function(time) {
@@ -65,7 +65,6 @@
                 } else {
                     return !!cachedDate;
                 }
-                return false;
             },
             _inject = function() {
                 View.injectTimes(MockTime);
@@ -155,4 +154,4 @@
 
     Queiroz.module.mocktime = MockTime;
 
-})(localStorage, Queiroz);
+})(localStorage, window.Queiroz);

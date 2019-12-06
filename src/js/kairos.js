@@ -21,4 +21,4 @@
 
     Queiroz.module.kairos = Kairos;
 
-})(window, Queiroz);
+})(window, window.Queiroz);

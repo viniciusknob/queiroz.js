@@ -2,9 +2,13 @@
   "name": "Queiroz.js",
   "description": "JavaScript Extension for Dimep Kairos",
   "homepage": "https://github.com/viniciusknob/queiroz.js",
-  "version": "3.7.50",
+  "version": "3.7.51",
   "author": "Vinícius M. Knob <knob.vinicius@gmail.com>",
+  "scripts": {
+    "lint": "npx eslint ./src/"
+  },
   "devDependencies": {
+    "eslint": "^6.7.2",
     "gulp": "^3.9.1",
     "gulp-clean-css": "^3.4.2",
     "gulp-concat": "^2.6.1",

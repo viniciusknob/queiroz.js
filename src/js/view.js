@@ -66,10 +66,6 @@
                     callback();
               });
           },
-          _appendTo = function(target, element) {
-              var filledSlotOut = target.parentNode;
-              filledSlotOut.parentNode.insertBefore(element, filledSlotOut.nextSibling);
-          },
           _getDisplayedDays = function() {
               var
                   days = [],
@@ -189,9 +185,9 @@
                                 if (day.date.isToday() == false || isWorkDay == false) {
                                     eDay.appendChild(Snippet.balanceTimePerDay(day.totalBalance, true));
                                 }
-                                day.periods.forEach(function(time, index) {
+                                day.periods.forEach(function(time) {
                                     if (time.out == false && day.date.isToday()) {
-                                        time.orderBy.forEach(function(variable, index) {
+                                        time.orderBy.forEach(function(variable) {
                                             var specificTime = time[variable];
                                             if (!!specificTime == false)
                                                 return;
@@ -285,4 +281,4 @@
 
     Queiroz.module.view = View;
 
-})(document, Queiroz);
+})(document, window.Queiroz);

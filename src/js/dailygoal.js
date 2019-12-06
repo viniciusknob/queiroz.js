@@ -99,4 +99,4 @@
 
     Queiroz.module.dailygoal = DailyGoal;
 
-})(localStorage, Queiroz);
+})(localStorage, window.Queiroz);

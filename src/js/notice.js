@@ -61,7 +61,7 @@
                 NOTICE_RANGE_MINUTES.forEach(function(minute) {
                     data.days.forEach(function(day) {
                         if (day.date.isToday()) {
-                            day.periods.forEach(function(time, index) {
+                            day.periods.forEach(function(time) {
                                 if (time.out == false)
                                     if ((Settings.DAILY_GOAL_MINUTES[day.date.getDay()] - minute) == Time.millisToMinute(day.reallyWorked))
                                         _notify(title, _formatMessage(Strings('noticeDailyGoal'), minute));
@@ -77,7 +77,7 @@
                 NOTICE_RANGE_MINUTES.forEach(function(minute) {
                     data.days.forEach(function(day) {
                         if (day.date.isToday()) {
-                            day.periods.forEach(function(time, index) {
+                            day.periods.forEach(function(time) {
                                 if (time.out == false && time.balancedLeave) {
                                     var balancedLeaveInMinutes = Time.millisToMinute(time.balancedLeave.getMillis());
                                     var nowInMinutes = Time.millisToMinute(Date.now().getMillis());
@@ -96,7 +96,7 @@
                 NOTICE_RANGE_MINUTES.forEach(function(minute) {
                     data.days.forEach(function(day) {
                         if (day.date.isToday()) {
-                            day.periods.forEach(function(time, index) {
+                            day.periods.forEach(function(time) {
                                 if (time.out == false)
                                     if ((Settings.MAX_DAILY_MINUTES - minute) == Time.millisToMinute(day.reallyWorked))
                                         _notify(title, _formatMessage(Strings('noticeMaxDaily'), minute));
@@ -112,7 +112,7 @@
                 NOTICE_RANGE_MINUTES.forEach(function(minute) {
                     data.days.forEach(function(day) {
                         if (day.date.isToday()) {
-                            day.periods.forEach(function(time, index) {
+                            day.periods.forEach(function(time) {
                                 if (time.out == false)
                                     if ((Settings.MAX_CONSECUTIVE_MINUTES - minute) == Time.millisToMinute(time.shift))
                                         _notify(title, _formatMessage(Strings('noticeMaxConsecutive'), minute));
@@ -143,9 +143,7 @@
             },
             requestPermission: function() {
                 if (Notification) {
-                    Notification.requestPermission().then(function(status) {
-                        Queiroz.reload();
-                    });
+                    Notification.requestPermission().then(Queiroz.reload);
                 }
             }
         };
@@ -155,4 +153,4 @@
 
     Queiroz.module.notice = Notice;
 
-})(Notification, Queiroz);
+})(Notification, window.Queiroz);

@@ -24,4 +24,4 @@
         screenName: document.querySelector('.PageTitle').textContent
     });
 
-})(Queiroz, ga);
+})(window.Queiroz, window.ga);
