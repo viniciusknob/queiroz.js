@@ -19,6 +19,8 @@
         DailyGoal = mod.dailygoal,
         Snippet   = mod.snippet,
         View      = mod.view,
+        Modal     = mod.modal,
+        Report    = mod.report,
         DayOff    = mod.dayoff,
         TimeOn    = mod.timeon,
         Notice    = mod.notice;
@@ -70,8 +72,8 @@
             _buildDayOffOption(data);
             View.getAllColumnDay().forEach(function(eDay) {
                 var headersDay = View.getHeadersDay(eDay);
-                var target = headersDay[0];
-                headersDay[1].style.display = 'none';
+                headersDay[0].style.display = 'none'; // used to "Salvar Marcações"
+                var target = headersDay[1];
 
                 var options = {weekday:'short', day: '2-digit', month: '2-digit'};
                 var day = Date.parseKairos(View.getDateFromTargetAsString(eDay) + " " + Time.zero);
@@ -115,6 +117,14 @@
             ViewTime.toHuman(data);
             View.render(data);
             KeepAlive.init();
+            Modal.init();
+
+            TimeOn.addObserver(KeepAlive);
+            MockTime.addObserver(KeepAlive);
+            DailyGoal.addObserver(KeepAlive);
+            Report.addObserver(KeepAlive);
+
+            Report.init();
         },
         _initWithDelay = function() {
             var interval = setInterval(function() {
@@ -128,38 +138,12 @@
     /* Public Functions */
 
     Queiroz.bless = function() {
-        if (View.isLoaded()) {
-            _init();
-        } else {
-            _initWithDelay();
-        }
-
-        TimeOn.addObserver(KeepAlive);
-        MockTime.addObserver(KeepAlive);
-        DailyGoal.addObserver(KeepAlive);
+        View.isLoaded() ? _init() : _initWithDelay();
 
         window.addEventListener('unload', Notice.closeFiredOnUnload);
         View.appendToFooter(this.description);
+
         return this.description;
-    };
-
-    Queiroz.beta = function() {
-        var modal = document.querySelector('.qz-modal');
-        if (modal) {
-            modal.classList.remove('js-hide');
-            modal.classList.add('js-show');
-            return;
-        }
-
-        View.appendToBody('__modal__', function() {
-            document.querySelector(".qz-modal-close").onclick = function() {
-                if (!modal) {
-                    modal = document.querySelector('.qz-modal');
-                }
-                modal.classList.remove('js-show');
-                modal.classList.add('js-hide');
-            };
-        });
     };
 
     Queiroz.reload = function() {

@@ -24,6 +24,7 @@
             MAX_CONSECUTIVE_MINUTES_IN_MILLIS = Time.minuteToMillis(Settings.MAX_CONSECUTIVE_MINUTES),
             MAX_DAILY_MINUTES_IN_MILLIS = Time.minuteToMillis(Settings.MAX_DAILY_MINUTES);
 
+
         /* Private Functions */
 
         var
@@ -83,7 +84,8 @@
                 data.days.forEach(function(day) {
                     day.worked = 0; // in/out OK
                     day.reallyWorked = 0; // in OK, out undefined
-                    day.worked += day.timeOn;
+                    if (day.timeOn)
+                        day.worked += day.timeOn;
                     day.periods.forEach(function(time) {
                         if (time.in && (time.out == false && day.date.isToday()))
                             day.reallyWorked += time.shift;
@@ -161,7 +163,7 @@
                     day.periods.forEach(function(time) {
                         if (time.in)
                             time.in = Date.parseKairos(day.date + " " + time.in);
-
+                        
                         if (time.out)
                             time.out = Date.parseKairos(day.date + " " + time.out);
                     });
@@ -213,6 +215,23 @@
                 data.worked = Time.millisToHuman(data.worked);
                 data.reallyWorked = Time.millisToHuman(data.reallyWorked);
                 data.weeklyBalance = Time.millisToHumanWithSign(data.weeklyBalance);
+            },
+            parsePeriodRange: function(periodRange) {
+                let
+                    periodArr = periodRange.split("a"),
+                    period = [];
+                periodArr.forEach(dateStr => {
+                    let 
+                        dateStrArr = dateStr.trim().split("/"),
+                        dd = parseInt(dateStrArr[0]),
+                        mm = parseInt(dateStrArr[1])-1,
+                        yyyy = parseInt(dateStrArr[2]);
+                    period.push(new Date(yyyy, mm, dd));
+                });
+                return {
+                    begin: period[0],
+                    end: period[1]
+                };
             }
         };
     }();

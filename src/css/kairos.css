@@ -1,7 +1,15 @@
 /* Override */
-
+* {
+    border-radius: .2rem!important;
+}
+#filterContent form {
+    display: inline-block;
+}
+#filterContent > div:first-child > div:first-child {
+    display: inline-block;
+}
 #SemanaApontamentos {
-    cursor: default !important;
+    cursor: default!important;
 }
 .ContentTable {
     margin-top: inherit;
@@ -13,5 +21,5 @@
     padding: 5px;
 }
 .FilledSlot span {
-    margin: inherit !important;
+    margin: inherit!important;
 }

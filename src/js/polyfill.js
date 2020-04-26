@@ -15,6 +15,9 @@
     Array.prototype.contains = function(value) {
         return this.indexOf(value) > -1;
     };
+    Array.prototype.isEmpty = function() {
+        return (!!this.length) === false;
+    };
 
     /* Date API */
 
@@ -29,11 +32,34 @@
             time = dateTime[1].split(':');
         return new Date(date[2], (date[1] - 1), date[0], time[0], time[1]);
     };
+    Date.isLeapYear = function(year) { 
+        return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0)); 
+    };
+    Date.getDaysInMonth = function(year, month) {
+        return [31, (Date.isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
+    };
+    Date.prototype.isLeapYear = function() { 
+        return Date.isLeapYear(this.getFullYear()); 
+    };
+    Date.prototype.getDaysInMonth = function() { 
+        return Date.getDaysInMonth(this.getFullYear(), this.getMonth());
+    };
+    Date.prototype.addMonths = function(value) {
+        var n = this.getDate();
+        this.setDate(1);
+        this.setMonth(this.getMonth() + value);
+        this.setDate(Math.min(n, this.getDaysInMonth()));
+        return this;
+    };
     Date.prototype.isToday = function() {
         var _now = Date.now();
         return this.getDayOfMonth() === _now.getDayOfMonth() &&
                this.getMonth() === _now.getMonth() &&
                this.getFullYear() === _now.getFullYear();
+    };
+    Date.prototype.getPrevFixedMonth = function() {
+        let fixedMonth = this.getFixedMonth();
+        return fixedMonth == 1 ? 12 : (fixedMonth - 1);
     };
     Date.prototype.getFixedMonth = function() {
         return this.getMonth() + 1;
@@ -49,6 +75,14 @@
     };
     Date.prototype.getMillis = function() {
         return this.getTime();
+    };
+    Date.prototype.toDDmmYYYY = function(separator) {
+        let
+            day = this.getDayOfMonth().padStart(2),
+            month = this.getFixedMonth().padStart(2),
+            year = this.getFullYear();
+        
+        return [day, month, year].join(separator);
     };
 
     /* Others */
@@ -74,5 +108,14 @@
     String.prototype.contains = function(str) {
         return this.indexOf(str) > -1;
     };
+    String.prototype.capitalize = function() {
+        if (this) 
+            return this.charAt(0).toUpperCase() + this.slice(1)
+        else 
+            return this;
+    }
+    String.is = function(arg) {
+        return typeof arg === 'string';
+    }
 
 })();

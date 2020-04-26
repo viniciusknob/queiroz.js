@@ -7,6 +7,9 @@
 .qz-text-left {
     text-align: left;
 }
+.qz-text-bold {
+    font-weight: 700!important;
+}
 .qz-text-primary { /* change primary for brown */
     color: #a52a2a;
 }
@@ -28,9 +31,15 @@
 .qz-text-orange {
     color: #e27300;
 }
+.qz-text-grey {
+    color: grey;
+}
+.qz-cursor-pointer {
+    cursor: pointer;
+}
 .qz-box {
-    padding: 5px 10px;
-    margin: 5px 1px;
+    padding: 5px 10px 4px;
+    margin: 2px 2px;
     border: darkgrey 1px solid;
     min-width: 60px;
 }
@@ -39,6 +48,14 @@
 }
 .qz-box-inline {
     display: inline-block;
+}
+.qz-box-period {
+    display: inline-block;
+    vertical-align: top;
+    margin-top: -2px;
+}
+.qz-box-period > .qz-box {
+    min-width: 100px;
 }
 .qz-box-head {
     float: right;
@@ -86,6 +103,14 @@
 }
 .qz-fa-se2 {
     float: right;
+    margin: 0px -8px 0px 0px;
+}
+.qz-fa-sw2 {
+    float: left;
+    margin: 0px 0px 0px -8px;
+}
+.qz-fa-se3 {
+    float: right;
     margin: 5px -8px 0px 0px;
 }
 
@@ -108,12 +133,6 @@
 }
 .js-hide {
     display: none;
-}
-
-/* Queiroz.js TimeOn */
-
-.fa-chevron-up, .fa-chevron-down {
-    margin: 0 2.5px;
 }
 
 /* Queiroz.js Dropdown */
@@ -177,8 +196,10 @@
 
 .qz-modal-dialog {
     position: relative;
-    width: 900px;
-    margin: 30px auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
 }
 
 .qz-modal-content {
@@ -206,6 +227,9 @@
 
 .qz-modal-body {
     padding: 10px;
+    height: 600px;
+    max-height: 100%;
+    overflow: auto;
 }
 
 .qz-modal-footer {
@@ -213,3 +237,36 @@
     border-top: 1px solid lightgray;
     text-align: center;
 }
+
+/* Queiroz.js Table */
+
+table {
+    border-collapse: collapse;
+}
+
+.qz-table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
+}
+
+.qz-table th,
+.qz-table td {
+    padding: 0.3rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+}
+
+.qz-table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.qz-table tbody + tbody {
+    border-top: 2px solid #dee2e6;
+}
+
+.qz-table tbody tr:hover {
+    color: #212529;
+    background-color: rgba(0, 0, 0, 0.075);
+ }

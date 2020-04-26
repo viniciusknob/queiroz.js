@@ -31,6 +31,8 @@
                 CHECKPOINT: '.FilledSlot span',
                 DATE: '[id^=hiddenDiaApont]',
                 HEADER: '#SemanaApontamentos div',
+                PERIOD_RANGE: '#PeriodoRange',
+                PERIOD_HEADER: '#filterContent div',
                 HEADER_DAY: '.weekDayTextSize',
                 TIME_IN: '.TimeIN,.TimeINVisualizacao',
                 FOOTER: 'footer .LabelEmpresa',
@@ -110,11 +112,11 @@
         /* Public Functions */
 
         return {
-            read: function() {
+            read: function(target) {
                 var
                     data = {},
                     days = [],
-                    eColumns = _getAll(Selector.COLUMN_DAY);
+                    eColumns = _getAll(Selector.COLUMN_DAY, target);
 
                 eColumns.forEach(function(eDay) {
                     var
@@ -254,11 +256,17 @@
             getHeadersDay: function(target) {
                 return _getAll(Selector.HEADER_DAY, target);
             },
+            getPeriodRange: function() {
+                return _get(Selector.PERIOD_RANGE).textContent;
+            },
             appendToHead: function(html) {
                 _append(Selector.HEAD, html);
             },
             appendToBody: function(html, callback) {
                 _append(Selector.BODY, html, callback);
+            },
+            appendToPeriodHeader: function(html, callback) {
+                _append(Selector.PERIOD_HEADER, html, callback);
             },
             appendToHeader: function(html) {
                 _append(Selector.HEADER, html);

@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.7.52';
+            VERSION = '3.8.52';
 
         /* Public API */
 
@@ -50,6 +50,9 @@
     Array.prototype.contains = function(value) {
         return this.indexOf(value) > -1;
     };
+    Array.prototype.isEmpty = function() {
+        return (!!this.length) === false;
+    };
 
     /* Date API */
 
@@ -64,11 +67,34 @@
             time = dateTime[1].split(':');
         return new Date(date[2], (date[1] - 1), date[0], time[0], time[1]);
     };
+    Date.isLeapYear = function(year) { 
+        return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0)); 
+    };
+    Date.getDaysInMonth = function(year, month) {
+        return [31, (Date.isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
+    };
+    Date.prototype.isLeapYear = function() { 
+        return Date.isLeapYear(this.getFullYear()); 
+    };
+    Date.prototype.getDaysInMonth = function() { 
+        return Date.getDaysInMonth(this.getFullYear(), this.getMonth());
+    };
+    Date.prototype.addMonths = function(value) {
+        var n = this.getDate();
+        this.setDate(1);
+        this.setMonth(this.getMonth() + value);
+        this.setDate(Math.min(n, this.getDaysInMonth()));
+        return this;
+    };
     Date.prototype.isToday = function() {
         var _now = Date.now();
         return this.getDayOfMonth() === _now.getDayOfMonth() &&
                this.getMonth() === _now.getMonth() &&
                this.getFullYear() === _now.getFullYear();
+    };
+    Date.prototype.getPrevFixedMonth = function() {
+        let fixedMonth = this.getFixedMonth();
+        return fixedMonth == 1 ? 12 : (fixedMonth - 1);
     };
     Date.prototype.getFixedMonth = function() {
         return this.getMonth() + 1;
@@ -84,6 +110,14 @@
     };
     Date.prototype.getMillis = function() {
         return this.getTime();
+    };
+    Date.prototype.toDDmmYYYY = function(separator) {
+        let
+            day = this.getDayOfMonth().padStart(2),
+            month = this.getFixedMonth().padStart(2),
+            year = this.getFullYear();
+        
+        return [day, month, year].join(separator);
     };
 
     /* Others */
@@ -109,6 +143,15 @@
     String.prototype.contains = function(str) {
         return this.indexOf(str) > -1;
     };
+    String.prototype.capitalize = function() {
+        if (this) 
+            return this.charAt(0).toUpperCase() + this.slice(1)
+        else 
+            return this;
+    }
+    String.is = function(arg) {
+        return typeof arg === 'string';
+    }
 
 })();
 
@@ -228,11 +271,44 @@
 (function(window, Queiroz) {
 
     /* Class Definition */
-
+    
     var Kairos = function() {
+
+
+        /* Constants */
+
+        const
+            BUSCAR_APONTAMENTOS_URL = '/Dimep/Ponto/BuscarApontamentos',
+            BUSCAR_PEDIDOS_APONTAMENTO_URL = '/Dimep/PedidosJustificativas/BuscarPedidosApontamento';
+        
+
+        /* Private Functions */
+
+        var
+            _getURL = function() {
+                let path = window.location.pathname;
+                return /Ponto/.test(path) ? 
+                    BUSCAR_APONTAMENTOS_URL : BUSCAR_PEDIDOS_APONTAMENTO_URL;
+            };
+
+
+        /* Public Functions */
+
         return {
             reload: function() {
                 window.location.reload(true);
+            },
+            loadAppointments: function(code = 0) {
+                window.dtoPessoaApontamentos.Week = code; // TODO create my own?
+                return fetch(_getURL(), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json;charset=utf-8'
+                    },
+                    body: JSON.stringify(window.dtoPessoaApontamentos)
+                })
+                .then(response => response.text())
+                .then(plainText => new DOMParser().parseFromString(plainText, 'text/html'));
             }
         };
     }();
@@ -326,7 +402,7 @@
         return Strings._[key];
     };
 
-    Strings._ = JSON.parse('{"pending":"Pendente","extra":"Extra","balance":"Saldo do dia","totalBalance":"Saldo Total","labor":"Efetuado","shift":"_n_&ordm; Turno","working":"Trabalhando...","exit":"Atinge _s_","exit+":"Meta + Saldo","config":"Config","weeklyGoal":"Meta Semanal","dailyGoal":"Meta do dia","timeOn":"Falta Abonada","mockTime":"Mock Time","notice":"Notificações","noticeMaxConsecutive":"Em _min_min você atingirá 6h de trabalho sem intervalo","noticeDailyGoal":"Em _min_min você completará a Meta Diária de 8h48","noticeBalancedLeave":"Em _min_min seu saldo total de horas será zerado","noticeMaxDaily":"Em _min_min você atingirá 10h, o máximo permitido por dia","noticeWeeklyGoal":"Em _min_min você completará a Meta Semanal de 44h","menuIcon":"&#9776;","menuItemHideLastWeekDays":"Ocultar dias da semana anterior","menuItemSupport":"Apoie este projeto","menuItemAbout":"Sobre"}');
+    Strings._ = JSON.parse('{"pending":"Pendente","extra":"Extra","balance":"Saldo do dia","totalBalance":"Saldo Total","labor":"Efetuado","loadingMonth":"Carregando...","shift":"_n_&ordm; Turno","working":"Trabalhando...","exit":"Atinge _s_","exit+":"Meta + Saldo","config":"Config","weeklyGoal":"Meta Semanal","dailyGoal":"Meta do dia","timeOn":"Falta Abonada","mockTime":"Mock Time","notice":"Notificações","noticeMaxConsecutive":"Em _min_min você atingirá 6h de trabalho sem intervalo","noticeDailyGoal":"Em _min_min você completará a Meta Diária de 8h48","noticeBalancedLeave":"Em _min_min seu saldo total de horas será zerado","noticeMaxDaily":"Em _min_min você atingirá 10h, o máximo permitido por dia","noticeWeeklyGoal":"Em _min_min você completará a Meta Semanal de 44h","menuIcon":"&#9776;","menuItemHideLastWeekDays":"Ocultar dias da semana anterior","menuItemSupport":"Apoie este projeto","menuItemAbout":"Sobre"}');
 
     /* Module Definition */
 
@@ -347,7 +423,7 @@
 
     var Style = function() {
         return {
-            CSS: 'html{line-height:1.15;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,footer,header,nav,section{display:block}h1{font-size:2em;margin:.67em 0}figcaption,figure,main{display:block}figure{margin:1em 40px}hr{box-sizing:content-box;height:0;overflow:visible}pre{font-family:monospace,monospace;font-size:1em}a{background-color:transparent;-webkit-text-decoration-skip:objects}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:inherit}b,strong{font-weight:bolder}code,kbd,samp{font-family:monospace,monospace;font-size:1em}dfn{font-style:italic}mark{background-color:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}audio,video{display:inline-block}audio:not([controls]){display:none;height:0}img{border-style:none}svg:not(:root){overflow:hidden}button,input,optgroup,select,textarea{font-family:sans-serif;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button,select{text-transform:none}[type=reset],[type=submit],button,html [type=button]{-webkit-appearance:button}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring,button:-moz-focusring{outline:1px dotted ButtonText}fieldset{padding:.35em .75em .625em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}progress{display:inline-block;vertical-align:baseline}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-cancel-button,[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}details,menu{display:block}summary{display:list-item}canvas{display:inline-block}template{display:none}[hidden]{display:none}#SemanaApontamentos{cursor:default!important}.ContentTable{margin-top:inherit}.FilledSlot,.LastSlot,.emptySlot{height:inherit;padding:5px}.FilledSlot span{margin:inherit!important}.qz-text-center{text-align:center}.qz-text-left{text-align:left}.qz-text-primary{color:brown}.qz-text-golden{color:#b8860b}.qz-text-green{color:green}.qz-text-teal{color:teal}.qz-text-black{color:#000}.qz-text-purple{color:#639}.qz-text-orange{color:#e27300}.qz-box{padding:5px 10px;margin:5px 1px;border:#a9a9a9 1px solid;min-width:60px}.qz-box-compact{min-width:auto}.qz-box-inline{display:inline-block}.qz-box-head{float:right}.qz-box-icon{min-width:auto;font-size:25px;border:initial}.qz-box-muted{background-color:#d3d3d3}.qz-box .qz-box-content{vertical-align:middle}.qz-box-with-fa-se{margin:0 0 0 5px}.qz-help-text{font-size:10px}.qz-input-time{height:13px;width:45px;text-align:center;padding:2px;margin:5px 0}.qz-input-error{border-color:red}.qz-fa{-moz-user-select:-moz-none;-khtml-user-select:none;-webkit-user-select:none;user-select:none}.qz-fa-se{float:right;margin:-10px -8px 0 0}.qz-fa-sw{float:left;margin:-10px 0 0 -8px}.qz-fa-se2{float:right;margin:5px -8px 0 0}.qz-toggle{margin-top:10px}.fa-toggle-on{color:green}.fa-toggle-off{color:grey}.js-show{display:block}.js-hide{display:none}.fa-chevron-down,.fa-chevron-up{margin:0 2.5px}.qz-dropdown{position:relative}.qz-dropdown-content{display:none;position:absolute;background-color:#f9f9f9;border:#a9a9a9 1px solid;box-shadow:0 4px 8px 0 rgba(0,0,0,.2);padding:2px;z-index:1024}.qz-dropdown:hover .qz-dropdown-content{display:block}.qz-dropdown-content p{font-weight:400;padding:5px;font-size:11px}.qz-dropdown-content p:hover{background-color:khaki}.qz-menu{min-width:200px;left:-160px}.qz-menu-item-icon{margin-right:4px;vertical-align:text-top}.qz-menu-item-icon-rg{float:right;margin:-1px}.qz-menu-item-anchor{color:inherit;cursor:inherit}.qz-column-menu{margin-right:10px;vertical-align:text-bottom;display:inline}.qz-modal{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1024;background-color:rgba(0,0,0,.5)}.qz-modal-dialog{position:relative;width:900px;margin:30px auto}.qz-modal-content{position:relative;background-color:#fff;background-clip:padding-box;border-radius:5px}.qz-modal-header{padding:10px;border-bottom:1px solid #d3d3d3;font-weight:700;font-size:16px}.qz-modal-close{float:right;cursor:pointer;background:0 0;border:0;padding:0;color:silver}.qz-modal-body{padding:10px}.qz-modal-footer{padding:10px;border-top:1px solid #d3d3d3;text-align:center}'
+            CSS: 'html{line-height:1.15;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,footer,header,nav,section{display:block}h1{font-size:2em;margin:.67em 0}figcaption,figure,main{display:block}figure{margin:1em 40px}hr{box-sizing:content-box;height:0;overflow:visible}pre{font-family:monospace,monospace;font-size:1em}a{background-color:transparent;-webkit-text-decoration-skip:objects}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:inherit}b,strong{font-weight:bolder}code,kbd,samp{font-family:monospace,monospace;font-size:1em}dfn{font-style:italic}mark{background-color:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}audio,video{display:inline-block}audio:not([controls]){display:none;height:0}img{border-style:none}svg:not(:root){overflow:hidden}button,input,optgroup,select,textarea{font-family:sans-serif;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button,select{text-transform:none}[type=reset],[type=submit],button,html [type=button]{-webkit-appearance:button}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring,button:-moz-focusring{outline:1px dotted ButtonText}fieldset{padding:.35em .75em .625em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}progress{display:inline-block;vertical-align:baseline}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-cancel-button,[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}details,menu{display:block}summary{display:list-item}canvas{display:inline-block}template{display:none}[hidden]{display:none}*{border-radius:.2rem!important}#filterContent form{display:inline-block}#filterContent>div:first-child>div:first-child{display:inline-block}#SemanaApontamentos{cursor:default!important}.ContentTable{margin-top:inherit}.FilledSlot,.LastSlot,.emptySlot{height:inherit;padding:5px}.FilledSlot span{margin:inherit!important}.qz-text-center{text-align:center}.qz-text-left{text-align:left}.qz-text-bold{font-weight:700!important}.qz-text-primary{color:brown}.qz-text-golden{color:#b8860b}.qz-text-green{color:green}.qz-text-teal{color:teal}.qz-text-black{color:#000}.qz-text-purple{color:#639}.qz-text-orange{color:#e27300}.qz-text-grey{color:grey}.qz-cursor-pointer{cursor:pointer}.qz-box{padding:5px 10px 4px;margin:2px 2px;border:#a9a9a9 1px solid;min-width:60px}.qz-box-compact{min-width:auto}.qz-box-inline{display:inline-block}.qz-box-period{display:inline-block;vertical-align:top;margin-top:-2px}.qz-box-period>.qz-box{min-width:100px}.qz-box-head{float:right}.qz-box-icon{min-width:auto;font-size:25px;border:initial}.qz-box-muted{background-color:#d3d3d3}.qz-box .qz-box-content{vertical-align:middle}.qz-box-with-fa-se{margin:0 0 0 5px}.qz-help-text{font-size:10px}.qz-input-time{height:13px;width:45px;text-align:center;padding:2px;margin:5px 0}.qz-input-error{border-color:red}.qz-fa{-moz-user-select:-moz-none;-khtml-user-select:none;-webkit-user-select:none;user-select:none}.qz-fa-se{float:right;margin:-10px -8px 0 0}.qz-fa-sw{float:left;margin:-10px 0 0 -8px}.qz-fa-se2{float:right;margin:0 -8px 0 0}.qz-fa-sw2{float:left;margin:0 0 0 -8px}.qz-fa-se3{float:right;margin:5px -8px 0 0}.qz-toggle{margin-top:10px}.fa-toggle-on{color:green}.fa-toggle-off{color:grey}.js-show{display:block}.js-hide{display:none}.qz-dropdown{position:relative}.qz-dropdown-content{display:none;position:absolute;background-color:#f9f9f9;border:#a9a9a9 1px solid;box-shadow:0 4px 8px 0 rgba(0,0,0,.2);padding:2px;z-index:1024}.qz-dropdown:hover .qz-dropdown-content{display:block}.qz-dropdown-content p{font-weight:400;padding:5px;font-size:11px}.qz-dropdown-content p:hover{background-color:khaki}.qz-menu{min-width:200px;left:-160px}.qz-menu-item-icon{margin-right:4px;vertical-align:text-top}.qz-menu-item-icon-rg{float:right;margin:-1px}.qz-menu-item-anchor{color:inherit;cursor:inherit}.qz-column-menu{margin-right:10px;vertical-align:text-bottom;display:inline}.qz-modal{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1024;background-color:rgba(0,0,0,.5)}.qz-modal-dialog{position:relative;top:50%;left:50%;transform:translate(-50%,-50%);width:800px}.qz-modal-content{position:relative;background-color:#fff;background-clip:padding-box;border-radius:5px}.qz-modal-header{padding:10px;border-bottom:1px solid #d3d3d3;font-weight:700;font-size:16px}.qz-modal-close{float:right;cursor:pointer;background:0 0;border:0;padding:0;color:silver}.qz-modal-body{padding:10px;height:600px;max-height:100%;overflow:auto}.qz-modal-footer{padding:10px;border-top:1px solid #d3d3d3;text-align:center}table{border-collapse:collapse}.qz-table{width:100%;margin-bottom:1rem;color:#212529}.qz-table td,.qz-table th{padding:.3rem;vertical-align:top;border-top:1px solid #dee2e6}.qz-table thead th{vertical-align:bottom;border-bottom:2px solid #dee2e6}.qz-table tbody+tbody{border-top:2px solid #dee2e6}.qz-table tbody tr:hover{color:#212529;background-color:rgba(0,0,0,.075)}'
         };
     }();
 
@@ -578,6 +654,7 @@
             MAX_CONSECUTIVE_MINUTES_IN_MILLIS = Time.minuteToMillis(Settings.MAX_CONSECUTIVE_MINUTES),
             MAX_DAILY_MINUTES_IN_MILLIS = Time.minuteToMillis(Settings.MAX_DAILY_MINUTES);
 
+
         /* Private Functions */
 
         var
@@ -637,7 +714,8 @@
                 data.days.forEach(function(day) {
                     day.worked = 0; // in/out OK
                     day.reallyWorked = 0; // in OK, out undefined
-                    day.worked += day.timeOn;
+                    if (day.timeOn)
+                        day.worked += day.timeOn;
                     day.periods.forEach(function(time) {
                         if (time.in && (time.out == false && day.date.isToday()))
                             day.reallyWorked += time.shift;
@@ -715,7 +793,7 @@
                     day.periods.forEach(function(time) {
                         if (time.in)
                             time.in = Date.parseKairos(day.date + " " + time.in);
-
+                        
                         if (time.out)
                             time.out = Date.parseKairos(day.date + " " + time.out);
                     });
@@ -767,6 +845,23 @@
                 data.worked = Time.millisToHuman(data.worked);
                 data.reallyWorked = Time.millisToHuman(data.reallyWorked);
                 data.weeklyBalance = Time.millisToHumanWithSign(data.weeklyBalance);
+            },
+            parsePeriodRange: function(periodRange) {
+                let
+                    periodArr = periodRange.split("a"),
+                    period = [];
+                periodArr.forEach(dateStr => {
+                    let 
+                        dateStrArr = dateStr.trim().split("/"),
+                        dd = parseInt(dateStrArr[0]),
+                        mm = parseInt(dateStrArr[1])-1,
+                        yyyy = parseInt(dateStrArr[2]);
+                    period.push(new Date(yyyy, mm, dd));
+                });
+                return {
+                    begin: period[0],
+                    end: period[1]
+                };
             }
         };
     }();
@@ -784,14 +879,14 @@
  * https://github.com/viniciusknob/queiroz.js
  */
 
-(function(document, Queiroz) {
+(function(window, document, Queiroz) {
 
     /* Modules */
 
     var
         mod      = Queiroz.module,
         Settings = mod.settings,
-        Kairos   = mod.kairos,
+        Kairos   = mod.kairos, // TODO remove, snippet should to create elements only
         Strings  = mod.strings,
         Style    = mod.style;
 
@@ -845,7 +940,7 @@
                 options.init();
 
                 var box = _buildTag(TagName.DIV, 'qz-box qz-box-muted qz-text-center js-has-edit-box');
-                var helpText = _buildTag(TagName.DIV, 'qz-help-text', options.helpText);
+                var helpText = _buildTag(TagName.DIV, 'qz-help-text', Strings(options.helpText));
                 var divInput = _buildTag(TagName.DIV);
                 var inputTime = _buildTag(TagName.INPUT, 'qz-input-time js-input-time');
                 var cancel = _buildTag(TagName.SPAN,'qz-fa qz-fa-sw fa fa-times');
@@ -934,33 +1029,118 @@
                 // end hideLastWeekDays
 
                 // support
-                var support = _buildTag(TagName.P, 'qz-text-left');
-                var icon = _buildTag(TagName.SPAN, 'fa fa-heart qz-menu-item-icon');
-                support.appendChild(icon);
-                var linkSupport = _buildTag(TagName.A, 'qz-menu-item-anchor', Strings('menuItemSupport'));
-                linkSupport.href = 'https://github.com/viniciusknob/queiroz.js/blob/master/SUPPORT.md';
+                var itemSupport = _buildTag(TagName.P, 'qz-text-left');
+                var linkSupport = _buildTag(TagName.A, 'qz-menu-item-anchor');
+                linkSupport.href = 'https://github.com/viniciusknob/queiroz.js/blob/master/SUPPORT.md'; // TODO settings?
                 linkSupport.target = '_blank';
-                support.onclick = function() {
-                    linkSupport.click();
-                };
-                support.appendChild(linkSupport);
-                menu.appendChild(support);
+                var iconSupport = _buildTag(TagName.SPAN, 'fa fa-heart qz-menu-item-icon');
+                var labelSupport = _buildTag(TagName.SPAN, '', Strings('menuItemSupport'));
+                itemSupport.appendChild(iconSupport);
+                itemSupport.appendChild(labelSupport);
+                linkSupport.appendChild(itemSupport);
+                menu.appendChild(linkSupport);
                 // end support
 
                 // about
-                var about = _buildTag(TagName.P, 'qz-text-left');
-                var linkGitHub = _buildTag(TagName.A, 'qz-menu-item-anchor', Strings('menuItemAbout'));
-                linkGitHub.href = 'https://github.com/viniciusknob/queiroz.js';
+                var itemAbout = _buildTag(TagName.P, 'qz-text-left');
+                var linkGitHub = _buildTag(TagName.A, 'qz-menu-item-anchor');
+                linkGitHub.href = 'https://github.com/viniciusknob/queiroz.js'; // TODO settings?
                 linkGitHub.target = '_blank';
-                about.onclick = function() {
-                    linkGitHub.click();
-                };
-                about.appendChild(linkGitHub);
-                menu.appendChild(about);
+                var labelAbout = _buildTag(TagName.SPAN, '', Strings('menuItemAbout'));
+                itemAbout.appendChild(labelAbout);
+                linkGitHub.appendChild(itemAbout);
+                menu.appendChild(linkGitHub);
                 // end about
 
                 box.appendChild(menu);
                 return box;
+            },
+            _buildReportTable = function(month) {
+                var table = _buildTag(TagName.TABLE, 'qz-table');
+                
+                var thead = _buildTag(TagName.THEAD);
+                var trhead = _buildTag(TagName.TR);
+                var thDate = _buildTag(TagName.TH);
+                var thWorked = _buildTag(TagName.TH);
+
+                thDate.textContent = 'Data';
+                thWorked.textContent = 'Realizado';
+                
+                trhead.appendChild(thDate);
+                trhead.appendChild(thWorked);
+                
+                thead.appendChild(trhead);
+                table.appendChild(thead);
+                
+                var tbody = _buildTag(TagName.TBODY);
+                
+                var options = {weekday:'short', day: '2-digit', month: 'short', year: 'numeric'};
+
+                month.weeks.forEach(week => {
+                    week.days.forEach(day => {
+                        var tr = _buildTag(TagName.TR, (day.periods.length === 0 ? 'qz-text-grey' : null));
+                        var tdDate = _buildTag(TagName.TD);
+                        var tdWorked = _buildTag(TagName.TD);
+    
+                        tdDate.textContent = day.date.toLocaleDateString('pt-BR', options).replace(/\./g,'');
+                        tdWorked.textContent = day.worked;
+                        
+                        tr.appendChild(tdDate);
+                        tr.appendChild(tdWorked);
+                        tbody.appendChild(tr);
+                    });
+
+                    // realizado na semana
+                    var tr = _buildTag(TagName.TR, 'qz-text-bold');
+                    var tdDate = _buildTag(TagName.TD);
+                    var tdWorked = _buildTag(TagName.TD);
+
+                    tdDate.textContent = 'Realizado na Semana';
+                    tdWorked.textContent = week.worked;
+                    
+                    tr.appendChild(tdDate);
+                    tr.appendChild(tdWorked);
+                    tbody.appendChild(tr);
+
+                    // saldo da semana
+                    tr = _buildTag(TagName.TR, 'qz-text-bold');
+                    tdDate = _buildTag(TagName.TD);
+                    tdWorked = _buildTag(TagName.TD);
+
+                    tdDate.textContent = 'Saldo da Semana';
+                    tdWorked.textContent = 'Em breve...';
+                    
+                    tr.appendChild(tdDate);
+                    tr.appendChild(tdWorked);
+                    tbody.appendChild(tr);
+
+                    // blank line
+                    tr = _buildTag(TagName.TR);
+                    tdDate = _buildTag(TagName.TD);
+                    tdWorked = _buildTag(TagName.TD);
+
+                    tdDate.textContent = '';
+                    tdWorked.textContent = '-';
+                    
+                    tr.appendChild(tdDate);
+                    tr.appendChild(tdWorked);
+                    tbody.appendChild(tr);
+                });
+
+                // realizado no mês
+                var tr = _buildTag(TagName.TR, 'qz-text-bold');
+                var tdDate = _buildTag(TagName.TD);
+                var tdWorked = _buildTag(TagName.TD);
+
+                tdDate.textContent = 'Realizado no Mês';
+                tdWorked.textContent = month.worked;
+                
+                tr.appendChild(tdDate);
+                tr.appendChild(tdWorked);
+                tbody.appendChild(tr);
+                
+                table.appendChild(tbody);
+                return table;
             };
 
         /* Public Functions */
@@ -971,6 +1151,9 @@
             },
             header: function() {
                 return _buildTag(TagName.DIV, 'qz-box-head');
+            },
+            periodHeader: function() {
+                return _buildTag(TagName.DIV, 'qz-box-period');
             },
             buildToggleForDayOff: function(key) {
                 return _buildTag(TagName.SPAN, 'fa fa-toggle-'+key+' qz-toggle');
@@ -990,7 +1173,7 @@
                     window.scrollTo(0, 300);
                     setTimeout(function() {
                         var options = {
-                            'helpText': Strings('timeOn'),
+                            'helpText': 'timeOn',
                             'init': TimeOn.activate,
                             'finally': TimeOn.deactivate,
                             'save': function(eDate, eTime) {
@@ -1010,7 +1193,7 @@
                     window.scrollTo(0, 300);
                     setTimeout(function() {
                         var options = {
-                            'helpText': Strings('mockTime'),
+                            'helpText': 'mockTime',
                             'init': MockTime.activate,
                             'finally': MockTime.deactivate,
                             'save': function(eDate, eTime) {
@@ -1028,18 +1211,11 @@
                 content.appendChild(addMockTime);
                 return dropdown;
             },
-            headerBeta: function() {
-                var box = _buildBox({
-                    helpText: 'config',
-                    humanTime: '',
-                    contentClass: 'fa fa-flask qz-text-golden',
-                    inlineText: true
-                });
-                box.className += ' qz-box-compact';
-                box.onclick = function() {
-                    Queiroz.beta();
-                }
-                return box;
+            buildIconRefreshModal: function() {
+                return _buildTag(TagName.SPAN,'qz-fa qz-fa-sw2 fa fa-refresh qz-cursor-pointer');
+            },
+            buildIconOpenModal: function() {
+                return _buildTag(TagName.SPAN,'qz-fa qz-fa-se2 fa fa-external-link qz-cursor-pointer');
             },
             headerWeeklyGoal: function(weeklyGoal) {
                 return _buildBox({
@@ -1078,6 +1254,14 @@
                 }
                 return box;
             },
+            headerMonthLaborTime: function() {
+                return _buildBox({
+                    helpText: 'loadingMonth',
+                    humanTime: '',
+                    contentClass: 'fa fa-spinner fa-spin',
+                    inlineText: true
+                });
+            },
             balanceTimePerDay: function(balanceTime, total) {
                 return _buildBox({
                     helpText: (total ? 'totalB' : 'b') + 'alance',
@@ -1091,7 +1275,7 @@
                     humanTime: dailyGoal,
                     contentClass: 'qz-text-black qz-box-with-fa-se'
                 });
-                var edit = _buildTag(TagName.SPAN,'qz-fa qz-fa-se2 fa fa-edit');
+                var edit = _buildTag(TagName.SPAN,'qz-fa qz-fa-se3 fa fa-edit');
 
                 edit.onclick = function() {
                   var eDay = this.parentElement.parentElement;
@@ -1101,7 +1285,7 @@
                   window.scrollTo(0, 300);
                   setTimeout(function() {
                       var options = {
-                          'helpText': Strings('dailyGoal'),
+                          'helpText': 'dailyGoal',
                           'init': DailyGoal.activate,
                           'finally': DailyGoal.deactivate,
                           'save': function(eDate, eTime) {
@@ -1166,7 +1350,8 @@
                 return box;
             },
             buildMockTime: _buildMockTime,
-            buildHeaderMenuBox: _buildHeaderMenuBox
+            buildHeaderMenuBox: _buildHeaderMenuBox,
+            buildReportTable: _buildReportTable
         };
     }();
 
@@ -1174,7 +1359,7 @@
 
     Queiroz.module.snippet = Snippet;
 
-})(document, window.Queiroz);
+})(window, document, window.Queiroz);
 
 
 /*!
@@ -1551,6 +1736,8 @@
                 CHECKPOINT: '.FilledSlot span',
                 DATE: '[id^=hiddenDiaApont]',
                 HEADER: '#SemanaApontamentos div',
+                PERIOD_RANGE: '#PeriodoRange',
+                PERIOD_HEADER: '#filterContent div',
                 HEADER_DAY: '.weekDayTextSize',
                 TIME_IN: '.TimeIN,.TimeINVisualizacao',
                 FOOTER: 'footer .LabelEmpresa',
@@ -1630,11 +1817,11 @@
         /* Public Functions */
 
         return {
-            read: function() {
+            read: function(target) {
                 var
                     data = {},
                     days = [],
-                    eColumns = _getAll(Selector.COLUMN_DAY);
+                    eColumns = _getAll(Selector.COLUMN_DAY, target);
 
                 eColumns.forEach(function(eDay) {
                     var
@@ -1774,11 +1961,17 @@
             getHeadersDay: function(target) {
                 return _getAll(Selector.HEADER_DAY, target);
             },
+            getPeriodRange: function() {
+                return _get(Selector.PERIOD_RANGE).textContent;
+            },
             appendToHead: function(html) {
                 _append(Selector.HEAD, html);
             },
             appendToBody: function(html, callback) {
                 _append(Selector.BODY, html, callback);
+            },
+            appendToPeriodHeader: function(html, callback) {
+                _append(Selector.PERIOD_HEADER, html, callback);
             },
             appendToHeader: function(html) {
                 _append(Selector.HEADER, html);
@@ -1802,6 +1995,386 @@
     Queiroz.module.view = View;
 
 })(document, window.Queiroz);
+
+/*!
+ * Queiroz.js: modal.js
+ * JavaScript Extension for Dimep Kairos
+ * https://github.com/viniciusknob/queiroz.js
+ */
+
+(function(window, Queiroz) {
+
+    /* Modules */
+
+    var
+        mod = Queiroz.module,
+        View = mod.view;
+
+    /* Class Definition */
+
+    var Modal = function() {
+
+        var 
+            MODAL = '<div class="qz-modal js-hide"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header"><span class="qz-modal-title"></span> <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"></div><div class="qz-modal-footer"><span>Queiroz.js tem ajudado você? <i class="fa fa-heart"></i> <a target="_blank" href="https://github.com/viniciusknob/queiroz.js/blob/master/SUPPORT.md">Clique aqui</a> e apoie este projeto.</span></div></div></div></div>';
+
+
+        /* Private Functions */
+
+        var
+            _getModal = function() {
+                return document.querySelector('.qz-modal');
+            },
+            _setModalTitle = function(title) {
+                document.querySelector('.qz-modal .qz-modal-title').textContent = title;
+            },
+            _getCloseButton = function() {
+                return document.querySelector(".qz-modal-close");
+            },
+            _close = function(callback) {
+                let modal = _getModal();
+                modal.classList.remove('js-show');
+                modal.classList.add('js-hide');
+                if (callback) 
+                    callback();
+            },
+            _open = function(modalTitle, callback, closeCallback) {
+                let modal = _getModal();
+
+                modal.classList.remove('js-hide');
+                modal.classList.add('js-show');
+
+                if (modalTitle)
+                    _setModalTitle(modalTitle);
+                if (closeCallback)
+                    _getCloseButton().onclick = () => _close(closeCallback);
+                if (callback) 
+                    callback();
+            },
+            _asyncInit = async function() {
+                View.appendToBody(MODAL, function() {
+                    _getCloseButton().onclick = _close;
+                });
+            };
+
+
+        /* Public Functions */
+
+        return {
+            init: _asyncInit,
+            open: _open
+        };
+    }();
+
+    /* Module Definition */
+
+    Queiroz.module.modal = Modal;
+
+})(window, window.Queiroz);
+
+
+/*!
+ * Queiroz.js: report.js
+ * JavaScript Extension for Dimep Kairos
+ * https://github.com/viniciusknob/queiroz.js
+ */
+
+(function(sessionStorage, Queiroz) {
+
+    /* Modules */
+
+    var
+        mod = Queiroz.module,
+        Settings = mod.settings,
+        Strings  = mod.strings,
+        Kairos = mod.kairos,
+        Snippet = mod.snippet,
+        Time = mod.time,
+        TimeOn = mod.timeon,
+        View = mod.view,
+        ViewTime = mod.viewtime,
+        Modal = mod.modal;
+
+
+    /* Class Definition */
+
+    var Report = function() {
+
+        const
+            NAME = "periods";
+
+        var
+            _cache = {},
+            _observers = [];
+
+
+        /* Private Functions */
+
+
+        // Observer Pattern
+        
+        var
+            _notifyObservers = function(enable) {
+                _observers.forEach(function(observer) {
+                    observer.update(Report, { isActive: enable });
+                });
+            },
+            _addObserver = function(observer) {
+                _observers.push(observer);
+            },
+            _activate = function() {
+                _notifyObservers(true);
+            },
+            _deactivate = function() {
+                _notifyObservers(false);
+            };
+        
+        // end Observer Pattern
+
+
+        // Cache
+
+        var
+            _buildKey = function(date) {
+                return date.getFixedMonth().padStart(2) + "_" + date.getFullYear();
+            },
+            _has = function(date) {
+                let month = _cache[_buildKey(date)];
+                if (month)
+                    return Date.now().toDDmmYYYY("/") == month.lastModified; // o mes atual atualiza com mais frequencia
+                
+                return false;
+            },
+            _get = function(date) {
+                return _cache[_buildKey(date)].days;
+            },
+            _persistCache = function(days) {
+                let patterns = [];
+                days.forEach(day => {
+                    let
+                        splittedDate = day.date.split("_"),
+                        mm = splittedDate[1],
+                        pattern = "_" + mm + "_";
+                    
+                    if (patterns.contains(pattern) == false)
+                        patterns.push(pattern);
+                });
+
+                let months = [];
+                patterns.forEach(pattern => {
+                    months.push(days.filter(day => day.date.contains(pattern)));
+                });
+
+                months.forEach(daysOfMonth => {
+                    let monthDate = Date.parseKairos(daysOfMonth.last().date + " " + Time.zero);
+                    let key = _buildKey(monthDate);
+                    let lastModified = Date.now().toDDmmYYYY("/");
+                    _cache[key] = { lastModified, days: daysOfMonth };
+                });
+
+                sessionStorage.setItem(NAME, JSON.stringify(_cache));
+
+                return days;
+            },
+            _deepCacheCleaning = function() {
+                _cache = {};
+                sessionStorage.removeItem(NAME);
+            };
+
+
+        // end Cache
+
+        var
+            _updateView = function(daysLength) {
+                let periodRange = View.getPeriodRange();
+                let period = ViewTime.parsePeriodRange(periodRange);
+                let numMonths = (period.end.getMonth() - period.begin.getMonth()) + 1;
+                let numDays = numMonths * 30;
+                let percent = parseInt((daysLength / numDays) * 100);
+                percent = percent > 100 ? 100 : percent;
+
+                let span = document.querySelector('.qz-box-period > .qz-box > .qz-help-text');
+                span.textContent = Strings('loadingMonth') + ' ' + percent + '%';
+            },
+            _loadCurrentPeriod = function(code = 0, days = []) {
+                _updateView(days.length);
+                return Kairos.loadAppointments(code)
+                    .then(html => View.read(html))
+                    .then(weekData => {
+                        days = days.concat(weekData.days);
+                        return weekData.days.length === 0;
+                    })
+                    .then(stop => stop ? days : _loadCurrentPeriod(code-1, days)); // TODO create second way to stop this recursive method
+            },
+            _getCurrentPeriod = function() {
+                let months = [];
+                let days = [];
+
+                let periodRange = View.getPeriodRange();
+                let period = ViewTime.parsePeriodRange(periodRange);
+
+                let current = new Date(period.begin);
+                let last = new Date(period.end);
+                months.push(period.begin);
+                while (current.getFixedMonth() != last.getFixedMonth()) {
+                    months.push(new Date(current.addMonths(1)));
+                }
+
+                months.forEach(month => {
+                    if (_has(month)) {
+                        days = days.concat(_get(month));
+                    }
+                });
+
+                if (days.isEmpty()) {
+                    return _loadCurrentPeriod()
+                        .then(days => _persistCache(days))
+                        .then(_getCurrentPeriod);
+                }
+
+                return new Promise(resolve => resolve(days));
+            },
+            _preparePeriod = function(days) {
+                let periodData = { days };
+                ViewTime.parse(periodData);
+                periodData.days.sort((a,b) => a.date.getMillis() - b.date.getMillis());
+                return periodData;
+            },
+            _buildMonths = function(periodData) {
+                let months = [];
+
+                let days = periodData.days;
+                let current = new Date(days[0].date);
+                let last = new Date(days.last().date);
+                let condition = day => day.date.getFixedMonth() == current.getFixedMonth();
+
+                months.push({days: days.filter(condition)});
+                while (current.getFixedMonth() != last.getFixedMonth()) {
+                    current.addMonths(1);
+                    months.push({days: days.filter(condition)});
+                }
+
+                periodData.months = months;
+
+                return periodData;
+            },
+            _buildWeeks = function(periodData) {
+                periodData.months.forEach(month => {
+                    let _week = {days: []};
+                    let weeks = [];
+                    month.days.forEach(day => {
+                        if (day.date.getDay() === Settings.INITIAL_WEEKDAY) {
+                            if (_week.days.length) {
+                                weeks.push(_week);
+                                _week = {days: []};
+                            }
+                        }
+                        _week.days.push(day);
+                    });
+                    weeks.push(_week); // rest
+                    month.weeks = weeks;
+                    delete month.days;
+                });
+
+                return periodData;
+            },
+            _prepareWeeks = function(periodData) {
+                periodData.months.forEach(month => {
+                    var monthWorked = 0;
+                    month.weeks.forEach(weekData => {
+                        TimeOn.check(weekData);
+                        
+                        ViewTime.compute(weekData);
+                        monthWorked += weekData.worked;
+                        
+                        ViewTime.toHuman(weekData);
+                    });
+                    month.worked = Time.millisToHuman(monthWorked);
+                });
+                
+                return periodData;
+            },
+            _evaluateHeader = function(periodData) {
+                let periodHeader = document.querySelector('.qz-box-period');
+                periodData.months.forEach((v, index) => {
+                    if (index !== 0)
+                        periodHeader.appendChild(Snippet.headerMonthLaborTime());
+                });
+
+                return periodData;
+            },
+            _prepareModal = function(periodData) {
+                let boxes = document.querySelectorAll('.qz-box-period > .qz-box');
+                boxes.forEach((box, index) => {
+                    let month = periodData.months[index];
+                    let lastDay = month.weeks.last().days.last();
+                    let title = 'Efetuado em ' + lastDay.date.toLocaleDateString('pt-BR', {month: 'long'}).capitalize();
+
+                    let iconRefreshModal = Snippet.buildIconRefreshModal();
+                    iconRefreshModal.onclick = () => {
+                        _deepCacheCleaning();
+                        Queiroz.reload();
+                    };
+                    box.appendChild(iconRefreshModal);
+
+                    let iconOpenModal = Snippet.buildIconOpenModal();
+                    iconOpenModal.onclick = () => {
+                        _activate();
+                        var openCallback = () => {
+                            let modalBody = document.querySelector('.qz-modal .qz-modal-body');
+                            modalBody.innerHTML = "";
+                            modalBody.appendChild(Snippet.buildReportTable(month));
+                        };
+                        var closeCallback = () => {
+                            _deactivate();
+                        };
+                        Modal.open(title, openCallback, closeCallback);
+                    };
+                    box.appendChild(iconOpenModal);
+    
+                    let help = box.querySelector('.qz-help-text');
+                    help.textContent = title;
+    
+                    let boxContent = box.querySelector('.qz-box-content');
+                    boxContent.innerHTML = month.worked;
+                    boxContent.classList.remove('fa','fa-spinner','fa-spin');
+                });
+            },
+            _asyncInit = async function() {
+                _activate();
+
+                _cache = {};
+                if (sessionStorage.hasItem(NAME))
+                    _cache = JSON.parse(sessionStorage.getItem(NAME));
+
+                var periodHeader = Snippet.periodHeader();
+                periodHeader.appendChild(Snippet.headerMonthLaborTime()); // first
+                
+                View.appendToPeriodHeader(periodHeader, () => {
+                    _getCurrentPeriod()
+                        .then(days => _preparePeriod(days))
+                        .then(periodData => _buildMonths(periodData))
+                        .then(periodData => _buildWeeks(periodData))
+                        .then(periodData => _prepareWeeks(periodData))
+                        .then(periodData => _evaluateHeader(periodData))
+                        .then(periodData => _prepareModal(periodData))
+                        .then(() => _deactivate());
+                });
+            };
+
+
+        /* Public Functions */
+
+        return {
+            init: _asyncInit,
+            addObserver: _addObserver
+        };
+    }();
+
+    /* Module Definition */
+
+    Queiroz.module.report = Report;
+
+})(sessionStorage, window.Queiroz);
 
 
 /*!
@@ -1982,6 +2555,8 @@
         DailyGoal = mod.dailygoal,
         Snippet   = mod.snippet,
         View      = mod.view,
+        Modal     = mod.modal,
+        Report    = mod.report,
         DayOff    = mod.dayoff,
         TimeOn    = mod.timeon,
         Notice    = mod.notice;
@@ -2033,8 +2608,8 @@
             _buildDayOffOption(data);
             View.getAllColumnDay().forEach(function(eDay) {
                 var headersDay = View.getHeadersDay(eDay);
-                var target = headersDay[0];
-                headersDay[1].style.display = 'none';
+                headersDay[0].style.display = 'none'; // used to "Salvar Marcações"
+                var target = headersDay[1];
 
                 var options = {weekday:'short', day: '2-digit', month: '2-digit'};
                 var day = Date.parseKairos(View.getDateFromTargetAsString(eDay) + " " + Time.zero);
@@ -2078,6 +2653,14 @@
             ViewTime.toHuman(data);
             View.render(data);
             KeepAlive.init();
+            Modal.init();
+
+            TimeOn.addObserver(KeepAlive);
+            MockTime.addObserver(KeepAlive);
+            DailyGoal.addObserver(KeepAlive);
+            Report.addObserver(KeepAlive);
+
+            Report.init();
         },
         _initWithDelay = function() {
             var interval = setInterval(function() {
@@ -2091,38 +2674,12 @@
     /* Public Functions */
 
     Queiroz.bless = function() {
-        if (View.isLoaded()) {
-            _init();
-        } else {
-            _initWithDelay();
-        }
-
-        TimeOn.addObserver(KeepAlive);
-        MockTime.addObserver(KeepAlive);
-        DailyGoal.addObserver(KeepAlive);
+        View.isLoaded() ? _init() : _initWithDelay();
 
         window.addEventListener('unload', Notice.closeFiredOnUnload);
         View.appendToFooter(this.description);
+
         return this.description;
-    };
-
-    Queiroz.beta = function() {
-        var modal = document.querySelector('.qz-modal');
-        if (modal) {
-            modal.classList.remove('js-hide');
-            modal.classList.add('js-show');
-            return;
-        }
-
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.7.52</small></div></div></div></div>', function() {
-            document.querySelector(".qz-modal-close").onclick = function() {
-                if (!modal) {
-                    modal = document.querySelector('.qz-modal');
-                }
-                modal.classList.remove('js-show');
-                modal.classList.add('js-hide');
-            };
-        });
     };
 
     Queiroz.reload = function() {

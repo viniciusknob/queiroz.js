@@ -4,6 +4,7 @@
     "balance" : "Saldo do dia",
     "totalBalance" : "Saldo Total",
     "labor" : "Efetuado",
+    "loadingMonth" : "Carregando...",
     "shift" : "_n_&ordm; Turno",
     "working" : "Trabalhando...",
     "exit" : "Atinge _s_",
