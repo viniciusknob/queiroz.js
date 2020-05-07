@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.7.51';
+            VERSION = '3.7.52';
 
         /* Public API */
 
@@ -2114,7 +2114,7 @@
             return;
         }
 
-        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.7.51</small></div></div></div></div>', function() {
+        View.appendToBody('<div class="qz-modal"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header">Queiroz.js 3.0 is coming <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"><h1>Coming soon!</h1></div><div class="qz-modal-footer"><small>Queiroz.js 3.7.52</small></div></div></div></div>', function() {
             document.querySelector(".qz-modal-close").onclick = function() {
                 if (!modal) {
                     modal = document.querySelector('.qz-modal');
