@@ -8,14 +8,14 @@
     "lint": "npx eslint ./src/"
   },
   "devDependencies": {
-    "eslint": "^6.7.2",
-    "gulp": "^3.9.1",
+    "eslint": "^7.1.0",
+    "gulp": "^4.0.2",
     "gulp-clean-css": "^3.4.2",
     "gulp-concat": "^2.6.1",
     "gulp-concat-css": "^2.3.0",
     "gulp-htmlmin": "^3.0.0",
     "gulp-jsonminify": "^1.0.0",
-    "gulp-minify": "^1.0.0",
+    "gulp-minify": "^3.1.0",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",
     "run-sequence": "^1.2.2"
@@ -33,6 +33,6 @@
     "url": "https://github.com/viniciusknob/queiroz.js/issues"
   },
   "dependencies": {
-    "gulp-cli": "^2.0.1"
+    "gulp-cli": "^2.2.1"
   }
 }
