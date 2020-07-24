@@ -21,6 +21,7 @@
 
     /* Date API */
 
+    // https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Date/now
     Date.now = function() {
         return new Date();
         //return new Date(2018,8,19,17,00); // => for TEST
@@ -83,6 +84,19 @@
             year = this.getFullYear();
         
         return [day, month, year].join(separator);
+    };
+    Date.prototype.isCurrentWeek = function(initialWeekDay) {
+        // initialWeekDay: 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+
+        let millis = Date.now() - this;
+        let days = parseInt(millis / 1000 / 60 / 60 / 24);
+        if (days > 7)
+            return false;
+        
+        let currentWeekDay = Date.now().getDay();
+        let targetWeekDay = this.getDay();
+        
+        return (initialWeekDay <= targetWeekDay && targetWeekDay <= currentWeekDay);
     };
 
     /* Others */

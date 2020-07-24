@@ -12,7 +12,8 @@
         mod       = Queiroz.module,
         Settings  = mod.settings,
         Time      = mod.time,
-        DailyGoal = mod.dailygoal;
+        DailyGoal = mod.dailygoal,
+        DayOff    = mod.dayoff;
 
     /* Class Definition */
 
@@ -35,26 +36,25 @@
                 return Time.minuteToMillis(DailyGoal.computeWeeklyGoalMinutes());
             },
             _computeFixedWeeklyGoalInMillis = function(days) {
-                var currentWeekDay = Date.now().getDay(); // 0 = Sunday, 1 = Monday,...
-                var fixedCurrentWeekDay = currentWeekDay === 0 ? 7 : currentWeekDay; // DimepKairos starts on monday, then sunday should be controlled different.
-                var weeklyGoal = _computeWeeklyGoalMinutesInMillis();
-
-                if (days.length === fixedCurrentWeekDay)
-                    return weeklyGoal;
-
+                var millisOff = 0;
                 var workedDays = [];
                 days.forEach(function(day) {
+                    if (DayOff.is(day.date))
+                        millisOff += _computeDailyGoalMinutesInMillis(day.date.getDay());
+                    
                     workedDays.push(day.date.getDay());
                 });
-
-                var millisOff = 0;
+                
+                let daysLastIsCurrentWeek = days.length && days.last().date.isCurrentWeek(Settings.INITIAL_WEEKDAY);
+                let fixedCurrentWeekDay = daysLastIsCurrentWeek ? (Date.now().getDay() === 0 ? 7 : Date.now().getDay()) : 7;
+                
                 for (let idx = 1; idx <= fixedCurrentWeekDay; idx++) {
-                     let fixedIdx = idx === 7 ? 0 : idx; // use native day of week
-                     if (workedDays.contains(fixedIdx) == false)
-                         millisOff += _computeDailyGoalMinutesInMillis(fixedIdx);
+                    let fixedIdx = idx === 7 ? 0 : idx; // use native day of week
+                    if (workedDays.contains(fixedIdx) == false)
+                        millisOff += _computeDailyGoalMinutesInMillis(fixedIdx);
                 }
-
-                return weeklyGoal - millisOff;
+                
+                return _computeWeeklyGoalMinutesInMillis() - millisOff;
             },
             _computeShiftTime = function(data) {
                 data.days.forEach(function(day) {

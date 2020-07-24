@@ -64,6 +64,11 @@
                 });
                 data.days = _days;
             },
+            checkAndMark: function(data) {
+                data.days.forEach(function(day) {
+                    day.off = _is(day.date);
+                });
+            },
             is: _is,
             add: _add,
             remove: _remove

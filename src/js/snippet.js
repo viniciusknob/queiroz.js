@@ -204,7 +204,14 @@
 
                 month.weeks.forEach(week => {
                     week.days.forEach(day => {
-                        var tr = _buildTag(TagName.TR, (day.periods.length === 0 ? 'qz-text-grey' : null));
+                        var tr = _buildTag(TagName.TR);
+
+                        if (day.periods.length === 0)
+                            tr.classList.add('qz-text-grey');
+
+                        if (day.off)
+                            tr.classList.add('qz-text-line-through');
+
                         var tdDate = _buildTag(TagName.TD);
                         var tdWorked = _buildTag(TagName.TD);
     
@@ -234,7 +241,7 @@
                     tdWorked = _buildTag(TagName.TD);
 
                     tdDate.textContent = 'Saldo da Semana';
-                    tdWorked.textContent = 'Em breve...';
+                    tdWorked.textContent = week.weeklyBalance;
                     
                     tr.appendChild(tdDate);
                     tr.appendChild(tdWorked);

@@ -34,6 +34,9 @@
 .qz-text-grey {
     color: grey;
 }
+.qz-text-line-through {
+    text-decoration: line-through;
+}
 .qz-cursor-pointer {
     cursor: pointer;
 }

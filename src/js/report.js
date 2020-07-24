@@ -16,6 +16,7 @@
         Kairos = mod.kairos,
         Snippet = mod.snippet,
         Time = mod.time,
+        DayOff = mod.dayoff,
         TimeOn = mod.timeon,
         View = mod.view,
         ViewTime = mod.viewtime,
@@ -208,6 +209,7 @@
                 periodData.months.forEach(month => {
                     var monthWorked = 0;
                     month.weeks.forEach(weekData => {
+                        DayOff.checkAndMark(weekData);
                         TimeOn.check(weekData);
                         
                         ViewTime.compute(weekData);
@@ -234,6 +236,13 @@
                 boxes.forEach((box, index) => {
                     let month = periodData.months[index];
                     let lastDay = month.weeks.last().days.last();
+                    if (!!lastDay == false) {
+                        month.weeks.forEach(week => {
+                            week.days.forEach(day => {
+                                lastDay = day;
+                            });
+                        });
+                    }
                     let title = 'Efetuado em ' + lastDay.date.toLocaleDateString('pt-BR', {month: 'long'}).capitalize();
 
                     let iconRefreshModal = Snippet.buildIconRefreshModal();
