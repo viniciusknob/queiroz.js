@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.8.54';
+            VERSION = '3.8.55';
 
         /* Public API */
 
@@ -386,7 +386,7 @@
 
         return {
             init: _init,
-            update: function(observable, args) { // Observer Pattern
+            notify: function(observable, args) { // Observer Pattern
                 if (args.isActive)
                     _clear();
                 else
@@ -595,12 +595,12 @@
                 _persistCache();
                 return true;
             },
-            _addObserver = function(observer) { // Observer Pattern
+            _subscribe = function(observer) { // Observer Pattern
                 _observers.push(observer);
             },
             _notifyObservers = function(enable) { // Observer Pattern
                 _observers.forEach(function(observer) {
-                    observer.update(DailyGoal, { isActive: enable });
+                    observer.notify(DailyGoal, { isActive: enable });
                 });
             },
             _activate = function() { // Observer Pattern
@@ -629,7 +629,7 @@
         return {
             add: _add,
             get: _get,
-            addObserver: _addObserver,
+            subscribe: _subscribe,
             activate: _activate,
             deactivate: _deactivate,
             computeWeeklyGoalMinutes: _computeWeeklyGoalMinutes
@@ -1472,7 +1472,7 @@
  * https://github.com/viniciusknob/queiroz.js
  */
 
-(function(localStorage, Queiroz) {
+(function(storage, Queiroz) {
 
     /* Modules */
 
@@ -1508,24 +1508,24 @@
                     cache[key] = 0;
 
                 cache[key] += time;
-                localStorage.setItem(NAME, JSON.stringify(cache));
+                storage.setItem(NAME, JSON.stringify(cache));
             },
             _remove = function(date) {
                 if (_has(date) == false)
                     return;
 
                 delete cache[_buildKey(date)];
-                localStorage.setItem(NAME, JSON.stringify(cache));
+                storage.setItem(NAME, JSON.stringify(cache));
             },
             _notifyObservers = function(enable) { // Observer Pattern
                 _observers.forEach(function(observer) {
-                    observer.update(TimeOn, { isActive: enable });
+                    observer.notify(TimeOn, { isActive: enable });
                 });
             };
 
         // Initialize cache
-        if (localStorage.hasItem(NAME)) {
-            cache = JSON.parse(localStorage.getItem(NAME));
+        if (storage.hasItem(NAME)) {
+            cache = JSON.parse(storage.getItem(NAME));
         }
 
         /* Public Functions */
@@ -1554,7 +1554,7 @@
                 var date = Date.parseKairos(eDate + " " + Time.zero);
                 _remove(date);
             },
-            addObserver: function(observer) { // Observer Pattern
+            subscribe: function(observer) { // Observer Pattern
                 _observers.push(observer);
             },
             activate: function() { // Observer Pattern
@@ -2142,10 +2142,10 @@
         var
             _notifyObservers = function(enable) {
                 _observers.forEach(function(observer) {
-                    observer.update(Report, { isActive: enable });
+                    observer.notify(Report, { isActive: enable });
                 });
             },
-            _addObserver = function(observer) {
+            _subscribe = function(observer) {
                 _observers.push(observer);
             },
             _activate = function() {
@@ -2401,7 +2401,7 @@
 
         return {
             init: _asyncInit,
-            addObserver: _addObserver
+            subscribe: _subscribe
         };
     }();
 
@@ -2527,12 +2527,12 @@
 
                 _persistCache();
             },
-            _addObserver = function(observer) { // Observer Pattern
+            _subscribe = function(observer) { // Observer Pattern
                 _observers.push(observer);
             },
             _notifyObservers = function(enable) { // Observer Pattern
                 _observers.forEach(function(observer) {
-                    observer.update(MockTime, { isActive: enable });
+                    observer.notify(MockTime, { isActive: enable });
                 });
             },
             _activate = function() { // Observer Pattern
@@ -2556,7 +2556,7 @@
             get: _get,
             add: _add,
             remove: _remove,
-            addObserver: _addObserver,
+            subscribe: _subscribe,
             activate: _activate,
             deactivate: _deactivate
         };
@@ -2690,10 +2690,10 @@
             KeepAlive.init();
             Modal.init();
 
-            TimeOn.addObserver(KeepAlive);
-            MockTime.addObserver(KeepAlive);
-            DailyGoal.addObserver(KeepAlive);
-            Report.addObserver(KeepAlive);
+            TimeOn.subscribe(KeepAlive);
+            MockTime.subscribe(KeepAlive);
+            DailyGoal.subscribe(KeepAlive);
+            Report.subscribe(KeepAlive);
 
             Report.init();
         },

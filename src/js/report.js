@@ -43,10 +43,10 @@
         var
             _notifyObservers = function(enable) {
                 _observers.forEach(function(observer) {
-                    observer.update(Report, { isActive: enable });
+                    observer.notify(Report, { isActive: enable });
                 });
             },
-            _addObserver = function(observer) {
+            _subscribe = function(observer) {
                 _observers.push(observer);
             },
             _activate = function() {
@@ -302,7 +302,7 @@
 
         return {
             init: _asyncInit,
-            addObserver: _addObserver
+            subscribe: _subscribe
         };
     }();
 

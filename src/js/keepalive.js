@@ -51,7 +51,7 @@
 
         return {
             init: _init,
-            update: function(observable, args) { // Observer Pattern
+            notify: function(observable, args) { // Observer Pattern
                 if (args.isActive)
                     _clear();
                 else

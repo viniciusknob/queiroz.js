@@ -54,12 +54,12 @@
                 _persistCache();
                 return true;
             },
-            _addObserver = function(observer) { // Observer Pattern
+            _subscribe = function(observer) { // Observer Pattern
                 _observers.push(observer);
             },
             _notifyObservers = function(enable) { // Observer Pattern
                 _observers.forEach(function(observer) {
-                    observer.update(DailyGoal, { isActive: enable });
+                    observer.notify(DailyGoal, { isActive: enable });
                 });
             },
             _activate = function() { // Observer Pattern
@@ -88,7 +88,7 @@
         return {
             add: _add,
             get: _get,
-            addObserver: _addObserver,
+            subscribe: _subscribe,
             activate: _activate,
             deactivate: _deactivate,
             computeWeeklyGoalMinutes: _computeWeeklyGoalMinutes

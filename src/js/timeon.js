@@ -5,7 +5,7 @@
  * https://github.com/viniciusknob/queiroz.js
  */
 
-(function(localStorage, Queiroz) {
+(function(storage, Queiroz) {
 
     /* Modules */
 
@@ -41,24 +41,24 @@
                     cache[key] = 0;
 
                 cache[key] += time;
-                localStorage.setItem(NAME, JSON.stringify(cache));
+                storage.setItem(NAME, JSON.stringify(cache));
             },
             _remove = function(date) {
                 if (_has(date) == false)
                     return;
 
                 delete cache[_buildKey(date)];
-                localStorage.setItem(NAME, JSON.stringify(cache));
+                storage.setItem(NAME, JSON.stringify(cache));
             },
             _notifyObservers = function(enable) { // Observer Pattern
                 _observers.forEach(function(observer) {
-                    observer.update(TimeOn, { isActive: enable });
+                    observer.notify(TimeOn, { isActive: enable });
                 });
             };
 
         // Initialize cache
-        if (localStorage.hasItem(NAME)) {
-            cache = JSON.parse(localStorage.getItem(NAME));
+        if (storage.hasItem(NAME)) {
+            cache = JSON.parse(storage.getItem(NAME));
         }
 
         /* Public Functions */
@@ -87,7 +87,7 @@
                 var date = Date.parseKairos(eDate + " " + Time.zero);
                 _remove(date);
             },
-            addObserver: function(observer) { // Observer Pattern
+            subscribe: function(observer) { // Observer Pattern
                 _observers.push(observer);
             },
             activate: function() { // Observer Pattern

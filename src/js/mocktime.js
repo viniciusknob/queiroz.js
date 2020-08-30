@@ -114,12 +114,12 @@
 
                 _persistCache();
             },
-            _addObserver = function(observer) { // Observer Pattern
+            _subscribe = function(observer) { // Observer Pattern
                 _observers.push(observer);
             },
             _notifyObservers = function(enable) { // Observer Pattern
                 _observers.forEach(function(observer) {
-                    observer.update(MockTime, { isActive: enable });
+                    observer.notify(MockTime, { isActive: enable });
                 });
             },
             _activate = function() { // Observer Pattern
@@ -143,7 +143,7 @@
             get: _get,
             add: _add,
             remove: _remove,
-            addObserver: _addObserver,
+            subscribe: _subscribe,
             activate: _activate,
             deactivate: _deactivate
         };

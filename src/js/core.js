@@ -119,10 +119,10 @@
             KeepAlive.init();
             Modal.init();
 
-            TimeOn.addObserver(KeepAlive);
-            MockTime.addObserver(KeepAlive);
-            DailyGoal.addObserver(KeepAlive);
-            Report.addObserver(KeepAlive);
+            TimeOn.subscribe(KeepAlive);
+            MockTime.subscribe(KeepAlive);
+            DailyGoal.subscribe(KeepAlive);
+            Report.subscribe(KeepAlive);
 
             Report.init();
         },
