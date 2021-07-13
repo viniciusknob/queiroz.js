@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.8.55';
+            VERSION = '3.8.56';
 
         /* Public API */
 
@@ -186,7 +186,7 @@
 
         var
             NAME = 'settings',
-            DEFAULT = JSON.parse('{"_static_":{"userscriptDelay":1000,"maxConsecutiveMinutes":360,"maxDailyMinutes":600,"dailyGoalMinutes":{"0":0,"1":528,"2":528,"3":528,"4":528,"5":528,"6":0},"initialWeekday":1,"gaTrackingId":"UA-105390656-1","qzKeepalive":60000,"ksKeepalive":1200000,"noticeRangeMinutes":[15,5,3,1],"notice_icon":"https://github.com/viniciusknob/queiroz.js/raw/master/src/img/ic_notification.png"},"_mutable_":{"hideLastWeekDays":true}}'),
+            DEFAULT = JSON.parse('{"_static_":{"userscriptDelay":1000,"maxConsecutiveMinutes":360,"maxDailyMinutes":600,"dailyGoalMinutes":{"0":0,"1":480,"2":480,"3":480,"4":480,"5":480,"6":0},"initialWeekday":1,"gaTrackingId":"UA-105390656-1","qzKeepalive":60000,"ksKeepalive":1200000,"noticeRangeMinutes":[15,5,3,1],"notice_icon":"https://github.com/viniciusknob/queiroz.js/raw/master/src/img/ic_notification.png"},"_mutable_":{"hideLastWeekDays":true}}'),
             KEY = {
                 hideLastWeekDays: 'hideLastWeekDays'
             },
@@ -416,7 +416,7 @@
         return Strings._[key];
     };
 
-    Strings._ = JSON.parse('{"pending":"Pendente","extra":"Extra","balance":"Saldo do dia","totalBalance":"Saldo Total","labor":"Efetuado","loadingMonth":"Carregando...","shift":"_n_&ordm; Turno","working":"Trabalhando...","exit":"Atinge _s_","exit+":"Meta + Saldo","config":"Config","weeklyGoal":"Meta Semanal","dailyGoal":"Meta do dia","timeOn":"Falta Abonada","mockTime":"Mock Time","notice":"Notificações","noticeMaxConsecutive":"Em _min_min você atingirá 6h de trabalho sem intervalo","noticeDailyGoal":"Em _min_min você completará a Meta Diária de 8h48","noticeBalancedLeave":"Em _min_min seu saldo total de horas será zerado","noticeMaxDaily":"Em _min_min você atingirá 10h, o máximo permitido por dia","noticeWeeklyGoal":"Em _min_min você completará a Meta Semanal de 44h","menuIcon":"&#9776;","menuItemHideLastWeekDays":"Ocultar dias da semana anterior","menuItemSupport":"Apoie este projeto","menuItemAbout":"Sobre"}');
+    Strings._ = JSON.parse('{"pending":"Pendente","extra":"Extra","balance":"Saldo do dia","totalBalance":"Saldo Total","labor":"Efetuado","loadingMonth":"Carregando...","shift":"_n_&ordm; Turno","working":"Trabalhando...","exit":"Atinge _s_","exit+":"Meta + Saldo","config":"Config","weeklyGoal":"Meta Semanal","dailyGoal":"Meta do dia","timeOn":"Falta Abonada","mockTime":"Mock Time","notice":"Notificações","noticeMaxConsecutive":"Em _min_min você atingirá 6h de trabalho sem intervalo","noticeDailyGoal":"Em _min_min você completará a Meta Diária","noticeBalancedLeave":"Em _min_min seu saldo total de horas será zerado","noticeMaxDaily":"Em _min_min você atingirá 10h, o máximo permitido por dia","noticeWeeklyGoal":"Em _min_min você completará a Meta Semanal","menuIcon":"&#9776;","menuItemHideLastWeekDays":"Ocultar dias da semana anterior","menuItemSupport":"Apoie este projeto","menuItemAbout":"Sobre"}');
 
     /* Module Definition */
 
