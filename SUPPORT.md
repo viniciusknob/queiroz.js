@@ -10,13 +10,12 @@ Você pode expressar sua gratidão ajudando esse projeto agora.
 Sua ajuda será utilizada para comprar um café melhor, ou  
 algum curso para aprender uma nova tecnologia.
 
-Muito obrigado.
+<br />
+<img src="src/img/support_pix.png" alt="PIX" />
+<br />
+
+Caso tenha dificuldade para reconhecer o QRCode, entre em
+https://nubank.com.br/pagar/3inrw/DJ92ROp7pe.
+
+Muito obrigado.  
 Desde já agradeço sua ajuda.
-
-<p>
-<img src="src/img/support/inter.png" alt="Inter" height="350" />
-<img src="src/img/support/nuconta.png" alt="NuConta" height="350" />
-<img src="src/img/support/picpay.jpg" alt="PicPay" height="350" />
-</p>
-
-Caso tenha dificuldade para reconhecer o QRCode, clique na imagem para expandi-la.
