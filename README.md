@@ -1,4 +1,4 @@
-# Queiroz.js 3.8.56
+# Queiroz.js 3.8.57
 JavaScript Extension for Dimep Kairos.
 
 ### Download e Instalação

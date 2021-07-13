@@ -1,15 +1,13 @@
-var
-    gulp = require('gulp'),
-    fs = require('fs'),
-    replace = require('gulp-replace'),
-    jsConcat = require('gulp-concat'),
-    cssConcat = require('gulp-concat-css'),
-    rename = require('gulp-rename'),
-    jsMinify = require('gulp-minify'),
-    cssMinify = require('gulp-clean-css'),
-    htmlMinify = require('gulp-htmlmin'),
-    jsonMinify = require('gulp-jsonminify'),
-    runSequence = require('run-sequence');
+const { src, dest, series } = require('gulp');
+const fs = require('fs');
+const replace = require('gulp-replace');
+const rename = require('gulp-rename');
+const jsonMinify = require('gulp-jsonminify');
+const htmlMinify = require('gulp-htmlmin');
+const cssConcat = require('gulp-concat-css');
+const cssMinify = require('gulp-clean-css');
+const jsConcat = require('gulp-concat');
+const jsMinify = require('gulp-minify');
 
 // Polyfill
 Number.prototype.padStart = function(length) {
@@ -36,7 +34,7 @@ var
     },
 
     Settings = {
-        VERSION: '3.8.55',
+        VERSION: '3.8.57',
         versionRegex: '(?:\\d+\\.){2}\\d+(?:-beta\\.\\d+)?',
         env: {
             DEV: {
@@ -57,8 +55,7 @@ var
 var
     setVersion = {
         root: function(env) {
-            return gulp
-                .src([
+            return src([
                     './README.md',   // Queiroz.js 2.8.12
                     './package.json', // "version": "2.8.12"
                     './queiroz.user.js' // version 2.8.12
@@ -66,144 +63,131 @@ var
                 .pipe(replace(new RegExp('(js\\s+)'+Settings.versionRegex), env.versionReplacer))
                 .pipe(replace(new RegExp('(version.{4})'+Settings.versionRegex), env.versionReplacer))
                 .pipe(replace(new RegExp('(version\\s+)'+Settings.versionRegex), env.versionReplacer))
-                .pipe(gulp.dest('./'));
+                .pipe(dest('./'));
         },
         dist: function(env) {
-            return gulp
-                .src([
-                    'dist/queiroz.js',
-                    'dist/queiroz.min.js'
+            return src([
+                    'dist/*',
                 ])
                 .pipe(replace('__version__', env.versionReplacer))
                 .on('end', function() {
                     console.log('\n\tQueiroz.js %s\n', env.versionReplacer());
                 })
-                .pipe(gulp.dest('dist'));
+                .pipe(dest('dist'));
             }
     }
 ;
 
 
-gulp.task('dev.version', function() {
+function _devVersion() {
     return setVersion.dist(Settings.env.DEV);
-});
+}
 
-gulp.task('all.version-root', function() {
+function _allVersionRoot() {
     return setVersion.root(Settings.env.PRD);
-});
+}
 
-gulp.task('all.version-dist', function() {
+function _allVersionDist() {
     return setVersion.dist(Settings.env.PRD);
-});
+}
 
-gulp.task('all.version', function(callback) {
-    runSequence('all.version-root', 'all.version-dist', callback);
-});
+const _allVersion = series(_allVersionRoot, _allVersionDist);
 
-gulp.task('resource.minToJS', function() {
-    return gulp.src('dist/queiroz.js')
+function _resourceMinToJS() {
+    return src('dist/queiroz.js')
         .pipe(replace('__strings__', fs.readFileSync('build/resource/strings.min.json', 'utf8')))
         .pipe(replace('__settings__', fs.readFileSync('build/resource/settings.min.json', 'utf8')))
-        .pipe(gulp.dest('dist'));
-});
+        .pipe(dest('dist'));
+}
 
-gulp.task('resource.compress.settings', function() {
-    return gulp.src('src/resource/settings.json')
+function _resourceCompressSettings() {
+    return src('src/resource/settings.json')
         .pipe(jsonMinify())
         .pipe(rename({
             suffix: '.min'
         }))
-        .pipe(gulp.dest('build/resource'));
-});
+        .pipe(dest('build/resource'));
+}
 
-gulp.task('resource.compress.strings', function() {
-    return gulp.src('src/resource/strings.json')
+function _resourceCompressStrings() {
+    return src('src/resource/strings.json')
         .pipe(jsonMinify())
         .pipe(rename({
             suffix: '.min'
         }))
-        .pipe(gulp.dest('build/resource'));
-});
+        .pipe(dest('build/resource'));
+}
 
-gulp.task('resource.compress', function(callback) {
-    runSequence('resource.compress.strings', 'resource.compress.settings', callback);
-});
+const _resourceCompress = series(_resourceCompressStrings, _resourceCompressSettings);
+const _resourceCompile = series(_resourceCompress, _resourceMinToJS);
 
-gulp.task('resource.compile', function(callback) {
-    runSequence('resource.compress', 'resource.minToJS', callback);
-});
-
-gulp.task('html.minToJS', function() {
-    return gulp.src('dist/queiroz.js')
+function _htmlMinToJS() {
+    return src('dist/queiroz.js')
         .pipe(replace('__modal__', fs.readFileSync('build/html/modal.min.html', 'utf8')))
-        .pipe(gulp.dest('dist'));
-});
+        .pipe(dest('dist'));
+}
 
-gulp.task('html.compress', function() {
-    return gulp.src('src/html/modal.html')
+function _htmlCompress() {
+    return src('src/html/modal.html')
         .pipe(htmlMinify({
             collapseWhitespace: true
         }))
         .pipe(rename({
             suffix: '.min'
         }))
-        .pipe(gulp.dest('build/html'));
-});
+        .pipe(dest('build/html'));
+}
 
-gulp.task('html.compile', function(callback) {
-    runSequence('html.compress', 'html.minToJS', callback);
-});
+const _htmlCompile = series(_htmlCompress, _htmlMinToJS);
 
-gulp.task('css.minToJS', function() {
-    return gulp.src('dist/queiroz.js')
+function _cssMinToJS() {
+    return src('dist/queiroz.js')
         .pipe(replace('__css__', fs.readFileSync('build/css/queiroz.min.css', 'utf8')))
-        .pipe(gulp.dest('dist'));
-});
+        .pipe(dest('dist'));
+}
 
-gulp.task('css.compress', function() {
-    return gulp.src('build/css/queiroz.css')
+function _cssCompress() {
+    return src('build/css/queiroz.css')
         .pipe(cssMinify())
         .pipe(rename({
             suffix: '.min'
         }))
-        .pipe(gulp.dest('build/css'));
-});
+        .pipe(dest('build/css'));
+}
 
-gulp.task('css.concat', function() {
-    return gulp.src([
+function _cssConcat() {
+    return src([
             'src/css/normalize.css',
             'src/css/kairos.css',
             'src/css/queiroz.css'
         ])
         .pipe(cssConcat('queiroz.css'))
-        .pipe(gulp.dest('build/css'));
-});
+        .pipe(dest('build/css'));
+}
 
-gulp.task('css.compile', function(callback) {
-    runSequence('css.concat', 'css.compress', 'css.minToJS', callback);
-});
+const _cssCompile = series(_cssConcat, _cssCompress, _cssMinToJS);
 
-gulp.task('js.compress', function() {
-    return gulp.src('dist/queiroz.js')
+function _jsCompress() {
+    return src('dist/queiroz.js')
         .pipe(jsMinify({
            ext: {
                min:'.min.js'
            }
         }))
-        .pipe(gulp.dest('dist'));
-});
+        .pipe(dest('dist'));
+}
 
-gulp.task('js.docToMin', function() {
-    return gulp.src([
+function _jsDocToMin() {
+    return src([
             'src/js/dochead.js',
             'dist/queiroz.min.js'
         ])
         .pipe(jsConcat('queiroz.min.js'))
-        .pipe(gulp.dest('dist'));
-});
+        .pipe(dest('dist'));
+}
 
-gulp.task('dev.concat', function() {
-    return gulp.src([
+function _devConcat() {
+    return src([
             'src/js/queiroz.js',
             'src/js/polyfill.js',
             'src/js/settings.js',
@@ -226,11 +210,11 @@ gulp.task('dev.concat', function() {
             'src/js/autoexec.js'
         ])
         .pipe(jsConcat('queiroz.js'))
-        .pipe(gulp.dest('dist'));
-});
+        .pipe(dest('dist'));
+}
 
-gulp.task('all.concat', function() {
-    return gulp.src([
+function _allConcat() {
+    return src([
             'src/js/queiroz.js',
             'src/js/polyfill.js',
             'src/js/settings.js',
@@ -254,39 +238,25 @@ gulp.task('all.concat', function() {
             'src/js/autoexec.js'
         ])
         .pipe(jsConcat('queiroz.js'))
-        .pipe(gulp.dest('dist'));
-});
+        .pipe(dest('dist'));
+}
 
-gulp.task('commons', function(callback) {
-    runSequence(
-      'css.compile',
-      'html.compile',
-      'resource.compile',
-      'js.compress',
-      callback
-    );
-});
+const _commons = series(
+    _cssCompile,
+    _htmlCompile,
+    _resourceCompile,
+    _jsCompress,
+);
 
-gulp.task('dev', function(callback) {
-    runSequence(
-      'dev.concat',
-      'commons',
-      'dev.version',
-      callback
-    );
-});
+exports.dev = series(
+    _devConcat,
+    _commons,
+    _devVersion,
+);
 
-gulp.task('release', function(callback) {
-    runSequence(
-      'all.concat',
-      'commons',
-      'js.docToMin',
-      'all.version',
-      callback
-    );
-});
-
-
-gulp.task('default', function() {
-    console.log('Queiroz.js '+Settings.VERSION);
-});
+exports.default = series(
+    _allConcat,
+    _commons,
+    _jsDocToMin,
+    _allVersion,
+);
