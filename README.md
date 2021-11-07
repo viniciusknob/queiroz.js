@@ -1,4 +1,4 @@
-# Queiroz.js 3.8.61
+# Queiroz.js 3.8.62
 JavaScript Extension for Dimep Kairos.
 
 ### Download e Instalação
@@ -22,3 +22,12 @@ Depois, basta clicar no link abaixo para instalar o script na extensão:
 Para mais informações, por favor acesse:
 
 * [Wiki](https://github.com/viniciusknob/queiroz.js/wiki)
+
+### Apoie este projeto!
+
+Você pode apoiar este projeto das seguintes formas:
+
+* Fale com seus colegas sobre a extensão e como ela pode ajudar;
+* Abra novas issues com solicitações de melhorias;
+* Favorite este projeto com uma :star:;
+* Faça uma doação acessando [SUPPORT.md](SUPPORT.md).

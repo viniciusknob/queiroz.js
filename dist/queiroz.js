@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.8.61';
+            VERSION = '3.8.62';
 
         /* Public API */
 
