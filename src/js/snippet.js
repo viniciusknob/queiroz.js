@@ -271,7 +271,19 @@
                 tr.appendChild(tdDate);
                 tr.appendChild(tdWorked);
                 tbody.appendChild(tr);
-                
+
+                // saldo no mês
+                tr = _buildTag(TagName.TR, 'qz-text-bold');
+                tdDate = _buildTag(TagName.TD);
+                tdWorked = _buildTag(TagName.TD);
+
+                tdDate.textContent = 'Saldo do Mês';
+                tdWorked.textContent = month.balance;
+
+                tr.appendChild(tdDate);
+                tr.appendChild(tdWorked);
+                tbody.appendChild(tr);
+
                 table.appendChild(tbody);
                 return table;
             };

@@ -208,16 +208,19 @@
             _prepareWeeks = function(periodData) {
                 periodData.months.forEach(month => {
                     var monthWorked = 0;
+                    let monthBalance = 0;
                     month.weeks.forEach(weekData => {
                         DayOff.checkAndMark(weekData);
                         TimeOn.check(weekData);
                         
                         ViewTime.compute(weekData);
                         monthWorked += weekData.worked;
+                        monthBalance += weekData.weeklyBalance;
                         
                         ViewTime.toHuman(weekData);
                     });
                     month.worked = Time.millisToHuman(monthWorked);
+                    month.balance = Time.millisToHumanWithSign(monthBalance);
                 });
                 
                 return periodData;

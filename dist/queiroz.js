@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.8.60';
+            VERSION = '3.8.61';
 
         /* Public API */
 
@@ -1242,7 +1242,19 @@
                 tr.appendChild(tdDate);
                 tr.appendChild(tdWorked);
                 tbody.appendChild(tr);
-                
+
+                // saldo no mês
+                tr = _buildTag(TagName.TR, 'qz-text-bold');
+                tdDate = _buildTag(TagName.TD);
+                tdWorked = _buildTag(TagName.TD);
+
+                tdDate.textContent = 'Saldo do Mês';
+                tdWorked.textContent = month.balance;
+
+                tr.appendChild(tdDate);
+                tr.appendChild(tdWorked);
+                tbody.appendChild(tr);
+
                 table.appendChild(tbody);
                 return table;
             };
@@ -2307,16 +2319,19 @@
             _prepareWeeks = function(periodData) {
                 periodData.months.forEach(month => {
                     var monthWorked = 0;
+                    let monthBalance = 0;
                     month.weeks.forEach(weekData => {
                         DayOff.checkAndMark(weekData);
                         TimeOn.check(weekData);
                         
                         ViewTime.compute(weekData);
                         monthWorked += weekData.worked;
+                        monthBalance += weekData.weeklyBalance;
                         
                         ViewTime.toHuman(weekData);
                     });
                     month.worked = Time.millisToHuman(monthWorked);
+                    month.balance = Time.millisToHumanWithSign(monthBalance);
                 });
                 
                 return periodData;
