@@ -157,7 +157,7 @@
                 // support
                 var itemSupport = _buildTag(TagName.P, 'qz-text-left');
                 var linkSupport = _buildTag(TagName.A, 'qz-menu-item-anchor');
-                linkSupport.href = 'https://github.com/viniciusknob/queiroz.js/blob/master/SUPPORT.md'; // TODO settings?
+                linkSupport.href = 'https://github.com/viniciusknob/queiroz.js/blob/main/SUPPORT.md'; // TODO settings?
                 linkSupport.target = '_blank';
                 var iconSupport = _buildTag(TagName.SPAN, 'fa fa-heart qz-menu-item-icon');
                 var labelSupport = _buildTag(TagName.SPAN, '', Strings('menuItemSupport'));

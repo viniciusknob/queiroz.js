@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.8.58';
+            VERSION = '3.8.59';
 
         /* Public API */
 
@@ -186,7 +186,7 @@
 
         var
             NAME = 'settings',
-            DEFAULT = JSON.parse('{"_static_":{"userscriptDelay":1000,"maxConsecutiveMinutes":360,"maxDailyMinutes":600,"dailyGoalMinutes":{"0":0,"1":480,"2":480,"3":480,"4":480,"5":480,"6":0},"initialWeekday":1,"gaTrackingId":"UA-105390656-1","qzKeepalive":60000,"ksKeepalive":1200000,"noticeRangeMinutes":[15,5,3,1],"notice_icon":"https://github.com/viniciusknob/queiroz.js/raw/master/src/img/ic_notification.png"},"_mutable_":{"hideLastWeekDays":true}}'),
+            DEFAULT = JSON.parse('{"_static_":{"userscriptDelay":1000,"maxConsecutiveMinutes":360,"maxDailyMinutes":600,"dailyGoalMinutes":{"0":0,"1":480,"2":480,"3":480,"4":480,"5":480,"6":0},"initialWeekday":1,"gaTrackingId":"UA-105390656-1","qzKeepalive":60000,"ksKeepalive":1200000,"noticeRangeMinutes":[15,5,3,1],"notice_icon":"https://github.com/viniciusknob/queiroz.js/raw/main/src/img/ic_notification.png"},"_mutable_":{"hideLastWeekDays":true}}'),
             KEY = {
                 hideLastWeekDays: 'hideLastWeekDays'
             },
@@ -1128,7 +1128,7 @@
                 // support
                 var itemSupport = _buildTag(TagName.P, 'qz-text-left');
                 var linkSupport = _buildTag(TagName.A, 'qz-menu-item-anchor');
-                linkSupport.href = 'https://github.com/viniciusknob/queiroz.js/blob/master/SUPPORT.md'; // TODO settings?
+                linkSupport.href = 'https://github.com/viniciusknob/queiroz.js/blob/main/SUPPORT.md'; // TODO settings?
                 linkSupport.target = '_blank';
                 var iconSupport = _buildTag(TagName.SPAN, 'fa fa-heart qz-menu-item-icon');
                 var labelSupport = _buildTag(TagName.SPAN, '', Strings('menuItemSupport'));
@@ -2041,7 +2041,7 @@
     var Modal = function() {
 
         var 
-            MODAL = '<div class="qz-modal js-hide"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header"><span class="qz-modal-title"></span> <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"></div><div class="qz-modal-footer"><span>Queiroz.js tem ajudado você? <i class="fa fa-heart"></i> <a target="_blank" href="https://github.com/viniciusknob/queiroz.js/blob/master/SUPPORT.md">Clique aqui</a> e apoie este projeto.</span></div></div></div></div>';
+            MODAL = '<div class="qz-modal js-hide"><div class="qz-modal-dialog"><div class="qz-modal-content"><div class="qz-modal-header"><span class="qz-modal-title"></span> <button class="qz-modal-close"><span class="fa fa-times"></span></button></div><div class="qz-modal-body qz-text-center"></div><div class="qz-modal-footer"><span>Queiroz.js tem ajudado você? <i class="fa fa-heart"></i> <a target="_blank" href="https://github.com/viniciusknob/queiroz.js/blob/main/SUPPORT.md">Clique aqui</a> e apoie este projeto.</span></div></div></div></div>';
 
 
         /* Private Functions */

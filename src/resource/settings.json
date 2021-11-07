@@ -17,7 +17,7 @@
         "qzKeepalive": 60000,
         "ksKeepalive": 1200000,
         "noticeRangeMinutes": [15,5,3,1],
-        "notice_icon": "https://github.com/viniciusknob/queiroz.js/raw/master/src/img/ic_notification.png"
+        "notice_icon": "https://github.com/viniciusknob/queiroz.js/raw/main/src/img/ic_notification.png"
     },
     "_mutable_": {
         "hideLastWeekDays": true

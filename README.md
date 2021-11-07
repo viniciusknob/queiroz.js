@@ -1,11 +1,11 @@
-# Queiroz.js 3.8.58
+# Queiroz.js 3.8.59
 JavaScript Extension for Dimep Kairos.
 
 ### Download e Instalação
 
 Atualmente, existem duas maneiras de você utilizar Queiroz.js em seu navegador Chrome ou Firefox:
 
-#### UserScript
+#### UserScript (Recomendada)
 
 Você vai precisar de uma extensão como Tampermonkey para Chrome ou Gracemonkey para Firefox. 
 Depois, basta clicar no link abaixo para instalar o script na extensão:
