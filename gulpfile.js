@@ -34,7 +34,7 @@ var
     },
 
     Settings = {
-        VERSION: '3.8.59',
+        VERSION: '3.8.60',
         versionRegex: '(?:\\d+\\.){2}\\d+(?:-beta\\.\\d+)?',
         env: {
             DEV: {
@@ -93,13 +93,6 @@ function _allVersionDist() {
 
 const _allVersion = series(_allVersionRoot, _allVersionDist);
 
-function _resourceMinToJS() {
-    return src('dist/queiroz.js')
-        .pipe(replace('__strings__', fs.readFileSync('build/resource/strings.min.json', 'utf8')))
-        .pipe(replace('__settings__', fs.readFileSync('build/resource/settings.min.json', 'utf8')))
-        .pipe(dest('dist'));
-}
-
 function _resourceCompressSettings() {
     return src('src/resource/settings.json')
         .pipe(jsonMinify())
@@ -119,13 +112,6 @@ function _resourceCompressStrings() {
 }
 
 const _resourceCompress = series(_resourceCompressStrings, _resourceCompressSettings);
-const _resourceCompile = series(_resourceCompress, _resourceMinToJS);
-
-function _htmlMinToJS() {
-    return src('dist/queiroz.js')
-        .pipe(replace('__modal__', fs.readFileSync('build/html/modal.min.html', 'utf8')))
-        .pipe(dest('dist'));
-}
 
 function _htmlCompress() {
     return src('src/html/modal.html')
@@ -136,14 +122,6 @@ function _htmlCompress() {
             suffix: '.min'
         }))
         .pipe(dest('build/html'));
-}
-
-const _htmlCompile = series(_htmlCompress, _htmlMinToJS);
-
-function _cssMinToJS() {
-    return src('dist/queiroz.js')
-        .pipe(replace('__css__', fs.readFileSync('build/css/queiroz.min.css', 'utf8')))
-        .pipe(dest('dist'));
 }
 
 function _cssCompress() {
@@ -165,7 +143,16 @@ function _cssConcat() {
         .pipe(dest('build/css'));
 }
 
-const _cssCompile = series(_cssConcat, _cssCompress, _cssMinToJS);
+const _cssCompile = series(_cssConcat, _cssCompress);
+
+function _minToJS() {
+    return src('dist/queiroz.js')
+        .pipe(replace('__css__', fs.readFileSync('build/css/queiroz.min.css', 'utf8')))
+        .pipe(replace('__modal__', fs.readFileSync('build/html/modal.min.html', 'utf8')))
+        .pipe(replace('__strings__', fs.readFileSync('build/resource/strings.min.json', 'utf8')))
+        .pipe(replace('__settings__', fs.readFileSync('build/resource/settings.min.json', 'utf8')))
+        .pipe(dest('dist'));
+}
 
 function _jsCompress() {
     return src('dist/queiroz.js')
@@ -186,75 +173,61 @@ function _jsDocToMin() {
         .pipe(dest('dist'));
 }
 
+const _jsFiles = [
+    'src/js/queiroz.js',
+    'src/js/polyfill.js',
+    'src/js/settings.js',
+    'src/js/analytics.js',
+    'src/js/kairos.js',
+    'src/js/keepalive.js',
+    'src/js/strings.js',
+    'src/js/style.js',
+    'src/js/time.js',
+    'src/js/dailygoal.js',
+    'src/js/dayoff.js',
+    'src/js/viewtime.js',
+    'src/js/snippet.js',
+    'src/js/timeon.js',
+    'src/js/notice.js',
+    'src/js/view.js',
+    'src/js/modal.js',
+    'src/js/report.js',
+    'src/js/mocktime.js',
+    'src/js/core.js',
+    'src/js/autoexec.js'
+];
+
+const _jsFiles_devIgnore = [
+    'src/js/analytics.js',
+];
+
 function _devConcat() {
-    return src([
-            'src/js/queiroz.js',
-            'src/js/polyfill.js',
-            'src/js/settings.js',
-            'src/js/kairos.js',
-            'src/js/keepalive.js',
-            'src/js/strings.js',
-            'src/js/style.js',
-            'src/js/time.js',
-            'src/js/dailygoal.js',
-            'src/js/dayoff.js',
-            'src/js/viewtime.js',
-            'src/js/snippet.js',
-            'src/js/timeon.js',
-            'src/js/notice.js',
-            'src/js/view.js',
-            'src/js/modal.js',
-            'src/js/report.js',
-            'src/js/mocktime.js',
-            'src/js/core.js',
-            'src/js/autoexec.js'
-        ])
+    return src(_jsFiles.filter(file => !_jsFiles_devIgnore.includes(file)))
         .pipe(jsConcat('queiroz.js'))
         .pipe(dest('dist'));
 }
 
 function _allConcat() {
-    return src([
-            'src/js/queiroz.js',
-            'src/js/polyfill.js',
-            'src/js/settings.js',
-            'src/js/analytics.js',
-            'src/js/kairos.js',
-            'src/js/keepalive.js',
-            'src/js/strings.js',
-            'src/js/style.js',
-            'src/js/time.js',
-            'src/js/dailygoal.js',
-            'src/js/dayoff.js',
-            'src/js/viewtime.js',
-            'src/js/snippet.js',
-            'src/js/timeon.js',
-            'src/js/notice.js',
-            'src/js/view.js',
-            'src/js/modal.js',
-            'src/js/report.js',
-            'src/js/mocktime.js',
-            'src/js/core.js',
-            'src/js/autoexec.js'
-        ])
+    return src(_jsFiles)
         .pipe(jsConcat('queiroz.js'))
         .pipe(dest('dist'));
 }
 
 const _commons = series(
     _cssCompile,
-    _htmlCompile,
-    _resourceCompile,
+    _htmlCompress,
+    _resourceCompress,
+    _minToJS,
     _jsCompress,
 );
 
-exports.dev = series(
+exports.default = series(
     _devConcat,
     _commons,
     _devVersion,
 );
 
-exports.default = series(
+exports.release = series(
     _allConcat,
     _commons,
     _jsDocToMin,

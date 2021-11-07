@@ -13,7 +13,7 @@ in your extensions to UserScript, Greasemonkey and Tampermonkey.
 
 ## Version Control
 
-`gulp dev` generates a development version by adding a number to the end of the version. The number indicates the date and time without signals. Use this feature as many times as you need during the development.
+`gulp` generates a development version by adding a number to the end of the version. The number indicates the date and time without signals. Use this feature as many times as you need during the development.
 
 `gulp release` normalizes the version to x.x.x, preparing the code to be commited.
 
