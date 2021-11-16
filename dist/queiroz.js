@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.8.62';
+            VERSION = '3.8.63';
 
         /* Public API */
 
@@ -1966,7 +1966,7 @@
             isLoaded: function() {
                 return _get(Selector.COLUMN_DAY);
             },
-            isTargetOnVacation: function(target) {
+            isEligibleToSwitchOff: function(target) {
                 var e = _get(Selector.TOOGLE, target).parentElement;
                 if (!!e == false)
                     return false;
@@ -1979,7 +1979,7 @@
                 if (!!span == false || span.tagName != 'SPAN')
                     return false;
 
-                return span.innerText == 'Férias';
+                return /Férias|Feriado/.test(span.innerText);
             },
             getAllColumnDay: function() {
                 return _getAll(Selector.COLUMN_DAY);
@@ -2646,7 +2646,7 @@
                     active = true;
 
                 if (active && Settings.isWorkDay(day)) {
-                    if (View.isTargetOnVacation(eDay))
+                    if (View.isEligibleToSwitchOff(eDay))
                         DayOff.add(day);
 
                     var eToggle = _buildToggleForDayOff(day);

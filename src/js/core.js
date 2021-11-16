@@ -60,7 +60,7 @@
                     active = true;
 
                 if (active && Settings.isWorkDay(day)) {
-                    if (View.isTargetOnVacation(eDay))
+                    if (View.isEligibleToSwitchOff(eDay))
                         DayOff.add(day);
 
                     var eToggle = _buildToggleForDayOff(day);
