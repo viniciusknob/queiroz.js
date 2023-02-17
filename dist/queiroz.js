@@ -15,7 +15,7 @@
 
         var
             NAME = 'Queiroz.js',
-            VERSION = '3.8.63';
+            VERSION = '3.9.63';
 
         /* Public API */
 
@@ -976,7 +976,7 @@
  * https://github.com/viniciusknob/queiroz.js
  */
 
-(function(window, document, Queiroz) {
+(function(window, document, jQuery, Queiroz) {
 
     /* Modules */
 
@@ -1280,6 +1280,7 @@
                 var content = _buildTag(TagName.DIV, 'qz-dropdown-content');
                 var addTimeOn = _buildTag(TagName.P, 'qz-text-left', ':: Abonar Falta');
                 var addMockTime = _buildTag(TagName.P, 'qz-text-left', ':: Mock Time');
+                var addFillTime = _buildTag(TagName.P, 'qz-text-left', ':: Preencher Horários (8h)');
 
                 addTimeOn.onclick = function() {
                     var eDay = this.parentElement.parentElement.parentElement.parentElement;
@@ -1321,10 +1322,47 @@
                     }, 250);
                 };
 
+                addFillTime.onclick = function() {
+                    var eDay = this.parentElement.parentElement.parentElement.parentElement;
+                    if (eDay.querySelector('.js-has-edit-box'))
+                        return;
+
+                    const r1 = Math.floor(Math.random() * (10 + 1));
+                    const r2 = Math.floor(Math.random() * (5 + 1));
+                    const r3 = Math.floor(Math.random() * (5 + 1));
+
+                    let h = 11;
+                    let m = 55 + r2;
+                    if (m === 60) {
+                        h = 12;
+                        m = 0;
+                    }
+
+                    let times = [
+                        `08:${(25 + r1).padStart(2)}`,
+                        `${h}:${m.padStart(2)}`,
+                        `13:${r3.padStart(2)}`,
+                        `17:${30 + r1 - r2 + r3}`
+                    ];
+
+                    eDay.querySelectorAll('.LastSlot'); // last box to insert time (only for first time)
+                    eDay.querySelector('.LastSlot .TimeIN input').value = times.shift();
+
+                    times.forEach(t => {
+                        // loop
+                        jQuery(eDay.querySelector('.emptySlot:last-child')).mouseenter(); // add input
+                        jQuery(eDay.querySelector('.emptySlot:last-child input')).mousedown(); // configure new emptySlot
+
+                        const nodes = eDay.querySelectorAll('.emptySlot input');
+                        nodes[nodes.length-1].value = t; // populate the last field with the other time
+                    });
+                };
+
                 dropdown.appendChild(icon);
                 dropdown.appendChild(content);
                 content.appendChild(addTimeOn);
                 content.appendChild(addMockTime);
+                content.appendChild(addFillTime);
                 return dropdown;
             },
             buildIconRefreshModal: function() {
@@ -1475,7 +1513,7 @@
 
     Queiroz.module.snippet = Snippet;
 
-})(window, document, window.Queiroz);
+})(window, document, window.jQuery, window.Queiroz);
 
 
 /*!
